@@ -300,6 +300,10 @@ function ThemeButton() {
 <span class="ox-avatar">GH</span>
 <span class="ox-avatar ox-avatar-lg">AT</span>
 <span class="ox-avatar ox-avatar-lg ox-avatar-solid">KJ</span>`),
+            H("Status"),
+            EX(`<span class="ox-avatar ox-avatar-solid" data-status="online">AL</span>
+<span class="ox-avatar" data-status="away">GH</span>
+<span class="ox-avatar" data-status="offline">AT</span>`),
             H("Stack"),
             EX(`<div class="ox-avatar-stack">
   <span class="ox-avatar ox-avatar-solid">AL</span>
@@ -312,7 +316,8 @@ function ThemeButton() {
               ["<code>.ox-avatar</code>", "Base avatar. Put initials or an <code>&lt;img&gt;</code> inside."],
               ["<code>.ox-avatar-sm</code>, <code>.ox-avatar-lg</code>", "Sizes."],
               ["<code>.ox-avatar-solid</code>", "Filled variant."],
-              ["<code>.ox-avatar-stack</code>", "Overlaps avatars in a row."]
+              ["<code>.ox-avatar-stack</code>", "Overlaps avatars in a row."],
+              ["<code>data-status</code>", "<code>online</code>, <code>away</code> or <code>offline</code> adds a presence dot."]
             ])
           ]
         },
@@ -568,11 +573,26 @@ Onyx.modal.close("example-modal");`),
     <button class="ox-btn ox-btn-sm ox-btn-pill">Contact</button>
   </div>
 </nav>`, "wide"),
+            H("Mobile menu"),
+            P("Add a toggle and a menu. Below 760px the links hide and the toggle opens the menu."),
+            CODE("html", `<nav class="ox-navbar">
+  <div class="ox-container ox-navbar-inner">
+    <a href="/">Studio</a>
+    <div class="ox-navbar-links"><a href="/work">Work</a><a href="/about">About</a></div>
+    <button class="ox-navbar-toggle" data-ox-nav-toggle aria-expanded="false" aria-label="Open menu"><span></span><span></span></button>
+  </div>
+  <div class="ox-navbar-menu">
+    <a href="/work">Work</a><a href="/about">About</a>
+  </div>
+</nav>`, "index.html"),
             H("API"),
             API([
               ["<code>.ox-navbar</code>", "Sticky bar with blur."],
               ["<code>.ox-navbar-inner</code>", "Flex row inside a container."],
-              ["<code>.ox-navbar-links</code>", "Link group. Hidden under 760px."]
+              ["<code>.ox-navbar-links</code>", "Link group. Hidden on small screens, where the menu takes over."],
+              ["<code>.ox-navbar-toggle</code> + <code>data-ox-nav-toggle</code>", "Menu button (two lines that turn into an X). Contains two empty <code>&lt;span&gt;</code>s."],
+              ["<code>.ox-navbar-menu</code>", "Full-screen menu for small screens. Closes on Escape, on a link tap, or when the window grows."],
+              ["<code>data-collapse=\"lg\"</code>", "On <code>.ox-navbar</code>: switch to the menu below 1024px instead of 760px."]
             ])
           ]
         },
@@ -729,6 +749,197 @@ Onyx.toast("Link copied", { duration: 5000 });`),
             H("API"),
             API([["<code>data-ox-tooltip=\"text\"</code>", "The tooltip text."]]),
             NOTE("<b>Keep it short.</b> Tooltips don't wrap. For icon-only buttons, also add <code>aria-label</code> — tooltips aren't read by screen readers.")
+          ]
+        }
+      ,
+        {
+          slug: "banner",
+          title: "Banner",
+          lead: "A full-width announcement bar. Dismissing it is remembered when it has a name.",
+          blocks: [
+            H("Example"),
+            EX(`<div class="ox-banner" style="width:100%;border-radius:8px">
+  <span><b>Onyx 1.1</b> is here.</span>
+  <a href="#">See what's new</a>
+  <button class="ox-banner-close" data-ox-dismiss aria-label="Dismiss">✕</button>
+</div>`, "wide"),
+            H("API"),
+            API([
+              ["<code>.ox-banner</code>", "The bar. Put it first in <code>&lt;body&gt;</code>."],
+              ["<code>data-ox-dismiss</code>", "On a button inside, hides the banner."],
+              ["<code>data-ox-banner=\"name\"</code>", "Remembers the dismissal in this browser, so it stays hidden."]
+            ])
+          ]
+        },
+        {
+          slug: "breadcrumb",
+          title: "Breadcrumb",
+          lead: "Shows where the current page sits in the hierarchy.",
+          blocks: [
+            H("Example"),
+            EX(`<nav class="ox-breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="#">Workspace</a></li>
+    <li><a href="#">Projects</a></li>
+    <li><span aria-current="page">Landing v2</span></li>
+  </ol>
+</nav>`),
+            H("API"),
+            API([
+              ["<code>.ox-breadcrumb</code>", "On a <code>&lt;nav aria-label=\"Breadcrumb\"&gt;</code> with an <code>&lt;ol&gt;</code> inside."],
+              ["<code>aria-current=\"page\"</code>", "Marks the current page."]
+            ])
+          ]
+        },
+        {
+          slug: "chips",
+          title: "Chips",
+          lead: "Toggleable filters. Several can be on at once, or just one with data-single.",
+          blocks: [
+            H("Multiple"),
+            EX(`<div class="ox-chips" aria-label="Filter by team">
+  <button class="ox-chip" aria-pressed="true">Design</button>
+  <button class="ox-chip" aria-pressed="false">Engineering</button>
+  <button class="ox-chip" aria-pressed="false">Marketing</button>
+</div>`),
+            H("Single choice"),
+            EX(`<div class="ox-chips" data-single aria-label="Sort by">
+  <button class="ox-chip" aria-pressed="true">Newest</button>
+  <button class="ox-chip" aria-pressed="false">Popular</button>
+  <button class="ox-chip" aria-pressed="false">A–Z</button>
+</div>`),
+            H("API"),
+            API([
+              ["<code>.ox-chips</code>", "Group. Fires <code>ox:change</code> with <code>detail.value</code>, the selected labels (or <code>value</code> attributes)."],
+              ["<code>.ox-chip</code>", "A button. <code>aria-pressed</code> holds its state."],
+              ["<code>data-single</code>", "Only one chip can be on."]
+            ])
+          ]
+        },
+        {
+          slug: "empty-state",
+          title: "Empty state",
+          lead: "What to show when there's nothing yet, with a clear next step.",
+          blocks: [
+            H("Example"),
+            EX(`<div class="ox-empty" style="width:100%">
+  <span class="ox-empty-icon" aria-hidden="true">◌</span>
+  <h3 class="ox-empty-title">No projects yet</h3>
+  <p class="ox-empty-text">Projects you create or are invited to will show up here.</p>
+  <button class="ox-btn ox-btn-pill">Create project</button>
+</div>`, "wide"),
+            H("API"),
+            API([
+              ["<code>.ox-empty</code>", "Dashed container."],
+              ["<code>.ox-empty-icon</code>, <code>-title</code>, <code>-text</code>", "Parts."]
+            ])
+          ]
+        },
+        {
+          slug: "number-stepper",
+          title: "Number stepper",
+          lead: "A number input with minus and plus buttons. Respects min, max and step.",
+          blocks: [
+            H("Example"),
+            EX(`<div class="ox-stepper">
+  <button type="button" data-step="-1" aria-label="Decrease">−</button>
+  <input type="number" value="2" min="1" max="8" aria-label="Guests">
+  <button type="button" data-step="1" aria-label="Increase">+</button>
+</div>`),
+            H("API"),
+            API([
+              ["<code>.ox-stepper</code>", "Wrapper around the buttons and input."],
+              ["<code>data-step=\"-1\"</code> / <code>\"1\"</code>", "Decrease and increase buttons. Disabled automatically at the limits."],
+              ["<code>min</code>, <code>max</code>, <code>step</code>", "Standard input attributes. Fires <code>input</code> and <code>change</code> on each step."]
+            ])
+          ]
+        },
+        {
+          slug: "pagination",
+          title: "Pagination",
+          lead: "Moves between pages of results.",
+          blocks: [
+            H("Example"),
+            EX(`<nav class="ox-pagination" aria-label="Pagination">
+  <ul>
+    <li><a href="#" aria-label="Previous page">‹</a></li>
+    <li><a href="#">1</a></li>
+    <li><span class="ox-gap" aria-hidden="true">…</span></li>
+    <li><a href="#">4</a></li>
+    <li><span aria-current="page">5</span></li>
+    <li><a href="#">6</a></li>
+    <li><span class="ox-gap" aria-hidden="true">…</span></li>
+    <li><a href="#">12</a></li>
+    <li><a href="#" aria-label="Next page">›</a></li>
+  </ul>
+</nav>`),
+            H("API"),
+            API([
+              ["<code>.ox-pagination</code>", "On a <code>&lt;nav&gt;</code> with a list of links."],
+              ["<code>aria-current=\"page\"</code>", "The current page, filled solid."],
+              ["<code>aria-disabled=\"true\"</code>", "Dims a link, for Previous on page 1."],
+              ["<code>.ox-gap</code>", "An ellipsis between page ranges."]
+            ])
+          ]
+        },
+        {
+          slug: "range",
+          title: "Range slider",
+          lead: "A styled native slider. The filled track follows the value.",
+          blocks: [
+            H("Example"),
+            EX(`<div class="ox-field" style="width:280px">
+  <label class="ox-label" for="r-demo">Volume</label>
+  <input class="ox-range" id="r-demo" type="range" min="0" max="100" value="64">
+</div>`),
+            H("API"),
+            API([
+              ["<code>.ox-range</code>", "On <code>&lt;input type=\"range\"&gt;</code>. Keyboard and screen reader support come from the browser."],
+              ["<code>Onyx.init()</code>", "Call after adding sliders with JavaScript, to paint their fill."]
+            ])
+          ]
+        },
+        {
+          slug: "table",
+          title: "Table",
+          lead: "A clean data table that scrolls sideways on small screens. For sorting and selection, see the Pro data table.",
+          blocks: [
+            H("Example"),
+            EX(`<div class="ox-table-wrap" style="width:100%">
+  <table class="ox-table">
+    <thead><tr><th scope="col">Invoice</th><th scope="col">Customer</th><th scope="col" class="num">Amount</th></tr></thead>
+    <tbody>
+      <tr><td>INV-2041</td><td>Grace Hopper</td><td class="num">$1,250.00</td></tr>
+      <tr><td>INV-2040</td><td>Alan Turing</td><td class="num">$480.00</td></tr>
+      <tr><td>INV-2039</td><td>Katherine Johnson</td><td class="num">$2,100.00</td></tr>
+    </tbody>
+  </table>
+</div>`, "wide"),
+            H("API"),
+            API([
+              ["<code>.ox-table-wrap</code>", "Bordered container that scrolls on narrow screens."],
+              ["<code>.ox-table</code>", "The table."],
+              ["<code>.num</code>", "Right-aligns numbers."],
+              ["<code>.ox-table-striped</code>", "Shades every other row."]
+            ])
+          ]
+        },
+        {
+          slug: "timeline",
+          title: "Timeline",
+          lead: "A vertical list of events, with done and upcoming states.",
+          blocks: [
+            H("Example"),
+            EX(`<ol class="ox-timeline">
+  <li data-state="done"><time>Nov 1</time><b>Kickoff</b><p>Scope and goals agreed.</p></li>
+  <li data-state="done"><time>Nov 3</time><b>Design review</b></li>
+  <li data-state="upcoming"><time>Nov 12</time><b>Launch</b></li>
+</ol>`, "left"),
+            H("API"),
+            API([
+              ["<code>.ox-timeline</code>", "On an <code>&lt;ol&gt;</code>."],
+              ["<code>data-state</code>", "<code>done</code> fills the dot, <code>upcoming</code> makes it dashed."]
+            ])
           ]
         }
       ]
@@ -1370,3 +1581,8 @@ document.getElementById("rt-fail").addEventListener("click", () =>
     }
   ];
 })();
+
+// Keep the component list alphabetical, wherever new pages were added above
+window.ONYX_DOCS.forEach(function (g) {
+  if (g.group === "Components") g.pages.sort(function (a, b) { return a.title.localeCompare(b.title); });
+});

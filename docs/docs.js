@@ -187,6 +187,8 @@
       try { new Function(b.js)(); } catch (err) { console.error("Example failed on " + page.slug, err); }
     });
 
+    if (window.Onyx && Onyx.init) Onyx.init(main);
+
     document.title = page.title + " — Onyx Docs";
     renderSidebar(page.slug);
     renderToc(page);

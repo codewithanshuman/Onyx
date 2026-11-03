@@ -1,5 +1,5 @@
 /*!
- * Onyx v1.0.0 — a black & white component library for the web
+ * Onyx v1.1.0 — a black & white component library for the web
  * Core: MIT License. Onyx Pro components require a commercial license.
  */
 
@@ -847,8 +847,84 @@
   transition: color var(--ox-duration) var(--ox-ease), background var(--ox-duration) var(--ox-ease);
 }
 .ox-navbar-links a:hover { color: var(--ox-fg); background: var(--ox-bg-muted); }
+
+/* Mobile menu: links collapse behind a toggle below 760px
+   (or below 1024px with data-collapse="lg" on .ox-navbar) */
+.ox-navbar-toggle { display: none; }
+.ox-navbar-menu { display: none; }
+.ox-navbar-toggle {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  color: var(--ox-fg);
+  background: transparent;
+  border: 1px solid var(--ox-border);
+  border-radius: var(--ox-radius-full);
+  cursor: pointer;
+}
+.ox-navbar-toggle span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1rem;
+  height: 1.5px;
+  margin: -0.75px 0 0 -0.5rem;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 260ms var(--ox-ease);
+}
+.ox-navbar-toggle span:first-child { transform: translateY(-3.5px); }
+.ox-navbar-toggle span:last-child { transform: translateY(3.5px); }
+.ox-navbar[data-open="true"] .ox-navbar-toggle span:first-child { transform: rotate(45deg); }
+.ox-navbar[data-open="true"] .ox-navbar-toggle span:last-child { transform: rotate(-45deg); }
+/* Absolute, not fixed: the navbar's backdrop-filter makes it the containing block
+   for fixed children, so the menu is sized from the navbar's bottom edge instead */
+.ox-navbar-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: calc(100vh - 3.75rem);
+  height: calc(100dvh - 3.75rem);
+  z-index: 99;
+  flex-direction: column;
+  gap: var(--ox-space-1);
+  padding: var(--ox-space-4) var(--ox-space-4) var(--ox-space-8);
+  overflow-y: auto;
+  background: var(--ox-bg);
+  border-top: 1px solid var(--ox-border);
+  opacity: 0;
+  transform: translateY(-8px);
+  visibility: hidden;
+  transition: opacity 220ms var(--ox-ease), transform 260ms var(--ox-ease), visibility 260ms;
+}
+.ox-navbar[data-open="true"] .ox-navbar-menu { opacity: 1; transform: none; visibility: visible; }
+.ox-navbar-menu > a:not(.ox-btn) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.25rem;
+  padding: 0 var(--ox-space-2);
+  font-size: var(--ox-text-lg);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ox-fg);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ox-border);
+}
+.ox-navbar-menu > a:not(.ox-btn)::after { content: "→"; color: var(--ox-fg-subtle); }
+.ox-navbar-menu .ox-btn { margin-top: var(--ox-space-4); }
+body.ox-nav-locked { overflow: hidden; }
 @media (max-width: 760px) {
   .ox-navbar-links { display: none; }
+  .ox-navbar-toggle { display: inline-grid; }
+  .ox-navbar-menu { display: flex; }
+}
+@media (max-width: 1023px) {
+  .ox-navbar[data-collapse="lg"] .ox-navbar-links { display: none; }
+  .ox-navbar[data-collapse="lg"] .ox-navbar-toggle { display: inline-grid; }
+  .ox-navbar[data-collapse="lg"] .ox-navbar-menu { display: flex; }
 }
 
 /* =========================================================
@@ -867,7 +943,169 @@
 }
 
 /* =========================================================
-   19. Keyframes & motion preferences
+   19. Breadcrumb & pagination
+   ========================================================= */
+.ox-breadcrumb ol { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ox-space-2); margin: 0; padding: 0; list-style: none; font-size: var(--ox-text-sm); }
+.ox-breadcrumb li { display: inline-flex; align-items: center; gap: var(--ox-space-2); color: var(--ox-fg-muted); }
+.ox-breadcrumb li + li::before { content: "/"; color: var(--ox-fg-subtle); }
+.ox-breadcrumb a { color: inherit; text-decoration: none; border-radius: var(--ox-radius-sm); transition: color var(--ox-duration); }
+.ox-breadcrumb a:hover { color: var(--ox-fg); }
+.ox-breadcrumb [aria-current="page"] { color: var(--ox-fg); font-weight: 500; }
+
+.ox-pagination ul { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ox-space-1); margin: 0; padding: 0; list-style: none; }
+.ox-pagination a,
+.ox-pagination span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 var(--ox-space-2);
+  font-size: var(--ox-text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ox-fg-muted);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--ox-radius);
+  transition: background var(--ox-duration), color var(--ox-duration), border-color var(--ox-duration);
+}
+.ox-pagination a:hover { color: var(--ox-fg); background: var(--ox-bg-muted); }
+.ox-pagination [aria-current="page"] { color: var(--ox-inverse); background: var(--ox-fg); border-color: var(--ox-fg); }
+.ox-pagination [aria-disabled="true"] { opacity: 0.35; pointer-events: none; }
+.ox-pagination .ox-gap { min-width: 1.5rem; }
+
+/* =========================================================
+   20. Range slider & number stepper
+   ========================================================= */
+.ox-range {
+  --_pct: 50%;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1.5rem;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.ox-range::-webkit-slider-runnable-track { height: 4px; border-radius: 99px; background: linear-gradient(to right, var(--ox-fg) var(--_pct), var(--ox-bg-muted) var(--_pct)); }
+.ox-range::-moz-range-track { height: 4px; border-radius: 99px; background: var(--ox-bg-muted); }
+.ox-range::-moz-range-progress { height: 4px; border-radius: 99px; background: var(--ox-fg); }
+.ox-range::-webkit-slider-thumb { -webkit-appearance: none; width: 1.25rem; height: 1.25rem; margin-top: calc(2px - 0.625rem); border-radius: 50%; background: var(--ox-bg); border: 2px solid var(--ox-fg); box-shadow: var(--ox-shadow-sm); transition: transform var(--ox-duration) var(--ox-ease); }
+.ox-range::-moz-range-thumb { width: 1rem; height: 1rem; border-radius: 50%; background: var(--ox-bg); border: 2px solid var(--ox-fg); }
+.ox-range:active::-webkit-slider-thumb { transform: scale(1.15); }
+.ox-range:focus-visible { outline: none; }
+.ox-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--ox-ring); }
+.ox-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px var(--ox-ring); }
+
+.ox-stepper { display: inline-flex; align-items: stretch; height: 2.5rem; background: var(--ox-surface); border: 1px solid var(--ox-border); border-radius: var(--ox-radius); overflow: hidden; }
+.ox-stepper:focus-within { border-color: var(--ox-fg); box-shadow: 0 0 0 3px var(--ox-ring); }
+.ox-stepper button { width: 2.5rem; padding: 0; font-size: var(--ox-text-lg); line-height: 1; color: var(--ox-fg); background: transparent; border: 0; cursor: pointer; transition: background var(--ox-duration); }
+.ox-stepper button:hover { background: var(--ox-bg-muted); }
+.ox-stepper button:disabled { opacity: 0.3; cursor: not-allowed; background: transparent; }
+.ox-stepper input { width: 3.5rem; padding: 0; font: inherit; font-size: var(--ox-text-sm); font-variant-numeric: tabular-nums; text-align: center; color: var(--ox-fg); background: transparent; border: 0; border-inline: 1px solid var(--ox-border); outline: none; -moz-appearance: textfield; }
+.ox-stepper input::-webkit-outer-spin-button,
+.ox-stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* =========================================================
+   21. Chips (toggleable filters)
+   ========================================================= */
+.ox-chips { display: flex; flex-wrap: wrap; gap: var(--ox-space-2); }
+.ox-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2rem;
+  padding: 0 var(--ox-space-3);
+  font: 500 var(--ox-text-sm) var(--ox-font-sans);
+  color: var(--ox-fg-muted);
+  background: var(--ox-surface);
+  border: 1px solid var(--ox-border);
+  border-radius: var(--ox-radius-full);
+  cursor: pointer;
+  transition: color var(--ox-duration), background var(--ox-duration), border-color var(--ox-duration), transform var(--ox-duration) var(--ox-ease);
+}
+.ox-chip:hover { color: var(--ox-fg); border-color: var(--ox-border-strong); }
+.ox-chip:active { transform: scale(0.97); }
+.ox-chip[aria-pressed="true"] { color: var(--ox-inverse); background: var(--ox-fg); border-color: var(--ox-fg); }
+.ox-chip[aria-pressed="true"]::before { content: "✓"; font-size: 0.7rem; }
+
+/* =========================================================
+   22. Table
+   ========================================================= */
+.ox-table-wrap { overflow-x: auto; border: 1px solid var(--ox-border); border-radius: var(--ox-radius-lg); background: var(--ox-surface); }
+.ox-table { width: 100%; border-collapse: collapse; font-size: var(--ox-text-sm); font-variant-numeric: tabular-nums; }
+.ox-table caption { padding: var(--ox-space-3) var(--ox-space-4); text-align: left; color: var(--ox-fg-muted); caption-side: bottom; font-size: var(--ox-text-xs); }
+.ox-table th { padding: var(--ox-space-3) var(--ox-space-4); text-align: left; font-size: var(--ox-text-xs); font-weight: 500; color: var(--ox-fg-muted); background: var(--ox-bg-subtle); border-bottom: 1px solid var(--ox-border); white-space: nowrap; }
+.ox-table td { padding: var(--ox-space-3) var(--ox-space-4); border-bottom: 1px solid var(--ox-border); }
+.ox-table tbody tr:last-child td { border-bottom: 0; }
+.ox-table tbody tr { transition: background var(--ox-duration); }
+.ox-table tbody tr:hover { background: var(--ox-bg-subtle); }
+.ox-table .num { text-align: right; }
+.ox-table-striped tbody tr:nth-child(even) { background: var(--ox-bg-subtle); }
+
+/* =========================================================
+   23. Empty state & timeline
+   ========================================================= */
+.ox-empty { display: grid; justify-items: center; gap: var(--ox-space-2); padding: var(--ox-space-12) var(--ox-space-6); text-align: center; border: 1.5px dashed var(--ox-border-strong); border-radius: var(--ox-radius-lg); }
+.ox-empty-icon { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: var(--ox-space-2); font-size: var(--ox-text-xl); color: var(--ox-fg); background: var(--ox-bg-muted); border-radius: 50%; }
+.ox-empty-title { margin: 0; font-size: var(--ox-text-base); font-weight: 600; }
+.ox-empty-text { max-width: 36ch; margin: 0 0 var(--ox-space-3); font-size: var(--ox-text-sm); color: var(--ox-fg-muted); }
+
+.ox-timeline { margin: 0; padding: 0; list-style: none; }
+.ox-timeline li { position: relative; padding: 0 0 var(--ox-space-6) var(--ox-space-8); }
+.ox-timeline li::before { content: ""; position: absolute; left: 0.3rem; top: 0.45rem; width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--ox-bg); border: 2px solid var(--ox-fg); }
+.ox-timeline li::after { content: ""; position: absolute; left: calc(0.3rem + 0.325rem - 0.5px); top: 1.4rem; bottom: 0.2rem; width: 1px; background: var(--ox-border-strong); }
+.ox-timeline li:last-child { padding-bottom: 0; }
+.ox-timeline li:last-child::after { display: none; }
+.ox-timeline li[data-state="done"]::before { background: var(--ox-fg); }
+.ox-timeline li[data-state="upcoming"]::before { border-color: var(--ox-border-strong); border-style: dashed; }
+.ox-timeline time { display: block; margin-bottom: 2px; font: 400 var(--ox-text-xs) var(--ox-font-mono); color: var(--ox-fg-subtle); }
+.ox-timeline b { display: block; font-size: var(--ox-text-sm); font-weight: 500; }
+.ox-timeline p { margin: 2px 0 0; font-size: var(--ox-text-sm); color: var(--ox-fg-muted); }
+
+/* =========================================================
+   24. Banner (dismissible announcement)
+   ========================================================= */
+.ox-banner {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ox-space-2) var(--ox-space-4);
+  padding: var(--ox-space-2) 3rem;
+  font-size: var(--ox-text-sm);
+  text-align: center;
+  color: var(--ox-inverse);
+  background: var(--ox-fg);
+}
+.ox-banner a { color: inherit; font-weight: 500; text-underline-offset: 3px; }
+.ox-banner-close { position: absolute; right: var(--ox-space-2); top: 50%; display: grid; place-items: center; width: 2rem; height: 2rem; margin-top: -1rem; padding: 0; color: inherit; background: transparent; border: 0; border-radius: var(--ox-radius-sm); opacity: 0.7; cursor: pointer; }
+.ox-banner-close:hover { opacity: 1; background: color-mix(in srgb, var(--ox-inverse) 15%, transparent); }
+.ox-banner[hidden] { display: none; }
+
+/* =========================================================
+   25. Avatar status
+   ========================================================= */
+.ox-avatar[data-status] { position: relative; overflow: visible; }
+.ox-avatar[data-status]::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 28%; height: 28%; min-width: 8px; min-height: 8px; border-radius: 50%; border: 2px solid var(--ox-surface); }
+.ox-avatar[data-status="online"]::after { background: var(--ox-fg); }
+.ox-avatar[data-status="away"]::after { background: var(--ox-bg); box-shadow: inset 0 0 0 2px var(--ox-fg); }
+.ox-avatar[data-status="offline"]::after { background: var(--ox-border-strong); }
+
+/* =========================================================
+   26. Touch screens: comfortable tap targets
+   ========================================================= */
+@media (pointer: coarse) {
+  .ox-btn-sm, .ox-chip, .ox-pagination a, .ox-pagination span { min-height: 2.5rem; }
+  .ox-btn-sm.ox-btn-icon { width: 2.5rem; }
+  .ox-segmented button { height: 2.25rem; }
+  .ox-tab { padding-block: var(--ox-space-3); }
+  .ox-dropdown-item { min-height: 2.75rem; }
+  .ox-checkbox, .ox-radio, .ox-switch { min-height: 2.25rem; }
+}
+
+/* =========================================================
+   27. Keyframes & motion preferences
    ========================================================= */
 @keyframes ox-spin { to { transform: rotate(360deg); } }
 @keyframes ox-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
@@ -884,3 +1122,7 @@
     transition-duration: 1ms !important;
   }
 }
+
+/* Theme switch: the new theme is revealed by a clip-path circle (see Onyx.theme.set) */
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }

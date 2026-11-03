@@ -1,6 +1,6 @@
 {
   "name": "@onyxdesign/core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A black & white, zero-dependency UI component library for people who care about the details.",
   "main": "src/onyx.js",
   "style": "src/onyx.css",

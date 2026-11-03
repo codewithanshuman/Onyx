@@ -1,3 +1,5 @@
+<p align="center"><img src="brand/onyx-logo-black.svg" width="120" alt="Onyx"></p>
+
 # Onyx
 
 **The interface, in black & white.**
@@ -40,6 +42,25 @@ Then open http://localhost:5173.
 | Navigation | Tabs (arrow-key support), Accordion |
 
 Full documentation with live examples lives in [docs/](docs/index.html) — run `npm run dev` and open http://localhost:5173/docs/.
+
+## Onyx Pro
+
+Premium components and templates are sold separately and kept in a private repository. The docs show live previews of them.
+
+Customers add the Pro files after the core files:
+
+```html
+<link rel="stylesheet" href="onyx.css">
+<link rel="stylesheet" href="onyx-pro.css">
+<script src="onyx.js"></script>
+<script src="onyx-pro.js"></script>
+```
+
+Maintainers: the private repo is cloned into `pro/` (ignored here). After changing it, run `npm run build:pro-preview` to refresh the docs previews in `docs/pro-preview/`.
+
+## Brand
+
+The bat logo lives in [`brand/`](brand): `onyx-logo.svg` (follows text color), black and white versions, and a favicon that adapts to light and dark mode.
 
 ## Theming
 

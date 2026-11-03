@@ -15,7 +15,7 @@ body { margin: 0; }
 .d-topbar { padding-inline: var(--ox-space-4); }
 @media (min-width: 640px) { .d-topbar { padding-inline: var(--ox-space-6); } }
 .d-logo { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; letter-spacing: -0.03em; color: var(--ox-fg); text-decoration: none; }
-.d-logo svg { width: 20px; height: 20px; }
+.d-logo svg { width: 32px; height: 13px; }
 .d-version { margin-left: var(--ox-space-1); }
 .d-menu-btn { display: none; }
 

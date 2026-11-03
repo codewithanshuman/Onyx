@@ -4,10 +4,24 @@
   "description": "A black & white, zero-dependency UI component library for people who care about the details.",
   "main": "src/onyx.js",
   "style": "src/onyx.css",
-  "files": ["src", "README.md", "LICENSE"],
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "dev": "python -m http.server 5173"
+    "dev": "python -m http.server 5173",
+    "build:pro-preview": "node scripts/build-pro-preview.mjs"
   },
-  "keywords": ["ui", "css", "components", "design-system", "black-and-white", "monochrome", "dark-mode", "accessible"],
+  "keywords": [
+    "ui",
+    "css",
+    "components",
+    "design-system",
+    "black-and-white",
+    "monochrome",
+    "dark-mode",
+    "accessible"
+  ],
   "license": "MIT"
 }

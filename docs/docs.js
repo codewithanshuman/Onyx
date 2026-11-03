@@ -92,6 +92,7 @@
           '<div class="d-example">' +
           '<div class="d-preview ' + b.layout + '">' + b.html + "</div>" +
           '<div class="d-code">' + codeBlock(b.html.trim(), "html", "HTML") + "</div>" +
+          (b.js ? '<div class="d-code">' + codeBlock(b.js.trim(), "js", "JavaScript") + "</div>" : "") +
           "</div>"
         );
       case "code":
@@ -122,7 +123,8 @@
       return (
         '<div class="d-nav-group"><p class="d-nav-title">' + g.group + "</p>" +
         g.pages.map(function (p) {
-          return '<a class="d-nav-link" href="#/' + p.slug + '"' + (p.slug === current ? ' aria-current="page"' : "") + ">" + p.title + "</a>";
+          return '<a class="d-nav-link" href="#/' + p.slug + '"' + (p.slug === current ? ' aria-current="page"' : "") + ">" + p.title +
+            (g.pro ? '<span class="ox-badge ox-badge-outline">Pro</span>' : "") + "</a>";
         }).join("") +
         "</div>"
       );
@@ -176,6 +178,14 @@
       page.blocks.map(renderBlock).join("") +
       renderPager(page) +
       "</article>";
+
+    // Examples with a JS part (charts, tables) are started once their markup is on the page.
+    // Command menus mount on <body>, so drop ones left behind by the previous page first.
+    document.querySelectorAll(".oxp-command").forEach(function (m) { m.remove(); });
+    page.blocks.forEach(function (b) {
+      if (b.type !== "example" || !b.js) return;
+      try { new Function(b.js)(); } catch (err) { console.error("Example failed on " + page.slug, err); }
+    });
 
     document.title = page.title + " — Onyx Docs";
     renderSidebar(page.slug);

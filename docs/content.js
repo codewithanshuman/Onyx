@@ -3,7 +3,7 @@
  * Each page is a list of blocks rendered by docs.js:
  *   H("Heading")                  section heading (also listed in "On this page")
  *   P("html")                     paragraph
- *   EX(`html`, "layout")          live preview + its source; layout: "block" | "left" | "wide"
+ *   EX(`html`, "layout", `js`)    live preview + its source; layout: "block" | "left" | "wide"; optional js runs after render
  *   CODE("lang", `src`, "file")   code block only
  *   API([[name, description]])    options table
  *   LIST(["html", ...])           bullet list
@@ -12,7 +12,7 @@
 (function () {
   var H = function (t) { return { type: "h2", text: t }; };
   var P = function (h) { return { type: "p", html: h }; };
-  var EX = function (h, layout) { return { type: "example", html: h, layout: layout || "" }; };
+  var EX = function (h, layout, js) { return { type: "example", html: h, layout: layout || "", js: js }; };
   var CODE = function (lang, src, file) { return { type: "code", lang: lang, src: src, file: file }; };
   var API = function (rows, head) { return { type: "table", head: head || ["Class / attribute", "Description"], rows: rows }; };
   var LIST = function (items) { return { type: "list", items: items }; };
@@ -663,6 +663,275 @@ Onyx.toast("Link copied", { duration: 5000 });`),
             H("API"),
             API([["<code>data-ox-tooltip=\"text\"</code>", "The tooltip text."]]),
             NOTE("<b>Keep it short.</b> Tooltips don't wrap. For icon-only buttons, also add <code>aria-label</code> — tooltips aren't read by screen readers.")
+          ]
+        }
+      ]
+    },
+
+    {
+      group: "Pro",
+      pro: true,
+      pages: [
+        {
+          slug: "pro",
+          title: "About Onyx Pro",
+          lead: "Advanced components and full page templates for real products. Included with the Pro and Team plans.",
+          blocks: [
+            H("What's included"),
+            LIST([
+              "<strong>Charts</strong> — line, area, bar and donut, with tooltips, drawn in pure SVG.",
+              "<strong>Data table</strong> — sorting, search, row selection and pagination from a plain array.",
+              "<strong>Command menu</strong> — a <code>Ctrl K</code> palette with fuzzy search.",
+              "<strong>Stat cards</strong>, <strong>sheets</strong>, <strong>steppers</strong> and <strong>file dropzones</strong>.",
+              "<strong>App shell</strong> — a responsive sidebar layout for dashboards and admin tools.",
+              "<strong>Templates</strong> — complete pages you can copy and ship."
+            ]),
+            H("Installation"),
+            P("Add the Pro files after the Onyx core files."),
+            CODE("html", `<link rel="stylesheet" href="onyx.css">
+<link rel="stylesheet" href="onyx-pro.css">
+
+<script src="onyx.js"></script>
+<script src="onyx-pro.js"></script>`, "index.html"),
+            H("Templates"),
+            { type: "cards", items: [
+              ["template-dashboard", "Dashboard", "Analytics overview with charts, orders table and command menu."]
+            ] },
+            NOTE("<b>License.</b> Onyx Pro is covered by a commercial license. You can use it in unlimited projects for yourself or your clients, but you can't resell or redistribute the Pro source files.")
+          ]
+        },
+        {
+          slug: "charts",
+          title: "Charts",
+          lead: "Monochrome SVG charts. Series are told apart by line style and shade instead of color.",
+          blocks: [
+            H("Area"),
+            EX(`<div id="demo-area" style="width:100%"></div>`, "wide", `OnyxPro.chart("#demo-area", {
+  type: "area",
+  height: 220,
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
+  series: [
+    { name: "This year", data: [12, 19, 15, 24, 22, 31, 28, 36] },
+    { name: "Last year", data: [10, 13, 14, 16, 19, 18, 22, 25] }
+  ],
+  format: (v) => v + "k",
+  legend: true
+});`),
+            H("Bar"),
+            EX(`<div id="demo-bar" style="width:100%"></div>`, "wide", `OnyxPro.chart("#demo-bar", {
+  type: "bar",
+  height: 220,
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  series: [
+    { name: "Online", data: [182, 205, 196, 240, 288, 312, 226] },
+    { name: "In-store", data: [96, 110, 104, 120, 164, 230, 190] }
+  ],
+  legend: true
+});`),
+            H("Donut"),
+            EX(`<div id="demo-donut" style="width:240px"></div>`, "", `OnyxPro.chart("#demo-donut", {
+  type: "donut",
+  height: 240,
+  labels: ["Online", "Retail", "Wholesale"],
+  series: [{ name: "Revenue", data: [248, 129, 64] }],
+  format: (v) => "$" + v + "k",
+  centerLabel: "Revenue",
+  legend: true
+});`),
+            H("Sparkline"),
+            EX(`<div id="demo-spark"></div>`, "", `OnyxPro.sparkline("#demo-spark", [4, 6, 5, 8, 7, 11, 10, 14]);`),
+            H("API"),
+            API([
+              ["<code>type</code>", "<code>\"line\"</code>, <code>\"area\"</code>, <code>\"bar\"</code> or <code>\"donut\"</code>."],
+              ["<code>labels</code>", "X-axis labels (or slice names for donut)."],
+              ["<code>series</code>", "<code>[{ name, data: [numbers] }]</code>. Up to 3 for line, 5 for bar."],
+              ["<code>height</code>", "Height in pixels. Width always fills the container."],
+              ["<code>format</code>", "Function that formats values in tooltips."],
+              ["<code>legend</code>", "Show a legend under the chart."],
+              ["<code>centerLabel</code>", "Text under the total in a donut."],
+              ["<code>.update(options)</code>", "Returned method: redraw with new data."]
+            ], ["Option", "Description"])
+          ]
+        },
+        {
+          slug: "data-table",
+          title: "Data table",
+          lead: "A table built from an array of objects, with sorting, search, selection and pagination.",
+          blocks: [
+            H("Example"),
+            EX(`<div id="demo-table" style="width:100%"></div>`, "wide left", `const table = OnyxPro.DataTable("#demo-table", {
+  selectable: true,
+  pageSize: 5,
+  columns: [
+    { key: "name", label: "Name" },
+    { key: "role", label: "Role" },
+    { key: "status", label: "Status",
+      render: (r) => '<span class="oxp-status" data-status="' + r.status + '">' + r.status + '</span>' },
+    { key: "projects", label: "Projects", align: "right" }
+  ],
+  rows: [
+    { name: "Ada Lovelace", role: "Owner", status: "paid", projects: 14 },
+    { name: "Grace Hopper", role: "Editor", status: "pending", projects: 9 },
+    { name: "Alan Turing", role: "Viewer", status: "paid", projects: 3 },
+    { name: "Katherine Johnson", role: "Editor", status: "failed", projects: 11 },
+    { name: "Margaret Hamilton", role: "Owner", status: "paid", projects: 21 },
+    { name: "Radia Perlman", role: "Viewer", status: "paid", projects: 6 },
+    { name: "Barbara Liskov", role: "Editor", status: "pending", projects: 8 }
+  ]
+});`),
+            H("API"),
+            API([
+              ["<code>columns</code>", "<code>[{ key, label, align, sortable, render(row), sortValue(row) }]</code>. Values are escaped unless you provide <code>render</code>."],
+              ["<code>rows</code>", "Array of objects. An <code>id</code> field is used for selection when present."],
+              ["<code>pageSize</code>", "Rows per page. Default 8."],
+              ["<code>selectable</code>", "Adds row checkboxes and a select-all checkbox."],
+              ["<code>searchable</code>, <code>searchPlaceholder</code>", "Show a search box (default on)."],
+              ["<code>actions</code>", "HTML for buttons in the toolbar."],
+              ["<code>onSelect(rows)</code>", "Called when the selection changes."],
+              ["<code>.setRows(rows)</code>, <code>.getSelected()</code>, <code>.clearSelection()</code>", "Returned methods."]
+            ], ["Option", "Description"])
+          ]
+        },
+        {
+          slug: "command-menu",
+          title: "Command menu",
+          lead: "A keyboard-first palette for actions and navigation, with fuzzy search.",
+          blocks: [
+            H("Example"),
+            P("Click the button, or press <code>Ctrl K</code> while this page is open. Try typing <code>dk</code>."),
+            EX(`<button class="ox-btn ox-btn-outline" id="demo-cmd">Open command menu</button>`, "", `const menu = OnyxPro.command({
+  hotkey: false, // the docs already use Ctrl K for search
+  items: [
+    { group: "Actions", label: "Create invoice", shortcut: "N", action: () => Onyx.toast("Invoice created") },
+    { group: "Actions", label: "Toggle dark mode", keywords: "theme", action: () => Onyx.theme.set(Onyx.theme.get() === "dark" ? "light" : "dark") },
+    { group: "Navigate", label: "Dashboard", hint: "Overview" },
+    { group: "Navigate", label: "Settings", keywords: "preferences" }
+  ]
+});
+document.getElementById("demo-cmd").addEventListener("click", menu.open);`),
+            H("API"),
+            API([
+              ["<code>items</code>", "<code>[{ group, label, hint, shortcut, keywords, icon, action(), href }]</code>."],
+              ["<code>placeholder</code>", "Input placeholder text."],
+              ["<code>hotkey</code>", "Bind <code>Ctrl/⌘ K</code> to open and close. Default <code>true</code>."],
+              ["<code>.open()</code>, <code>.close()</code>, <code>.setItems(items)</code>", "Returned methods."]
+            ], ["Option", "Description"])
+          ]
+        },
+        {
+          slug: "stat-card",
+          title: "Stat card",
+          lead: "A key number with its change and a sparkline.",
+          blocks: [
+            H("Example"),
+            EX(`<div class="ox-card oxp-stat" style="width:280px">
+  <div class="oxp-stat-label">Revenue</div>
+  <div class="oxp-stat-value">$48,210</div>
+  <div class="oxp-stat-foot">
+    <span class="oxp-delta" data-trend="up">12.4% <small>vs last month</small></span>
+    <div id="demo-stat-spark"></div>
+  </div>
+</div>`, "", `OnyxPro.sparkline("#demo-stat-spark", [30, 34, 31, 40, 38, 46, 52]);`),
+            H("API"),
+            API([
+              ["<code>.oxp-stat</code>", "Add to an <code>.ox-card</code>."],
+              ["<code>.oxp-stat-label</code>, <code>-value</code>, <code>-foot</code>", "Parts."],
+              ["<code>.oxp-delta[data-trend]</code>", "<code>up</code> or <code>down</code> adds an arrow."]
+            ])
+          ]
+        },
+        {
+          slug: "sheet",
+          title: "Sheet",
+          lead: "A panel that slides in from the side. It's a modal, so it uses the same attributes.",
+          blocks: [
+            H("Example"),
+            EX(`<button class="ox-btn" data-ox-modal-open="demo-sheet">Open sheet</button>
+
+<div class="ox-modal oxp-sheet" id="demo-sheet" role="dialog" aria-modal="true" aria-labelledby="demo-sheet-title" aria-hidden="true">
+  <div class="ox-modal-dialog">
+    <div class="ox-modal-header">
+      <h3 class="ox-modal-title" id="demo-sheet-title">Edit profile</h3>
+      <button class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon" data-ox-modal-close aria-label="Close">✕</button>
+    </div>
+    <div class="ox-modal-body ox-stack">
+      <div class="ox-field"><label class="ox-label" for="sh-name">Name</label><input class="ox-input" id="sh-name" value="Ada Lovelace"></div>
+      <div class="ox-field"><label class="ox-label" for="sh-mail">Email</label><input class="ox-input" id="sh-mail" value="ada@example.com"></div>
+    </div>
+    <div class="ox-modal-footer">
+      <button class="ox-btn ox-btn-outline" data-ox-modal-close>Cancel</button>
+      <button class="ox-btn" data-ox-modal-close data-ox-toast="Profile saved">Save</button>
+    </div>
+  </div>
+</div>`),
+            H("API"),
+            API([
+              ["<code>.ox-modal.oxp-sheet</code>", "Turns a modal into a right-side sheet."],
+              ["<code>.left</code>", "Slide in from the left instead."]
+            ])
+          ]
+        },
+        {
+          slug: "stepper",
+          title: "Stepper",
+          lead: "Shows progress through a multi-step flow.",
+          blocks: [
+            H("Example"),
+            EX(`<ol class="oxp-steps">
+  <li data-state="done"><b>Account</b></li>
+  <li data-state="current"><b>Workspace</b></li>
+  <li><b>Invite team</b></li>
+</ol>`, "block"),
+            H("API"),
+            API([
+              ["<code>.oxp-steps</code>", "On an <code>&lt;ol&gt;</code>. Steps are numbered automatically."],
+              ["<code>data-state</code>", "<code>done</code> or <code>current</code> on an <code>&lt;li&gt;</code>."]
+            ])
+          ]
+        },
+        {
+          slug: "dropzone",
+          title: "Dropzone",
+          lead: "A drag-and-drop file picker that lists the chosen files.",
+          blocks: [
+            H("Example"),
+            EX(`<div>
+  <label class="oxp-dropzone" data-oxp-files="#demo-files">
+    <span><b>Click to upload</b> or drag and drop</span>
+    <span class="ox-subtle" style="font-size:12px">PDF, PNG or JPG up to 10 MB</span>
+    <input type="file" multiple>
+  </label>
+  <ul class="oxp-files" id="demo-files"></ul>
+</div>`, "block"),
+            H("Getting the files"),
+            CODE("js", `document.querySelector(".oxp-dropzone").addEventListener("oxp:files", (e) => {
+  console.log(e.detail.files); // FileList
+});`),
+            H("API"),
+            API([
+              ["<code>.oxp-dropzone</code>", "A <code>&lt;label&gt;</code> containing a file input."],
+              ["<code>data-oxp-files</code>", "Selector of a <code>.oxp-files</code> list to show chosen files."],
+              ["<code>oxp:files</code>", "Event with <code>detail.files</code>."]
+            ])
+          ]
+        },
+        {
+          slug: "template-dashboard",
+          title: "Dashboard template",
+          lead: "A complete analytics dashboard: app shell, stat cards, charts, an orders table, a command menu and a sheet.",
+          blocks: [
+            H("Preview"),
+            NOTE('<b>Included with Pro and Team.</b> Customers get the full template source along with the Pro components.'),
+            H("What's inside"),
+            LIST([
+              "Responsive sidebar layout (<code>.oxp-shell</code>) that becomes a drawer on phones.",
+              "Four stat cards with sparklines.",
+              "Area chart with a 7 / 30 / 90-day range switch, a donut and a grouped bar chart.",
+              "Orders table with search, sort, selection and CSV export of the selected rows.",
+              "<code>Ctrl K</code> command menu and a “New invoice” sheet with a stepper and file upload."
+            ]),
+            H("Using it"),
+            P("Copy <code>pro/templates/dashboard.html</code> into your project, fix the paths to the CSS and JS files, and replace the sample data with your own.")
           ]
         }
       ]

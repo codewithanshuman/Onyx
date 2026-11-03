@@ -1,5 +1,6 @@
 // Opens every page in a real browser and fails on:
-//   - any accessibility violation (axe-core, WCAG 2.1 AA), in light and dark mode
+//   - any accessibility violation (axe-core, WCAG 2.1 AA), in light and dark mode,
+//     including with popups open (date picker, combobox, command menu)
 //   - sideways scrolling at phone, tablet and desktop widths
 //   - a navbar that wraps, or that shows both (or neither) the links and the menu button
 //   - JavaScript errors on the page
@@ -12,7 +13,13 @@ import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const PAGES = ["/", "/components/", "/studio/", "/changelog/", "/docs/#/button", "/docs/#/color", "/docs/#/date-picker"];
+const PAGES = ["/", "/components/", "/studio/", "/changelog/", "/docs/#/button", "/docs/#/color", "/docs/#/date-picker", "/docs/#/combobox", "/docs/#/command-menu"];
+// Popups only exist once opened, so these pages are scanned a second time with one open (and empty, the trickiest state)
+const OPEN = {
+  "/docs/#/date-picker": async (page) => { await page.locator("input.oxp-date-input").first().click(); },
+  "/docs/#/combobox": async (page) => { await page.locator("#cb-one input").click(); await page.keyboard.type("zzzzz"); },
+  "/docs/#/command-menu": async (page) => { await page.click("#demo-cmd"); await page.waitForTimeout(400); await page.keyboard.type("zzzz"); }
+};
 const WIDTHS = [320, 390, 768, 1024, 1440];
 const TYPES = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".mjs": "text/javascript", ".svg": "image/svg+xml", ".png": "image/png", ".json": "application/json" };
 
@@ -54,10 +61,17 @@ for (const url of PAGES) {
     page.on("pageerror", (e) => errors.push(e.message));
     await open(page, url);
     await page.evaluate((t) => document.documentElement.setAttribute("data-theme", t), theme);
-    const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"]).analyze();
+    const axe = () => new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"]).analyze();
+    const { violations } = await axe();
     for (const v of violations) fail(`${url} [${theme}] ${v.impact} ${v.id}: ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" ; ")}`);
+    let openViolations = [];
+    if (OPEN[url]) {
+      await OPEN[url](page);
+      openViolations = (await axe()).violations;
+      for (const v of openViolations) fail(`${url} [${theme}, popup open] ${v.impact} ${v.id}: ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" ; ")}`);
+    }
     for (const e of errors) fail(`${url} [${theme}] JavaScript error: ${e}`);
-    if (!violations.length && !errors.length) console.log(`  ✔ accessibility (${theme})`);
+    if (!violations.length && !openViolations.length && !errors.length) console.log(`  ✔ accessibility (${theme}${OPEN[url] ? ", popup closed and open" : ""})`);
     await context.close();
   }
 

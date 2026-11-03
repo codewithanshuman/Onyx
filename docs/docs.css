@@ -164,6 +164,7 @@ body { margin: 0; }
 
 /* ---------- API table ---------- */
 .d-table-wrap { margin: var(--ox-space-4) 0 var(--ox-space-6); border: 1px solid var(--ox-border); border-radius: var(--ox-radius-lg); overflow-x: auto; }
+.d-table-wrap:focus-visible { outline: 2px solid var(--ox-fg); outline-offset: 2px; }
 .d-table { width: 100%; border-collapse: collapse; font-size: var(--ox-text-sm); }
 .d-table th { padding: 0.6rem 1rem; text-align: left; font-weight: 500; font-size: var(--ox-text-xs); color: var(--ox-fg-subtle); background: var(--ox-bg-subtle); border-bottom: 1px solid var(--ox-border); }
 .d-table td { padding: 0.7rem 1rem; color: var(--ox-fg-muted); border-bottom: 1px solid var(--ox-border); vertical-align: top; }

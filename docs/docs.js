@@ -99,7 +99,8 @@
         return '<div class="d-code-standalone">' + codeBlock(b.src.trim(), b.lang, b.file || b.lang) + "</div>";
       case "table":
         return (
-          '<div class="d-table-wrap"><table class="d-table"><thead><tr>' +
+          // Focusable so keyboard users can scroll it sideways on narrow screens
+          '<div class="d-table-wrap" tabindex="0" role="region" aria-label="Reference table"><table class="d-table"><thead><tr>' +
           b.head.map(function (h) { return "<th>" + h + "</th>"; }).join("") +
           "</tr></thead><tbody>" +
           b.rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>"; }).join("") +

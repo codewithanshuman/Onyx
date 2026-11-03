@@ -455,7 +455,7 @@
       }).filter(Boolean);
       if (q) shown.sort(function (a, b) { return b.score - a.score; });
       sel = 0;
-      if (!shown.length) { list.innerHTML = '<div class="oxp-command-empty">No results for “' + esc(input.value) + "”</div>"; return; }
+      if (!shown.length) { list.innerHTML = '<div class="oxp-command-empty" role="option" aria-disabled="true" aria-selected="false">No results for “' + esc(input.value) + "”</div>"; input.removeAttribute("aria-activedescendant"); return; }
       var html = "", group = null;
       shown.forEach(function (s, i) {
         var g = q ? "Results" : s.item.group || "Commands";
@@ -737,7 +737,9 @@
     var pop = document.createElement("div");
     pop.className = "oxp-popover";
     pop.hidden = true;
+    pop.id = "oxp-dp" + (++uid);
     pop.setAttribute("role", "dialog");
+    input.setAttribute("aria-controls", pop.id);
     pop.setAttribute("aria-label", opts.range ? "Choose dates" : "Choose a date");
     pop.innerHTML = '<div></div><div class="oxp-cal-foot"><button type="button" class="ox-btn ox-btn-ghost ox-btn-sm" data-act="clear">Clear</button><button type="button" class="ox-btn ox-btn-outline ox-btn-sm" data-act="today">Today</button></div>';
     wrap.appendChild(pop);
@@ -871,7 +873,7 @@
         return '<div class="oxp-option" role="option" id="' + id + "-o" + i + '" data-i="' + i + '" aria-selected="' + sel + '"' + (i === active ? " data-active" : "") + ">" +
           '<svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
           "<span>" + s.html + "</span>" + (s.o && s.o.hint ? '<span class="hint">' + esc(s.o.hint) + "</span>" : "") + "</div>";
-      }).join("") : '<div class="oxp-option-empty">' + (opts.creatable ? "Type to add" : "No matches") + "</div>";
+      }).join("") : '<div class="oxp-option-empty" role="option" aria-disabled="true" aria-selected="false">' + (opts.creatable ? "Type to add" : "No matches") + "</div>";
       if (active >= 0) input.setAttribute("aria-activedescendant", id + "-o" + active);
       else input.removeAttribute("aria-activedescendant");
     }

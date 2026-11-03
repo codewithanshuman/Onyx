@@ -1,0 +1,8 @@
+# Private Onyx Pro source and templates must never be uploaded
+pro/
+scripts/
+.claude/
+node_modules/
+.nojekyll
+.env*
+.vercel/

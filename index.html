@@ -18,6 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="src/onyx.css" />
+  <link rel="stylesheet" href="docs/pro-preview/onyx-pro.css" />
   <style>
     body { margin: 0; }
     section { padding: clamp(4rem, 9vw, 7rem) 0; }
@@ -194,6 +195,72 @@
     .foot-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--ox-space-4); margin-top: var(--ox-space-12); padding-top: var(--ox-space-6); border-top: 1px solid var(--ox-border); font-size: var(--ox-text-xs); color: var(--ox-fg-subtle); }
     @media (max-width: 720px) { .foot { grid-template-columns: 1fr 1fr; } .foot > :first-child { grid-column: 1 / -1; } }
 
+    /* Headline: words rise out of a blur, one after another */
+    .split .w { display: inline-block; white-space: nowrap; opacity: 0; transform: translateY(0.35em); filter: blur(10px); animation: word-in 900ms var(--ox-ease) forwards; animation-delay: calc(var(--i) * 80ms + 120ms); }
+    @keyframes word-in { to { opacity: 1; transform: none; filter: blur(0); } }
+    .hero .announce, .hero .ox-lead, .hero-ctas, .hero .install { animation: fade-up 900ms var(--ox-ease) both; }
+    .hero .ox-lead { animation-delay: 450ms; }
+    .hero-ctas { animation-delay: 550ms; }
+    .hero .install { animation-delay: 650ms; }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } }
+
+    /* Spotlight: a soft light and a lit border follow the cursor across cards */
+    .spot { position: relative; isolation: isolate; }
+    .spot::before,
+    .spot::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 300ms var(--ox-ease); }
+    .spot::before {
+      z-index: 1; padding: 1px;
+      background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), var(--ox-fg), transparent 70%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    }
+    .spot::after { z-index: -1; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--ox-fg) 5%, transparent), transparent 70%); }
+    .spot:hover::before { opacity: 0.55; }
+    .spot:hover::after { opacity: 1; }
+
+    /* Marquee: a slow, endless strip of live components */
+    .marquee { position: relative; overflow: hidden; padding: var(--ox-space-10) 0; -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+    .marquee-track { display: flex; gap: var(--ox-space-4); width: max-content; animation: marquee 48s linear infinite; }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    .marquee-item { display: flex; align-items: center; gap: var(--ox-space-3); height: 3.5rem; padding: 0 var(--ox-space-5); background: var(--ox-surface); border: 1px solid var(--ox-border); border-radius: var(--ox-radius-full); white-space: nowrap; font-size: var(--ox-text-sm); }
+    .marquee-item .ox-progress { width: 90px; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    /* Playground */
+    .pg { display: grid; gap: var(--ox-space-6); grid-template-columns: 320px minmax(0, 1fr); align-items: start; }
+    .pg-controls { position: sticky; top: 5rem; display: grid; gap: var(--ox-space-6); padding: var(--ox-space-6); }
+    .pg-control { display: grid; gap: var(--ox-space-3); }
+    .pg-control .ox-label { display: flex; justify-content: space-between; }
+    .pg-control output { font: 400 var(--ox-text-xs) var(--ox-font-mono); color: var(--ox-fg-muted); }
+    .pg-range { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; margin: 8px 0; background: var(--ox-bg-muted); border-radius: 99px; outline: none; }
+    .pg-range::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--ox-fg); border: 3px solid var(--ox-bg); box-shadow: 0 0 0 1px var(--ox-fg); cursor: grab; }
+    .pg-range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--ox-fg); border: 3px solid var(--ox-bg); box-shadow: 0 0 0 1px var(--ox-fg); cursor: grab; }
+    .pg-range:focus-visible { box-shadow: 0 0 0 3px var(--ox-ring); }
+    .pg-inks { display: flex; gap: var(--ox-space-2); }
+    .pg-ink { width: 2rem; height: 2rem; border-radius: 50%; background: var(--ink); border: 2px solid var(--ox-bg); box-shadow: 0 0 0 1px var(--ox-border-strong); cursor: pointer; transition: box-shadow var(--ox-duration); }
+    .pg-ink[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ox-fg); }
+    .pg-stage { padding: var(--ox-space-8); background-color: var(--ox-bg-subtle); background-image: radial-gradient(var(--ox-border) 1px, transparent 1px); background-size: 16px 16px; border: 1px solid var(--ox-border); border-radius: var(--ox-radius-xl); }
+    .pg-preview { color: var(--ox-fg); background: var(--ox-bg); font-family: var(--ox-font-sans); padding: var(--ox-space-6); border-radius: var(--ox-radius-xl); border: 1px solid var(--ox-border); box-shadow: var(--ox-shadow); transition: background 300ms var(--ox-ease), color 300ms var(--ox-ease); }
+    .pg-grid { display: grid; gap: var(--ox-space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pg-grid .ox-card { padding: var(--ox-space-5); }
+    .pg-code { margin-top: var(--ox-space-4); position: relative; }
+    .pg-code .ox-code { padding-right: 5.5rem; }
+    .pg-code .ox-btn { position: absolute; top: var(--ox-space-3); right: var(--ox-space-3); color: #fff; border-color: #333; background: transparent; }
+    @media (max-width: 960px) { .pg { grid-template-columns: minmax(0, 1fr); } .pg-controls { position: static; } }
+    @media (max-width: 640px) { .pg-grid { grid-template-columns: minmax(0, 1fr); } .pg-stage { padding: var(--ox-space-3); } }
+
+    /* Command hint in the navbar */
+    .cmd-hint { display: inline-flex; align-items: center; gap: var(--ox-space-2); height: 2rem; padding: 0 0.35rem 0 0.7rem; font: inherit; font-size: var(--ox-text-xs); color: var(--ox-fg-subtle); background: var(--ox-bg-subtle); border: 1px solid var(--ox-border); border-radius: var(--ox-radius-full); cursor: pointer; margin-right: var(--ox-space-1); }
+    .cmd-hint:hover { color: var(--ox-fg); border-color: var(--ox-border-strong); }
+    .cmd-hint svg { width: 13px; height: 13px; }
+    @media (max-width: 900px) { .cmd-hint span:first-of-type { display: none; } }
+    @media (max-width: 520px) { .cmd-hint .ox-kbd, .nav-gh { display: none; } .cmd-hint { width: 2rem; padding: 0; justify-content: center; } .ox-navbar-inner > .ox-row { flex-wrap: nowrap; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .split .w, .hero .announce, .hero .ox-lead, .hero-ctas, .hero .install { animation: none; opacity: 1; transform: none; filter: none; }
+      .marquee-track { animation: none; }
+    }
+
     /* Scroll reveal */
     .reveal { opacity: 0; transform: translateY(16px); transition: opacity 700ms var(--ox-ease), transform 700ms var(--ox-ease); }
     .reveal.in { opacity: 1; transform: none; }
@@ -221,12 +288,14 @@
       <div class="ox-navbar-links">
         <a href="#components">Components</a>
         <a href="docs/">Docs</a>
+        <a href="#playground">Playground</a>
         <a href="#developers">Developers</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
       </div>
       <div class="ox-row" style="gap:var(--ox-space-1)">
-        <a href="https://github.com/codewithanshuman/Onyx" class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon" aria-label="GitHub" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg></a>
+        <button class="cmd-hint" id="cmd-open" aria-label="Open command menu"><svg><use href="#i-search"/></svg><span>Jump to…</span><span class="ox-kbd">Ctrl K</span></button>
+        <a href="https://github.com/codewithanshuman/Onyx" class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon nav-gh" aria-label="GitHub" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg></a>
         <button class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon" data-ox-theme-toggle aria-label="Toggle theme">
           <svg class="icon-moon"><use href="#i-moon"/></svg><svg class="icon-sun"><use href="#i-sun"/></svg>
         </button>
@@ -242,7 +311,7 @@
         <span class="ox-badge ox-badge-solid">New</span>
         <span>Onyx 1.0 — 40+ components, one stylesheet</span>
       </a>
-      <h1 class="ox-display">The interface, in black&nbsp;&amp;&nbsp;white.</h1>
+      <h1 class="ox-display split" aria-label="The interface, in black &amp; white.">The interface, in black&nbsp;&amp;&nbsp;white.</h1>
       <p class="ox-lead">Onyx is a component library for designers who believe restraint is a feature. Two colors, perfect type, and every detail considered.</p>
       <div class="ox-row hero-ctas">
         <a href="#pricing" class="ox-btn ox-btn-lg ox-btn-pill">Start building free <svg class="ox-arrow"><use href="#i-arrow"/></svg></a>
@@ -314,6 +383,22 @@
       <div><span class="ox-eyebrow">02</span><h3>Accessible by default</h3><p>Focus management, keyboard navigation and maximum contrast.</p></div>
       <div><span class="ox-eyebrow">03</span><h3>Light &amp; dark, natively</h3><p>Follows the system, flips on demand, inverts any section with one class.</p></div>
       <div><span class="ox-eyebrow">04</span><h3>Yours to theme</h3><p>Every radius, shadow and spacing step is a CSS variable.</p></div>
+    </div>
+  </div>
+
+  <!-- Marquee: the track is duplicated by script so the loop is seamless -->
+  <div class="marquee" aria-label="A few of the components">
+    <div class="marquee-track" id="marquee">
+      <div class="marquee-item"><button class="ox-btn ox-btn-sm">Primary</button><button class="ox-btn ox-btn-sm ox-btn-outline">Outline</button></div>
+      <div class="marquee-item"><label class="ox-switch"><input type="checkbox" checked /><span class="ox-switch-track"></span>Notifications</label></div>
+      <div class="marquee-item"><span class="ox-badge ox-badge-solid">Solid</span><span class="ox-badge ox-badge-outline">Outline</span><span class="ox-badge ox-badge-dot ox-badge-live">Live</span></div>
+      <div class="marquee-item"><span class="ox-muted">Search</span><span class="ox-kbd">Ctrl</span><span class="ox-kbd">K</span></div>
+      <div class="marquee-item"><div class="ox-avatar-stack"><span class="ox-avatar ox-avatar-sm ox-avatar-solid">AL</span><span class="ox-avatar ox-avatar-sm">GH</span><span class="ox-avatar ox-avatar-sm">AT</span></div>12 members</div>
+      <div class="marquee-item"><span class="ox-muted">Uploading</span><div class="ox-progress"><div class="ox-progress-bar" style="--value:64%"></div></div></div>
+      <div class="marquee-item"><div class="ox-segmented"><button aria-pressed="true">Day</button><button aria-pressed="false">Week</button><button aria-pressed="false">Month</button></div></div>
+      <div class="marquee-item"><label class="ox-checkbox"><input type="checkbox" checked /> Accept terms</label></div>
+      <div class="marquee-item"><div class="ox-spinner" aria-hidden="true"></div>Deploying…</div>
+      <div class="marquee-item"><label class="ox-radio"><input type="radio" name="mq" checked /> Monthly</label><label class="ox-radio"><input type="radio" name="mq" /> Yearly</label></div>
     </div>
   </div>
 
@@ -454,6 +539,94 @@
               <button class="ox-btn ox-btn-sm">Primary</button>
               <button class="ox-btn ox-btn-sm ox-btn-outline">Outline</button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Playground: change the tokens, watch every component follow -->
+  <section id="playground" class="rule">
+    <div class="ox-container">
+      <div class="section-head">
+        <span class="ox-eyebrow">Playground</span>
+        <h2 class="ox-h1">Make it yours<br />in ten seconds.</h2>
+        <p class="ox-lead">Everything in Onyx is a token. Drag a slider and watch every component follow, then copy the CSS into your project.</p>
+      </div>
+
+      <div class="pg">
+        <div class="ox-card pg-controls reveal">
+          <div class="pg-control">
+            <label class="ox-label" for="pg-radius">Corner radius <output id="pg-radius-out">8px</output></label>
+            <input class="pg-range" id="pg-radius" type="range" min="0" max="20" value="8" />
+          </div>
+          <div class="pg-control">
+            <span class="ox-label">Density</span>
+            <div class="ox-segmented" id="pg-density" aria-label="Density" style="width:100%">
+              <button value="0.8" aria-pressed="false" style="flex:1">Compact</button>
+              <button value="1" aria-pressed="true" style="flex:1">Default</button>
+              <button value="1.25" aria-pressed="false" style="flex:1">Roomy</button>
+            </div>
+          </div>
+          <div class="pg-control">
+            <label class="ox-label" for="pg-font">Typeface</label>
+            <select class="ox-select" id="pg-font">
+              <option value="Geist">Geist</option>
+              <option value="Inter">Inter</option>
+              <option value="IBM Plex Sans">IBM Plex Sans</option>
+              <option value="Space Grotesk">Space Grotesk</option>
+              <option value="Instrument Sans">Instrument Sans</option>
+            </select>
+          </div>
+          <div class="pg-control">
+            <span class="ox-label">Ink <output id="pg-ink-out">Pure black</output></span>
+            <div class="pg-inks" id="pg-inks">
+              <button class="pg-ink" style="--ink:#0a0a0a" data-ink="#0a0a0a" data-name="Pure black" aria-pressed="true" aria-label="Pure black"></button>
+              <button class="pg-ink" style="--ink:#1f2328" data-ink="#1f2328" data-name="Graphite" aria-pressed="false" aria-label="Graphite"></button>
+              <button class="pg-ink" style="--ink:#111827" data-ink="#111827" data-name="Midnight" aria-pressed="false" aria-label="Midnight"></button>
+              <button class="pg-ink" style="--ink:#1c1917" data-ink="#1c1917" data-name="Espresso" aria-pressed="false" aria-label="Espresso"></button>
+            </div>
+          </div>
+          <div class="pg-control">
+            <span class="ox-label">Preview mode</span>
+            <div class="ox-segmented" id="pg-mode" aria-label="Preview mode" style="width:100%">
+              <button value="light" aria-pressed="true" style="flex:1">Light</button>
+              <button value="dark" aria-pressed="false" style="flex:1">Dark</button>
+            </div>
+          </div>
+          <button class="ox-btn ox-btn-ghost ox-btn-sm" id="pg-reset">Reset to defaults</button>
+        </div>
+
+        <div class="reveal">
+          <div class="pg-stage">
+            <div class="pg-preview" id="pg-preview" data-theme="light">
+              <div class="ox-row ox-between" style="margin-bottom:var(--ox-space-5)">
+                <div>
+                  <div style="font-weight:600;font-size:var(--ox-text-lg);letter-spacing:-0.02em">Workspace settings</div>
+                  <div class="ox-muted" style="font-size:var(--ox-text-sm)">Changes apply to everyone on your team.</div>
+                </div>
+                <span class="ox-badge ox-badge-dot ox-badge-live">Synced</span>
+              </div>
+              <div class="pg-grid">
+                <div class="ox-card ox-stack">
+                  <div class="ox-field"><label class="ox-label" for="pg-name">Workspace name</label><input class="ox-input" id="pg-name" value="Acme Studio" /></div>
+                  <div class="ox-field"><label class="ox-label" for="pg-plan">Plan</label><select class="ox-select" id="pg-plan"><option>Pro</option><option>Team</option></select></div>
+                  <div class="ox-row"><button class="ox-btn">Save changes</button><button class="ox-btn ox-btn-outline">Cancel</button></div>
+                </div>
+                <div class="ox-card ox-stack">
+                  <label class="ox-switch ox-between" style="display:flex">Email digests<input type="checkbox" checked /><span class="ox-switch-track"></span></label>
+                  <label class="ox-switch ox-between" style="display:flex">Public profile<input type="checkbox" /><span class="ox-switch-track"></span></label>
+                  <div class="ox-row ox-between" style="font-size:var(--ox-text-sm)"><span>Seats used</span><span class="ox-mono ox-muted">7 / 10</span></div>
+                  <div class="ox-progress"><div class="ox-progress-bar" style="--value:70%"></div></div>
+                  <div class="ox-row"><div class="ox-avatar-stack"><span class="ox-avatar ox-avatar-sm ox-avatar-solid">AL</span><span class="ox-avatar ox-avatar-sm">GH</span><span class="ox-avatar ox-avatar-sm">+5</span></div><button class="ox-btn ox-btn-sm ox-btn-pill ox-btn-outline">Invite</button></div>
+                </div>
+              </div>
+              <div class="ox-alert" style="margin-top:var(--ox-space-4)"><span class="ox-alert-icon">i</span><div><strong>Tip</strong>Press Ctrl K anywhere to jump between settings.</div></div>
+            </div>
+          </div>
+          <div class="pg-code">
+            <pre class="ox-code" id="pg-css"></pre>
+            <button class="ox-btn ox-btn-sm" id="pg-copy">Copy CSS</button>
           </div>
         </div>
       </div>
@@ -665,6 +838,7 @@
   </div>
 
   <script src="src/onyx.js"></script>
+  <script src="docs/pro-preview/onyx-pro.js"></script>
   <script>
     // Page-specific demo wiring
     document.getElementById("loading-demo").addEventListener("click", function () {
@@ -692,6 +866,148 @@
       Onyx.toast("You're on the list");
       this.reset();
     });
+
+    // ---- Headline: wrap each word so it can animate in on its own ----
+    document.querySelectorAll(".split").forEach(function (h) {
+      var words = h.textContent.split(" ");
+      h.innerHTML = words.map(function (w, i) {
+        return '<span class="w" aria-hidden="true" style="--i:' + i + '">' + w.replace(/&/g, "&amp;") + "</span>";
+      }).join(" ");
+    });
+
+    // ---- Spotlight on cards: track the pointer only on the card under it ----
+    document.querySelectorAll(".bento > .ox-card, .plan, .shot-grid .ox-card, .shot-col .ox-card, .pg-controls").forEach(function (el) { el.classList.add("spot"); });
+    document.addEventListener("pointermove", function (e) {
+      var card = e.target.closest && e.target.closest(".spot");
+      if (!card) return;
+      var r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", e.clientX - r.left + "px");
+      card.style.setProperty("--my", e.clientY - r.top + "px");
+    }, { passive: true });
+
+    // ---- Marquee: duplicate the items once so translateX(-50%) loops seamlessly ----
+    var track = document.getElementById("marquee");
+    Array.prototype.slice.call(track.children).forEach(function (item) {
+      var copy = item.cloneNode(true);
+      copy.setAttribute("aria-hidden", "true");
+      copy.setAttribute("inert", "");
+      copy.querySelectorAll("input[type=radio]").forEach(function (r) { r.name = r.name + "-copy"; });
+      track.appendChild(copy);
+    });
+
+    // ---- Playground ----
+    var pg = {
+      preview: document.getElementById("pg-preview"),
+      radius: document.getElementById("pg-radius"),
+      font: document.getElementById("pg-font"),
+      css: document.getElementById("pg-css"),
+      state: { radius: 8, density: 1, font: "Geist", ink: "#0a0a0a", inkName: "Pure black", mode: "light" }
+    };
+    var DEFAULTS = JSON.parse(JSON.stringify(pg.state));
+    var SPACES = [1, 2, 3, 4, 5, 6, 8, 10, 12, 16];
+    var loadedFonts = { Geist: true };
+
+    function loadFont(name) {
+      if (loadedFonts[name]) return;
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://fonts.googleapis.com/css2?family=" + name.replace(/ /g, "+") + ":wght@400;500;600;700&display=swap";
+      document.head.appendChild(link);
+      loadedFonts[name] = true;
+    }
+
+    function radii(r) {
+      return { "--ox-radius-sm": Math.max(0, r - 2) + "px", "--ox-radius": r + "px", "--ox-radius-lg": Math.round(r * 1.5) + "px", "--ox-radius-xl": Math.round(r * 2.5) + "px", "--ox-radius-full": r === 0 ? "0px" : "999px" };
+    }
+
+    function tokens() {
+      var s = pg.state, t = radii(s.radius);
+      if (s.density !== 1) SPACES.forEach(function (n) { t["--ox-space-" + n] = +(n * 0.25 * s.density).toFixed(3) + "rem"; });
+      if (s.font !== "Geist") t["--ox-font-sans"] = '"' + s.font + '", system-ui, sans-serif';
+      if (s.ink !== DEFAULTS.ink) {
+        if (s.mode === "light") t["--ox-fg"] = s.ink;
+        else {
+          t["--ox-bg"] = "color-mix(in srgb, " + s.ink + " 55%, #000)";
+          t["--ox-surface"] = s.ink;
+          t["--ox-bg-subtle"] = s.ink;
+          t["--ox-bg-muted"] = "color-mix(in srgb, " + s.ink + ", #fff 8%)";
+        }
+      }
+      return t;
+    }
+
+    var applied = [];
+    function render() {
+      var s = pg.state, t = tokens();
+      applied.forEach(function (k) { pg.preview.style.removeProperty(k); });
+      applied = Object.keys(t);
+      applied.forEach(function (k) { pg.preview.style.setProperty(k, t[k]); });
+      pg.preview.setAttribute("data-theme", s.mode);
+      loadFont(s.font);
+
+      document.getElementById("pg-radius-out").textContent = s.radius + "px";
+      document.getElementById("pg-ink-out").textContent = s.inkName;
+
+      // Show only what differs from Onyx defaults, so the snippet stays short
+      var lines = Object.keys(t).filter(function (k) { return !(k in radii(DEFAULTS.radius)) || t[k] !== radii(DEFAULTS.radius)[k]; });
+      var sel = s.mode === "dark" ? '[data-theme="dark"]' : ":root";
+      var esc = function (v) { return v.replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
+      pg.css.innerHTML = lines.length
+        ? '<span class="c">/* Paste after onyx.css */</span>\n<span class="t">' + sel + "</span> {\n" +
+          lines.map(function (k) { return '  <span class="a">' + k + "</span>: " + '<span class="s">' + esc(t[k]) + "</span>;"; }).join("\n") + "\n}"
+        : '<span class="c">/* These are the Onyx defaults — nothing to override yet. */</span>';
+      pg.text = pg.css.textContent;
+    }
+
+    pg.radius.addEventListener("input", function () { pg.state.radius = +pg.radius.value; render(); });
+    pg.font.addEventListener("change", function () { pg.state.font = pg.font.value; render(); });
+    document.getElementById("pg-density").addEventListener("ox:change", function (e) { pg.state.density = +e.detail.value; render(); });
+    document.getElementById("pg-mode").addEventListener("ox:change", function (e) { pg.state.mode = e.detail.value; render(); });
+    document.getElementById("pg-inks").addEventListener("click", function (e) {
+      var b = e.target.closest(".pg-ink");
+      if (!b) return;
+      document.querySelectorAll(".pg-ink").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      pg.state.ink = b.dataset.ink;
+      pg.state.inkName = b.dataset.name;
+      render();
+    });
+    document.getElementById("pg-copy").addEventListener("click", function () { Onyx.copy(pg.text); });
+    document.getElementById("pg-reset").addEventListener("click", function () {
+      pg.state = JSON.parse(JSON.stringify(DEFAULTS));
+      pg.radius.value = DEFAULTS.radius;
+      pg.font.value = DEFAULTS.font;
+      [["pg-density", "1"], ["pg-mode", "light"]].forEach(function (pair) {
+        document.querySelectorAll("#" + pair[0] + " button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.value === pair[1])); });
+      });
+      document.querySelectorAll(".pg-ink").forEach(function (x) { x.setAttribute("aria-pressed", String(x.dataset.ink === DEFAULTS.ink)); });
+      render();
+    });
+    render();
+
+    // ---- Command menu (Ctrl K) ----
+    if (window.OnyxPro) {
+      var go = function (hash) { return function () { location.hash = hash; }; };
+      var cmd = OnyxPro.command({
+        placeholder: "Jump to a section, component or action…",
+        items: [
+          { group: "Sections", label: "Components", action: go("#components") },
+          { group: "Sections", label: "Playground", keywords: "theme customize tokens", action: go("#playground") },
+          { group: "Sections", label: "Developers", keywords: "code install", action: go("#developers") },
+          { group: "Sections", label: "Pricing", keywords: "plans pro team", action: go("#pricing") },
+          { group: "Sections", label: "FAQ", keywords: "questions", action: go("#faq") },
+          { group: "Docs", label: "Getting started", href: "docs/#/installation" },
+          { group: "Docs", label: "Button", href: "docs/#/button" },
+          { group: "Docs", label: "Modal", href: "docs/#/modal" },
+          { group: "Docs", label: "Charts", hint: "Pro", href: "docs/#/charts" },
+          { group: "Docs", label: "Data table", hint: "Pro", href: "docs/#/data-table" },
+          { group: "Actions", label: "Toggle dark mode", keywords: "theme light", action: function () { Onyx.theme.set(Onyx.theme.get() === "dark" ? "light" : "dark"); } },
+          { group: "Actions", label: "Copy install command", keywords: "npm", action: function () { Onyx.copy("npm i onyx-ui"); } },
+          { group: "Actions", label: "Star on GitHub", href: "https://github.com/codewithanshuman/Onyx" }
+        ]
+      });
+      document.getElementById("cmd-open").addEventListener("click", cmd.open);
+    }
+    if (/Mac|iPhone|iPad/.test(navigator.platform)) document.querySelector("#cmd-open .ox-kbd").textContent = "⌘K";
 
     // Reveal on scroll
     if ("IntersectionObserver" in window) {

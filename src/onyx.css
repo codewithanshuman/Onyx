@@ -11,6 +11,7 @@
    opposite palette (black card on a white page, and back).
    ========================================================= */
 :root,
+[data-theme="light"],
 [data-theme="dark"] .ox-invert {
   --ox-bg: #ffffff;
   --ox-bg-subtle: #fafafa;

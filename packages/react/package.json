@@ -38,7 +38,7 @@
     "url": "git+https://github.com/codewithanshuman/Onyx.git",
     "directory": "packages/react"
   },
-  "homepage": "https://onyx-six-ashy.vercel.app/docs/#/react",
+  "homepage": "https://onyxdesign.vercel.app/docs/#/react",
   "keywords": [
     "react",
     "ui",

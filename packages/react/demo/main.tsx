@@ -102,7 +102,7 @@ function App() {
     <Container style={{ padding: "48px 16px" }}>
       <Row between style={{ marginBottom: 32 }}>
         <div>
-          <h1 className="ox-h1" style={{ margin: 0 }}>@onyx-ui/react</h1>
+          <h1 className="ox-h1" style={{ margin: 0 }}>@onyxdesign/react</h1>
           <p className="ox-muted" style={{ margin: "6px 0 0" }}>Every component on this page is a React component.</p>
         </div>
         <Button variant="outline" onClick={toggle}>{resolved === "dark" ? "Light" : "Dark"} mode</Button>

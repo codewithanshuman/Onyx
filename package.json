@@ -1,5 +1,5 @@
 {
-  "name": "onyx-ui",
+  "name": "@onyxdesign/core",
   "version": "1.0.0",
   "description": "A black & white, zero-dependency UI component library for people who care about the details.",
   "main": "src/onyx.js",
@@ -31,5 +31,8 @@
   "homepage": "https://onyx-six-ashy.vercel.app/",
   "bugs": {
     "url": "https://github.com/codewithanshuman/Onyx/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

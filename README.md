@@ -21,7 +21,7 @@ Onyx is a zero-dependency UI component library for designers who believe restrai
 Or via npm (once published):
 
 ```bash
-npm install onyx-ui
+npm install @onyxdesign/core
 ```
 
 ## React
@@ -29,12 +29,12 @@ npm install onyx-ui
 Onyx is also available as typed React components:
 
 ```bash
-npm install @onyx-ui/react
+npm install @onyxdesign/react
 ```
 
 ```tsx
-import "@onyx-ui/react/styles.css";
-import { Button, Modal, Tabs, useToast } from "@onyx-ui/react";
+import "@onyxdesign/react/styles.css";
+import { Button, Modal, Tabs, useToast } from "@onyxdesign/react";
 ```
 
 See [packages/react](packages/react) for details.

@@ -1,23 +1,23 @@
-# @onyx-ui/react
+# @onyxdesign/react
 
 Onyx's black & white components for React 18 and 19. Typed, accessible, and only ~22 KB.
 
 ## Install
 
 ```bash
-npm install @onyx-ui/react
+npm install @onyxdesign/react
 ```
 
 Import the styles once, at the root of your app:
 
 ```tsx
-import "@onyx-ui/react/styles.css";
+import "@onyxdesign/react/styles.css";
 ```
 
 ## Use
 
 ```tsx
-import { Button, Field, Input, Modal, ToastProvider, useToast } from "@onyx-ui/react";
+import { Button, Field, Input, Modal, ToastProvider, useToast } from "@onyxdesign/react";
 
 function Invite() {
   const toast = useToast();
@@ -59,7 +59,7 @@ Behavior lives in the components, so you don't need `onyx.js`. Modals trap focus
 ## Theme
 
 ```tsx
-import { ThemeProvider, useTheme } from "@onyx-ui/react";
+import { ThemeProvider, useTheme } from "@onyxdesign/react";
 
 function ThemeButton() {
   const { resolved, toggle } = useTheme();

@@ -66,10 +66,10 @@
 </body>
 </html>`, "index.html"),
             H("Via npm"),
-            CODE("bash", `npm install onyx-ui`, "Terminal"),
+            CODE("bash", `npm install @onyxdesign/core`, "Terminal"),
             P("Then import it once at the entry point of your app:"),
-            CODE("js", `import "onyx-ui/src/onyx.css";
-import "onyx-ui/src/onyx.js";`, "main.js"),
+            CODE("js", `import "@onyxdesign/core/src/onyx.css";
+import "@onyxdesign/core/src/onyx.js";`, "main.js"),
             H("Fonts"),
             P("Onyx is designed around <strong>Geist</strong> and <strong>Geist Mono</strong>. They're optional — without them Onyx falls back to the system font."),
             CODE("html", `<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -147,7 +147,7 @@ import "onyx-ui/src/onyx.js";`, "main.js"),
 Onyx.modal.close("my-modal");
 
 Onyx.toast("Saved", { duration: 3000 });
-Onyx.copy("npm i onyx-ui");      // copies and shows a toast
+Onyx.copy("npm i @onyxdesign/core");      // copies and shows a toast
 
 Onyx.theme.set("dark");          // "light" | "dark"
 Onyx.theme.get();                // → "dark"`),
@@ -174,11 +174,11 @@ Onyx.theme.get();                // → "dark"`),
           lead: "Onyx as typed React components. Behavior lives in the components, so there's no script to add.",
           blocks: [
             H("Install"),
-            CODE("bash", `npm install @onyx-ui/react`, "Terminal"),
+            CODE("bash", `npm install @onyxdesign/react`, "Terminal"),
             P("Import the styles once at the root of your app, and add the <code>ox</code> class to <code>&lt;body&gt;</code>."),
-            CODE("js", `import "@onyx-ui/react/styles.css";`, "main.tsx"),
+            CODE("js", `import "@onyxdesign/react/styles.css";`, "main.tsx"),
             H("Example"),
-            CODE("js", `import { Button, Field, Input, Modal, ToastProvider, useToast } from "@onyx-ui/react";
+            CODE("js", `import { Button, Field, Input, Modal, ToastProvider, useToast } from "@onyxdesign/react";
 import { useState } from "react";
 
 function Invite() {
@@ -222,7 +222,7 @@ export default function App() {
               "<code>Switch</code> uses the switch role, and <code>Progress</code> reports its value."
             ]),
             H("Theme"),
-            CODE("js", `import { ThemeProvider, useTheme, Button } from "@onyx-ui/react";
+            CODE("js", `import { ThemeProvider, useTheme, Button } from "@onyxdesign/react";
 
 function ThemeButton() {
   const { resolved, toggle } = useTheme();

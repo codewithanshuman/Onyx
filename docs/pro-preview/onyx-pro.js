@@ -1,4 +1,4 @@
-/*! Onyx Pro v1.0.0 — PREVIEW BUILD for the Onyx documentation only.
+/*! Onyx Pro v1.1.0 — PREVIEW BUILD for the Onyx documentation only.
  *  Not licensed for use in your projects. Get a license from the Onyx pricing page. */
 (function (global) {
   "use strict";
@@ -563,11 +563,740 @@
     }
   });
 
+  /* =========================================================
+     Shared helpers for popovers
+     ========================================================= */
+  function $(el) { return typeof el === "string" ? document.querySelector(el) : el; }
+
+  // Close a popover on outside pointerdown; returns a function that removes the listener
+  function onOutside(root, close) {
+    function handler(e) { if (!root.contains(e.target)) close(); }
+    document.addEventListener("pointerdown", handler, true);
+    return function () { document.removeEventListener("pointerdown", handler, true); };
+  }
+
+  // Open below the anchor, or above it when there isn't room
+  function place(pop, anchor, height) {
+    var r = anchor.getBoundingClientRect();
+    var above = r.bottom + height + 12 > global.innerHeight && r.top > height + 12;
+    pop.style.top = above ? "auto" : "calc(100% + 6px)";
+    pop.style.bottom = above ? "calc(100% + 6px)" : "auto";
+  }
+
+  /* =========================================================
+     Calendar & date picker
+     ========================================================= */
+  var pad2 = function (n) { return (n < 10 ? "0" : "") + n; };
+  function iso(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+  function parseISO(s) {
+    if (!s) return null;
+    if (s instanceof Date) return new Date(s.getFullYear(), s.getMonth(), s.getDate());
+    var p = String(s).split("-");
+    return new Date(+p[0], +p[1] - 1, +p[2]);
+  }
+  function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+  function addMonths(d, n) {
+    var t = new Date(d.getFullYear(), d.getMonth() + n, 1);
+    var last = new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate();
+    return new Date(t.getFullYear(), t.getMonth(), Math.min(d.getDate(), last));
+  }
+
+  function calendar(el, opts) {
+    el = $(el);
+    opts = Object.assign({ range: false, weekStart: 0, locale: undefined, min: null, max: null, disabled: null, onSelect: null }, opts);
+    if (opts.weekStart == null) opts.weekStart = 0; // the date picker passes undefined when not set
+    var min = parseISO(opts.min), max = parseISO(opts.max);
+    var today = parseISO(new Date());
+    var start = null, end = null, hover = null;
+    if (opts.range && Array.isArray(opts.value)) { start = parseISO(opts.value[0]); end = parseISO(opts.value[1]); }
+    else if (!opts.range) start = parseISO(opts.value);
+    var focus = start || today;
+    var id = "oxp-cal" + (++uid);
+
+    el.classList.add("oxp-calendar");
+    el.innerHTML =
+      '<div class="oxp-cal-head">' +
+        '<button type="button" class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon" data-nav="-1" aria-label="Previous month">‹</button>' +
+        '<div class="oxp-cal-title" id="' + id + '-title" aria-live="polite"></div>' +
+        '<button type="button" class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon" data-nav="1" aria-label="Next month">›</button>' +
+      "</div>" +
+      '<div class="oxp-cal-grid" role="grid" aria-labelledby="' + id + '-title"></div>';
+    var grid = el.querySelector(".oxp-cal-grid");
+    var title = el.querySelector(".oxp-cal-title");
+    var dowFmt = new Intl.DateTimeFormat(opts.locale, { weekday: "short" });
+    var longFmt = new Intl.DateTimeFormat(opts.locale, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+
+    function isDisabled(d) {
+      return (min && d < min) || (max && d > max) || (opts.disabled && opts.disabled(d));
+    }
+    function same(a, b) { return a && b && a.getTime() === b.getTime(); }
+
+    function render(focusAfter) {
+      var first = new Date(focus.getFullYear(), focus.getMonth(), 1);
+      var lead = (first.getDay() - opts.weekStart + 7) % 7;
+      var cursor = addDays(first, -lead);
+      title.textContent = new Intl.DateTimeFormat(opts.locale, { month: "long", year: "numeric" }).format(first);
+      var rangeEnd = end || (opts.range && start && hover && hover > start ? hover : null);
+      var html = "";
+      for (var w = 0; w < 7; w++) {
+        var dow = addDays(cursor, w);
+        html += '<div class="oxp-cal-dow" role="columnheader" aria-label="' + esc(new Intl.DateTimeFormat(opts.locale, { weekday: "long" }).format(dow)) + '">' + esc(dowFmt.format(dow).slice(0, 2)) + "</div>";
+      }
+      for (var i = 0; i < 42; i++) {
+        var d = addDays(cursor, i);
+        var selected = same(d, start) || same(d, end);
+        var inRange = opts.range && start && rangeEnd && d > start && d < rangeEnd;
+        html += '<button type="button" role="gridcell" class="oxp-day" data-date="' + iso(d) + '"' +
+          ' tabindex="' + (same(d, focus) ? 0 : -1) + '"' +
+          ' aria-label="' + esc(longFmt.format(d)) + '"' +
+          ' aria-selected="' + selected + '"' +
+          (same(d, today) ? ' aria-current="date"' : "") +
+          (d.getMonth() !== first.getMonth() ? " data-outside" : "") +
+          (inRange ? " data-in-range" : "") +
+          (isDisabled(d) ? " disabled" : "") + ">" + d.getDate() + "</button>";
+      }
+      grid.innerHTML = html;
+      if (focusAfter) grid.querySelector('[tabindex="0"]').focus();
+    }
+
+    function select(d) {
+      if (isDisabled(d)) return;
+      focus = d;
+      if (!opts.range) { start = d; render(true); if (opts.onSelect) opts.onSelect(iso(d)); return; }
+      if (!start || end || d < start) { start = d; end = null; }
+      else { end = d; }
+      render(true);
+      if (opts.onSelect) opts.onSelect(end ? [iso(start), iso(end)] : [iso(start), null]);
+    }
+
+    el.addEventListener("click", function (e) {
+      var nav = e.target.closest("[data-nav]");
+      if (nav) { focus = addMonths(focus, +nav.getAttribute("data-nav")); render(); return; }
+      var day = e.target.closest(".oxp-day");
+      if (day) select(parseISO(day.getAttribute("data-date")));
+    });
+    grid.addEventListener("pointerover", function (e) {
+      if (!opts.range || !start || end) return;
+      var day = e.target.closest(".oxp-day");
+      if (!day) return;
+      hover = parseISO(day.getAttribute("data-date"));
+      grid.querySelectorAll(".oxp-day").forEach(function (b) {
+        var d = parseISO(b.getAttribute("data-date"));
+        b.toggleAttribute("data-in-range", d > start && d < hover);
+      });
+    });
+    grid.addEventListener("keydown", function (e) {
+      var moves = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+      var next = null;
+      if (moves[e.key]) next = addDays(focus, moves[e.key]);
+      else if (e.key === "PageUp") next = addMonths(focus, e.shiftKey ? -12 : -1);
+      else if (e.key === "PageDown") next = addMonths(focus, e.shiftKey ? 12 : 1);
+      else if (e.key === "Home") next = addDays(focus, -((focus.getDay() - opts.weekStart + 7) % 7));
+      else if (e.key === "End") next = addDays(focus, 6 - ((focus.getDay() - opts.weekStart + 7) % 7));
+      else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(focus); return; }
+      if (!next) return;
+      e.preventDefault();
+      focus = next;
+      render(true);
+    });
+
+    render();
+    return {
+      el: el,
+      getValue: function () { return opts.range ? [start && iso(start), end && iso(end)] : start && iso(start); },
+      setValue: function (v) {
+        if (opts.range) { start = parseISO(v && v[0]); end = parseISO(v && v[1]); }
+        else start = parseISO(v);
+        focus = start || today;
+        render();
+      },
+      focus: function () { render(true); }
+    };
+  }
+
+  function datepicker(input, opts) {
+    input = $(input);
+    opts = Object.assign({ range: false, locale: undefined, placeholder: opts && opts.range ? "Pick a date range" : "Pick a date", onChange: null }, opts);
+    var fmt = new Intl.DateTimeFormat(opts.locale, { month: "short", day: "numeric", year: "numeric" });
+    var wrap = document.createElement("span");
+    wrap.className = "oxp-anchor";
+    wrap.style.display = "block";
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+    input.classList.add("oxp-date-input");
+    input.readOnly = true;
+    input.placeholder = input.placeholder || opts.placeholder;
+    input.setAttribute("aria-haspopup", "dialog");
+    input.setAttribute("aria-expanded", "false");
+
+    var pop = document.createElement("div");
+    pop.className = "oxp-popover";
+    pop.hidden = true;
+    pop.setAttribute("role", "dialog");
+    pop.setAttribute("aria-label", opts.range ? "Choose dates" : "Choose a date");
+    pop.innerHTML = '<div></div><div class="oxp-cal-foot"><button type="button" class="ox-btn ox-btn-ghost ox-btn-sm" data-act="clear">Clear</button><button type="button" class="ox-btn ox-btn-outline ox-btn-sm" data-act="today">Today</button></div>';
+    wrap.appendChild(pop);
+    var stopOutside = null;
+
+    function show(value) {
+      if (opts.range) {
+        var a = value && value[0] && parseISO(value[0]), b = value && value[1] && parseISO(value[1]);
+        input.value = a ? fmt.format(a) + " – " + (b ? fmt.format(b) : "…") : "";
+        input.dataset.value = a && b ? value[0] + "/" + value[1] : "";
+      } else {
+        input.value = value ? fmt.format(parseISO(value)) : "";
+        input.dataset.value = value || "";
+      }
+    }
+
+    var cal = calendar(pop.firstChild, {
+      range: opts.range, weekStart: opts.weekStart, locale: opts.locale, min: opts.min, max: opts.max, disabled: opts.disabled, value: opts.value,
+      onSelect: function (v) {
+        show(v);
+        var done = !opts.range || v[1];
+        if (done) {
+          close(true);
+          input.dispatchEvent(new Event("change", { bubbles: true }));
+          if (opts.onChange) opts.onChange(v);
+        }
+      }
+    });
+    show(opts.value);
+
+    function open() {
+      if (!pop.hidden) return;
+      place(pop, input, 360);
+      pop.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      cal.focus();
+      stopOutside = onOutside(wrap, function () { close(false); });
+    }
+    function close(refocus) {
+      if (pop.hidden) return;
+      pop.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      if (stopOutside) stopOutside();
+      if (refocus) input.focus();
+    }
+
+    input.addEventListener("click", open);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") { e.preventDefault(); open(); }
+    });
+    pop.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); }
+    });
+    pop.addEventListener("click", function (e) {
+      var act = e.target.closest("[data-act]");
+      if (!act) return;
+      if (act.getAttribute("data-act") === "clear") {
+        cal.setValue(null); show(null); close(true);
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+        if (opts.onChange) opts.onChange(opts.range ? [null, null] : null);
+      } else {
+        var t = iso(parseISO(new Date()));
+        if (opts.range) { cal.setValue([t, null]); show([t, null]); cal.focus(); }
+        else { cal.setValue(t); show(t); close(true); input.dispatchEvent(new Event("change", { bubbles: true })); if (opts.onChange) opts.onChange(t); }
+      }
+    });
+
+    return { getValue: cal.getValue, setValue: function (v) { cal.setValue(v); show(v); }, open: open, close: close, input: input };
+  }
+
+  /* =========================================================
+     Combobox: searchable select, multi-select and tag input
+     ========================================================= */
+  function combobox(el, opts) {
+    el = $(el);
+    opts = Object.assign({ options: [], multiple: false, creatable: false, placeholder: "Select…", label: "", onChange: null, max: Infinity }, opts);
+    var options = opts.options.map(function (o) { return typeof o === "string" ? { value: o, label: o } : o; });
+    var value = opts.multiple ? (opts.value || []).slice() : (opts.value == null ? null : opts.value);
+    var id = "oxp-cb" + (++uid);
+    var active = -1, shown = [], stopOutside = null;
+
+    el.classList.add("oxp-anchor");
+    el.innerHTML =
+      '<div class="oxp-combo-control">' +
+        '<input type="text" role="combobox" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-controls="' + id + '-list"' +
+          (opts.label ? ' aria-label="' + esc(opts.label) + '"' : "") + ">" +
+      "</div>" +
+      '<svg class="oxp-combo-caret" viewBox="0 0 10 10" aria-hidden="true"><path d="m2 3.5 3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      '<div class="oxp-popover oxp-listbox" id="' + id + '-list" role="listbox"' + (opts.multiple ? ' aria-multiselectable="true"' : "") + " hidden></div>";
+    var control = el.querySelector(".oxp-combo-control");
+    var input = el.querySelector("input");
+    var list = el.querySelector(".oxp-listbox");
+    if (opts.inputId) input.id = opts.inputId;
+
+    function labelOf(v) {
+      var o = options.filter(function (x) { return x.value === v; })[0];
+      return o ? o.label : v;
+    }
+    function isSelected(v) { return opts.multiple ? value.indexOf(v) !== -1 : value === v; }
+
+    function renderTags() {
+      control.querySelectorAll(".oxp-tag").forEach(function (t) { t.remove(); });
+      if (!opts.multiple) {
+        input.placeholder = opts.placeholder;
+        if (document.activeElement !== input) input.value = value == null ? "" : labelOf(value);
+        return;
+      }
+      value.forEach(function (v) {
+        var tag = document.createElement("span");
+        tag.className = "oxp-tag";
+        tag.innerHTML = esc(labelOf(v)) + '<button type="button" aria-label="Remove ' + esc(labelOf(v)) + '" data-remove="' + esc(v) + '">×</button>';
+        control.insertBefore(tag, input);
+      });
+      input.placeholder = value.length ? "" : opts.placeholder;
+    }
+
+    function filter() {
+      var q = input.value.trim().toLowerCase();
+      // In single mode, showing the selected label in the input shouldn't hide the other options
+      if (!opts.multiple && value != null && input.value === labelOf(value)) q = "";
+      shown = options.filter(function (o) { return !q || o.label.toLowerCase().indexOf(q) !== -1; }).map(function (o) {
+        var at = q ? o.label.toLowerCase().indexOf(q) : -1;
+        return { o: o, html: at < 0 ? esc(o.label) : esc(o.label.slice(0, at)) + "<mark>" + esc(o.label.slice(at, at + q.length)) + "</mark>" + esc(o.label.slice(at + q.length)) };
+      });
+      var exact = options.some(function (o) { return o.label.toLowerCase() === q; });
+      if (opts.creatable && q && !exact) shown.push({ create: input.value.trim(), html: "Create “" + esc(input.value.trim()) + "”" });
+      active = shown.length ? Math.max(0, Math.min(active, shown.length - 1)) : -1;
+      if (active < 0 && shown.length) active = 0;
+      list.innerHTML = shown.length ? shown.map(function (s, i) {
+        var sel = s.o ? isSelected(s.o.value) : false;
+        return '<div class="oxp-option" role="option" id="' + id + "-o" + i + '" data-i="' + i + '" aria-selected="' + sel + '"' + (i === active ? " data-active" : "") + ">" +
+          '<svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+          "<span>" + s.html + "</span>" + (s.o && s.o.hint ? '<span class="hint">' + esc(s.o.hint) + "</span>" : "") + "</div>";
+      }).join("") : '<div class="oxp-option-empty">' + (opts.creatable ? "Type to add" : "No matches") + "</div>";
+      if (active >= 0) input.setAttribute("aria-activedescendant", id + "-o" + active);
+      else input.removeAttribute("aria-activedescendant");
+    }
+
+    function open() {
+      if (!list.hidden) return;
+      place(list, control, 260);
+      list.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      filter();
+      stopOutside = onOutside(el, close);
+    }
+    function close() {
+      if (list.hidden) return;
+      list.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+      if (stopOutside) stopOutside();
+      if (opts.multiple) input.value = "";
+      else input.value = value == null ? "" : labelOf(value);
+    }
+
+    function emit() {
+      renderTags();
+      el.dispatchEvent(new CustomEvent("oxp:change", { bubbles: true, detail: { value: opts.multiple ? value.slice() : value } }));
+      if (opts.onChange) opts.onChange(opts.multiple ? value.slice() : value);
+    }
+
+    function choose(i) {
+      var s = shown[i];
+      if (!s) return;
+      var v;
+      if (s.create) {
+        v = s.create;
+        if (!options.some(function (o) { return o.value === v; })) options.push({ value: v, label: v });
+      } else v = s.o.value;
+      if (opts.multiple) {
+        var at = value.indexOf(v);
+        if (at === -1) { if (value.length < opts.max) value.push(v); }
+        else value.splice(at, 1);
+        input.value = "";
+        emit();
+        filter();
+      } else {
+        value = v;
+        emit();
+        close();
+      }
+    }
+
+    function move(d) {
+      if (!shown.length) return;
+      active = (active + d + shown.length) % shown.length;
+      list.querySelectorAll(".oxp-option").forEach(function (o, i) { o.toggleAttribute("data-active", i === active); });
+      var cur = list.querySelector('[data-i="' + active + '"]');
+      cur.scrollIntoView({ block: "nearest" });
+      input.setAttribute("aria-activedescendant", cur.id);
+    }
+
+    control.addEventListener("click", function (e) {
+      var rm = e.target.closest("[data-remove]");
+      if (rm) {
+        value.splice(value.indexOf(rm.getAttribute("data-remove")), 1);
+        emit();
+        if (!list.hidden) filter();
+        input.focus();
+        return;
+      }
+      input.focus();
+      open();
+    });
+    input.addEventListener("focus", function () { if (!opts.multiple && value != null) input.select(); });
+    input.addEventListener("input", function () { open(); active = 0; filter(); });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown") { e.preventDefault(); if (list.hidden) open(); else move(1); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); if (list.hidden) open(); else move(-1); }
+      else if (e.key === "Enter") { if (!list.hidden && active >= 0) { e.preventDefault(); choose(active); } }
+      else if (e.key === "Escape") { if (!list.hidden) { e.preventDefault(); e.stopPropagation(); close(); } }
+      else if (e.key === "Tab") close();
+      else if (e.key === "," && opts.multiple && opts.creatable && input.value.trim()) {
+        e.preventDefault();
+        filter();
+        var match = shown.findIndex(function (s) { return s.create || (s.o && s.o.label.toLowerCase() === input.value.trim().toLowerCase()); });
+        if (match >= 0) choose(match);
+      } else if (e.key === "Backspace" && opts.multiple && !input.value && value.length) {
+        value.pop();
+        emit();
+        if (!list.hidden) filter();
+      }
+    });
+    list.addEventListener("pointerdown", function (e) { e.preventDefault(); }); // keep focus in the input
+    list.addEventListener("click", function (e) {
+      var o = e.target.closest(".oxp-option");
+      if (o) choose(+o.getAttribute("data-i"));
+    });
+
+    renderTags();
+    return {
+      el: el,
+      input: input,
+      getValue: function () { return opts.multiple ? value.slice() : value; },
+      setValue: function (v) { value = opts.multiple ? (v || []).slice() : v; renderTags(); },
+      setOptions: function (o) { options = o.map(function (x) { return typeof x === "string" ? { value: x, label: x } : x; }); if (!list.hidden) filter(); }
+    };
+  }
+
+  /* =========================================================
+     Code input (one-time passcodes)
+     ========================================================= */
+  function otp(el, opts) {
+    el = $(el);
+    opts = Object.assign({ length: 6, separator: 3, label: "Verification code", onComplete: null, numeric: true }, opts);
+    el.classList.add("oxp-otp");
+    el.setAttribute("role", "group");
+    el.setAttribute("aria-label", opts.label);
+    var html = "";
+    for (var i = 0; i < opts.length; i++) {
+      if (opts.separator && i === opts.separator) html += '<span class="oxp-otp-sep" aria-hidden="true"></span>';
+      html += '<input type="text" inputmode="' + (opts.numeric ? "numeric" : "text") + '" maxlength="1" placeholder=" "' +
+        (i === 0 ? ' autocomplete="one-time-code"' : ' autocomplete="off"') +
+        ' aria-label="Character ' + (i + 1) + " of " + opts.length + '">';
+    }
+    el.innerHTML = html;
+    var inputs = Array.prototype.slice.call(el.querySelectorAll("input"));
+    var allowed = opts.numeric ? /\d/ : /[A-Za-z0-9]/;
+
+    function code() { return inputs.map(function (i) { return i.value; }).join(""); }
+    function check() {
+      el.removeAttribute("data-state");
+      var c = code();
+      if (c.length === opts.length) {
+        el.dispatchEvent(new CustomEvent("oxp:complete", { bubbles: true, detail: { code: c } }));
+        if (opts.onComplete) opts.onComplete(c);
+      }
+    }
+    // Spread several characters (paste or SMS autofill) across the boxes starting at index
+    function fill(from, text) {
+      var chars = String(text).split("").filter(function (c) { return allowed.test(c); });
+      if (!chars.length) return false;
+      for (var i = 0; i < chars.length && from + i < inputs.length; i++) inputs[from + i].value = opts.numeric ? chars[i] : chars[i].toUpperCase();
+      inputs[Math.min(from + chars.length, inputs.length - 1)].focus();
+      check();
+      return true;
+    }
+
+    inputs.forEach(function (input, i) {
+      input.addEventListener("input", function () {
+        var v = input.value;
+        input.value = "";
+        if (!fill(i, v)) return;
+      });
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Backspace" && !input.value && i > 0) { e.preventDefault(); inputs[i - 1].value = ""; inputs[i - 1].focus(); el.removeAttribute("data-state"); }
+        else if (e.key === "ArrowLeft" && i > 0) { e.preventDefault(); inputs[i - 1].focus(); }
+        else if (e.key === "ArrowRight" && i < inputs.length - 1) { e.preventDefault(); inputs[i + 1].focus(); }
+      });
+      input.addEventListener("paste", function (e) {
+        e.preventDefault();
+        fill(i, (e.clipboardData || global.clipboardData).getData("text"));
+      });
+      input.addEventListener("focus", function () { input.select(); });
+    });
+
+    return {
+      el: el,
+      getValue: code,
+      clear: function () { inputs.forEach(function (i) { i.value = ""; }); el.removeAttribute("data-state"); inputs[0].focus(); },
+      setState: function (s) {
+        el.removeAttribute("data-state");
+        void el.offsetWidth; // restart the shake animation
+        if (s) el.setAttribute("data-state", s);
+      },
+      focus: function () { inputs[0].focus(); }
+    };
+  }
+
+  /* =========================================================
+     Task board (kanban) with pointer and keyboard dragging
+     ========================================================= */
+  function kanban(el, opts) {
+    el = $(el);
+    opts = Object.assign({ columns: [], renderCard: null, onMove: null }, opts);
+    var cards = {};
+    el.classList.add("oxp-board");
+    el.setAttribute("role", "region");
+    el.setAttribute("aria-label", opts.label || "Task board");
+
+    function cardHTML(c) {
+      var body = opts.renderCard ? opts.renderCard(c) :
+        "<div>" + esc(c.title) + "</div>" +
+        (c.tag || c.assignee ? '<div class="oxp-card-meta">' + (c.tag ? '<span class="ox-badge ox-badge-outline">' + esc(c.tag) + "</span>" : "<span></span>") +
+          (c.assignee ? '<span class="ox-avatar ox-avatar-sm">' + esc(c.assignee) + "</span>" : "") + "</div>" : "");
+      return '<div class="oxp-card" tabindex="0" role="listitem" data-id="' + esc(c.id) + '" aria-roledescription="draggable card" aria-describedby="' + el.id + '-help">' + body + "</div>";
+    }
+
+    if (!el.id) el.id = "oxp-kb" + (++uid);
+    el.innerHTML = opts.columns.map(function (col) {
+      col.cards.forEach(function (c) { cards[c.id] = c; });
+      return '<section class="oxp-col" data-col="' + esc(col.id) + '" aria-label="' + esc(col.title) + '">' +
+        '<div class="oxp-col-head">' + esc(col.title) + "<span>" + col.cards.length + "</span></div>" +
+        '<div class="oxp-col-list" role="list">' + col.cards.map(cardHTML).join("") + "</div></section>";
+    }).join("") +
+      '<p class="ox-sr-only" id="' + el.id + '-help">Press Space to pick up. Use arrow keys to move, Space to drop, Escape to cancel.</p>' +
+      '<div class="ox-sr-only" aria-live="assertive" data-live></div>';
+    var live = el.querySelector("[data-live]");
+
+    function say(t) { live.textContent = t; }
+    function colOf(card) { return card.closest(".oxp-col"); }
+    function titleOf(col) { return col.getAttribute("aria-label"); }
+    function counts() { el.querySelectorAll(".oxp-col").forEach(function (c) { c.querySelector(".oxp-col-head span").textContent = c.querySelectorAll(".oxp-card").length; }); }
+    function positionOf(card) { return Array.prototype.indexOf.call(card.parentNode.querySelectorAll(".oxp-card"), card); }
+    function commit(card, from, fromIndex) {
+      counts();
+      var to = colOf(card), index = positionOf(card);
+      if (to === from && index === fromIndex) return;
+      say(cards[card.dataset.id].title + " moved to " + titleOf(to) + ", position " + (index + 1) + ".");
+      var detail = { card: cards[card.dataset.id], from: from.dataset.col, to: to.dataset.col, index: index };
+      el.dispatchEvent(new CustomEvent("oxp:move", { bubbles: true, detail: detail }));
+      if (opts.onMove) opts.onMove(detail);
+    }
+
+    // ---- Pointer dragging ----
+    var drag = null;
+    el.addEventListener("pointerdown", function (e) {
+      var card = e.target.closest(".oxp-card");
+      if (!card || e.button !== 0) return;
+      drag = { card: card, x: e.clientX, y: e.clientY, started: false, from: colOf(card), fromIndex: positionOf(card), next: card.nextSibling };
+    });
+    document.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      if (!drag.started) {
+        if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) < 6) return;
+        var r = drag.card.getBoundingClientRect();
+        drag.started = true;
+        drag.dx = drag.x - r.left;
+        drag.dy = drag.y - r.top;
+        drag.ghost = drag.card.cloneNode(true);
+        drag.ghost.classList.add("oxp-card-ghost");
+        drag.ghost.style.width = r.width + "px";
+        document.body.appendChild(drag.ghost);
+        drag.ph = document.createElement("div");
+        drag.ph.className = "oxp-card-placeholder";
+        drag.ph.style.height = r.height + "px";
+        drag.card.parentNode.insertBefore(drag.ph, drag.card);
+        drag.card.style.display = "none";
+        document.body.classList.add("oxp-dragging");
+      }
+      drag.ghost.style.left = e.clientX - drag.dx + "px";
+      drag.ghost.style.top = e.clientY - drag.dy + "px";
+      var under = document.elementFromPoint(e.clientX, e.clientY);
+      var col = under && under.closest && under.closest(".oxp-col");
+      el.querySelectorAll(".oxp-col").forEach(function (c) { c.toggleAttribute("data-over", c === col); });
+      if (!col || !el.contains(col)) return;
+      var listEl = col.querySelector(".oxp-col-list");
+      var before = Array.prototype.filter.call(listEl.querySelectorAll(".oxp-card"), function (c) { return c !== drag.card; })
+        .filter(function (c) { var b = c.getBoundingClientRect(); return e.clientY < b.top + b.height / 2; })[0];
+      if (before) listEl.insertBefore(drag.ph, before); else listEl.appendChild(drag.ph);
+    });
+    function endDrag(cancel) {
+      if (!drag) return;
+      var d = drag;
+      drag = null;
+      if (!d.started) return;
+      d.ghost.remove();
+      document.body.classList.remove("oxp-dragging");
+      el.querySelectorAll(".oxp-col").forEach(function (c) { c.removeAttribute("data-over"); });
+      d.card.style.display = "";
+      if (cancel) { d.ph.remove(); return; }
+      d.ph.parentNode.insertBefore(d.card, d.ph);
+      d.ph.remove();
+      commit(d.card, d.from, d.fromIndex);
+    }
+    document.addEventListener("pointerup", function () { endDrag(false); });
+    document.addEventListener("pointercancel", function () { endDrag(true); });
+
+    // ---- Keyboard dragging ----
+    var held = null;
+    el.addEventListener("keydown", function (e) {
+      var card = e.target.closest && e.target.closest(".oxp-card");
+      if (!card) return;
+      if (drag && e.key === "Escape") { endDrag(true); return; }
+      if (!held) {
+        if (e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          held = { card: card, from: colOf(card), fromIndex: positionOf(card), next: card.nextSibling, parent: card.parentNode };
+          card.setAttribute("aria-grabbed", "true");
+          say("Picked up " + cards[card.dataset.id].title + ". Use arrow keys to move, Space to drop, Escape to cancel.");
+        }
+        return;
+      }
+      var listEl = card.parentNode, cols = Array.prototype.slice.call(el.querySelectorAll(".oxp-col"));
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        e.preventDefault();
+        var sib = e.key === "ArrowUp" ? card.previousElementSibling : card.nextElementSibling;
+        if (sib && sib.classList.contains("oxp-card")) listEl.insertBefore(card, e.key === "ArrowUp" ? sib : sib.nextSibling);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        var target = cols[cols.indexOf(colOf(card)) + (e.key === "ArrowLeft" ? -1 : 1)];
+        if (target) {
+          var tl = target.querySelector(".oxp-col-list");
+          var at = tl.querySelectorAll(".oxp-card")[positionOf(card)];
+          tl.insertBefore(card, at || null);
+        }
+      } else if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        card.removeAttribute("aria-grabbed");
+        var h = held; held = null;
+        commit(card, h.from, h.fromIndex);
+        if (colOf(card) === h.from && positionOf(card) === h.fromIndex) say("Dropped " + cards[card.dataset.id].title + " in its original place.");
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        card.removeAttribute("aria-grabbed");
+        held.parent.insertBefore(card, held.next && held.next.parentNode === held.parent ? held.next : null);
+        held = null;
+        say("Move cancelled.");
+      } else return;
+      card.focus();
+      if (held) say(titleOf(colOf(card)) + ", position " + (positionOf(card) + 1) + ".");
+    });
+
+    return {
+      el: el,
+      getColumns: function () {
+        return Array.prototype.map.call(el.querySelectorAll(".oxp-col"), function (c) {
+          return { id: c.dataset.col, cards: Array.prototype.map.call(c.querySelectorAll(".oxp-card"), function (k) { return cards[k.dataset.id]; }) };
+        });
+      }
+    };
+  }
+
+  /* =========================================================
+     Rich toasts: title, description, actions, loading → done
+     ========================================================= */
+  var ICONS = { success: "✓", error: "!", info: "i", loading: "" };
+
+  function richToast(o) {
+    if (typeof o === "string") o = { title: o };
+    var region = document.querySelector(".ox-toast-region");
+    if (!region) {
+      region = document.createElement("div");
+      region.className = "ox-toast-region ox";
+      region.setAttribute("aria-live", "polite");
+      document.body.appendChild(region);
+    }
+    var t = document.createElement("div");
+    t.className = "oxp-toast";
+    region.appendChild(t);
+    var timer = null, remaining = 0, startedAt = 0, current = {};
+
+    function render(next) {
+      current = Object.assign({ variant: "success", duration: 4000 }, next);
+      if (current.variant === "loading") current.duration = Infinity;
+      t.setAttribute("data-variant", current.variant);
+      t.setAttribute("role", current.variant === "error" ? "alert" : "status");
+      t.innerHTML =
+        (current.variant in ICONS ? '<span class="oxp-toast-icon" aria-hidden="true">' + ICONS[current.variant] + "</span>" : "") +
+        '<div class="oxp-toast-body"><div class="oxp-toast-title">' + esc(current.title || "") + "</div>" +
+          (current.description ? '<div class="oxp-toast-desc">' + esc(current.description) + "</div>" : "") +
+          (current.action || current.cancel ? '<div class="oxp-toast-actions">' +
+            (current.action ? '<button type="button" class="ox-btn ox-btn-sm" data-act="action">' + esc(current.action.label) + "</button>" : "") +
+            (current.cancel ? '<button type="button" class="ox-btn ox-btn-ghost ox-btn-sm" data-act="cancel">' + esc(current.cancel.label || "Cancel") + "</button>" : "") +
+          "</div>" : "") +
+        "</div>" +
+        (current.variant === "loading" ? "" : '<button type="button" class="oxp-toast-close" aria-label="Dismiss">×</button>');
+      remaining = current.duration;
+      start();
+    }
+    function start() {
+      clearTimeout(timer);
+      if (remaining === Infinity) return;
+      startedAt = Date.now();
+      timer = setTimeout(dismiss, remaining);
+    }
+    function pause() {
+      if (remaining === Infinity) return;
+      clearTimeout(timer);
+      remaining = Math.max(800, remaining - (Date.now() - startedAt));
+    }
+    function dismiss() {
+      clearTimeout(timer);
+      if (t.hasAttribute("data-leaving")) return;
+      t.setAttribute("data-leaving", "");
+      var gone = function () { t.remove(); };
+      t.addEventListener("animationend", gone);
+      setTimeout(gone, 400); // in case animations are paused (hidden tab)
+    }
+
+    // Hovering or focusing a toast pauses its timer, so people can read it and reach the buttons
+    t.addEventListener("pointerenter", pause);
+    t.addEventListener("pointerleave", start);
+    t.addEventListener("focusin", pause);
+    t.addEventListener("focusout", start);
+    t.addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      var act = b.getAttribute("data-act");
+      if (act === "action" && current.action.onClick) current.action.onClick();
+      if (act === "cancel" && current.cancel.onClick) current.cancel.onClick();
+      dismiss();
+    });
+
+    render(o);
+    return { update: render, dismiss: dismiss, el: t };
+  }
+
+  // Shows a loading toast that turns into success or error when the promise settles
+  richToast.promise = function (promise, msgs) {
+    var t = richToast({ variant: "loading", title: msgs.loading || "Working…" });
+    var pick = function (m, arg) { return typeof m === "function" ? m(arg) : m; };
+    var asOpts = function (m) { return typeof m === "string" ? { title: m } : m; };
+    return Promise.resolve(promise).then(function (res) {
+      t.update(Object.assign({ variant: "success" }, asOpts(pick(msgs.success, res))));
+      return res;
+    }, function (err) {
+      t.update(Object.assign({ variant: "error" }, asOpts(pick(msgs.error, err))));
+      throw err;
+    });
+  };
+
   global.OnyxPro = {
-    version: "1.0.0",
+    version: "1.1.0",
     chart: chart,
     sparkline: sparkline,
     DataTable: DataTable,
-    command: command
+    command: command,
+    calendar: calendar,
+    datepicker: datepicker,
+    combobox: combobox,
+    otp: otp,
+    kanban: kanban,
+    toast: richToast
   };
 })(window);

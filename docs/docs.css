@@ -111,7 +111,10 @@ body { margin: 0; }
 .d-article a:not(.ox-btn):hover { text-decoration-color: var(--ox-fg); }
 
 /* ---------- Example block ---------- */
-.d-example { margin: var(--ox-space-4) 0 var(--ox-space-6); border: 1px solid var(--ox-border); border-radius: var(--ox-radius-lg); overflow: hidden; }
+.d-example { margin: var(--ox-space-4) 0 var(--ox-space-6); border: 1px solid var(--ox-border); border-radius: var(--ox-radius-lg); }
+/* No overflow clipping on the frame, so popovers (date picker, combobox) can extend past it */
+.d-example > .d-preview { z-index: 2; border-radius: var(--ox-radius-lg) var(--ox-radius-lg) 0 0; }
+.d-example > .d-code:last-child { overflow: hidden; border-radius: 0 0 var(--ox-radius-lg) var(--ox-radius-lg); }
 .d-preview {
   position: relative;
   display: flex;

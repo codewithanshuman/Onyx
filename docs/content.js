@@ -682,6 +682,9 @@ Onyx.toast("Link copied", { duration: 5000 });`),
               "<strong>Charts</strong> — line, area, bar and donut, with tooltips, drawn in pure SVG.",
               "<strong>Data table</strong> — sorting, search, row selection and pagination from a plain array.",
               "<strong>Command menu</strong> — a <code>Ctrl K</code> palette with fuzzy search.",
+              "<strong>Date picker</strong> — single dates and ranges, with full keyboard support.",
+              "<strong>Combobox</strong> — searchable select, multi-select and tag input in one component.",
+              "<strong>Code input</strong>, <strong>task board</strong> with drag and drop, and <strong>rich toasts</strong> with actions.",
               "<strong>Stat cards</strong>, <strong>sheets</strong>, <strong>steppers</strong> and <strong>file dropzones</strong>.",
               "<strong>App shell</strong> — a responsive sidebar layout for dashboards and admin tools.",
               "<strong>Templates</strong> — complete pages you can copy and ship."
@@ -917,6 +920,202 @@ document.getElementById("demo-cmd").addEventListener("click", menu.open);`),
               ["<code>data-oxp-files</code>", "Selector of a <code>.oxp-files</code> list to show chosen files."],
               ["<code>oxp:files</code>", "Event with <code>detail.files</code>."]
             ])
+          ]
+        },
+        {
+          slug: "date-picker",
+          title: "Date picker",
+          lead: "A calendar for picking a date or a range. Arrow keys move by day and week, Page Up and Page Down by month.",
+          blocks: [
+            H("Single date"),
+            EX(`<div class="ox-field" style="width:260px">
+  <label class="ox-label" for="dp-one">Due date</label>
+  <input class="ox-input" id="dp-one">
+</div>`, "", `OnyxPro.datepicker("#dp-one", {
+  value: "2026-11-14",
+  onChange: (v) => Onyx.toast("Picked " + v)
+});`),
+            H("Date range"),
+            EX(`<div class="ox-field" style="width:300px">
+  <label class="ox-label" for="dp-range">Trip dates</label>
+  <input class="ox-input" id="dp-range">
+</div>`, "", `OnyxPro.datepicker("#dp-range", {
+  range: true,
+  min: "2026-11-01",
+  weekStart: 1 // Monday
+});`),
+            H("Inline calendar"),
+            EX(`<div class="ox-card" id="dp-inline" style="padding:8px"></div>`, "", `OnyxPro.calendar("#dp-inline", {
+  // Weekends are unavailable
+  disabled: (d) => d.getDay() === 0 || d.getDay() === 6
+});`),
+            H("API"),
+            API([
+              ["<code>OnyxPro.datepicker(input, options)</code>", "Turns a text input into a date field with a calendar popover."],
+              ["<code>OnyxPro.calendar(element, options)</code>", "An always-visible calendar."],
+              ["<code>value</code>", "An ISO date like <code>2026-11-14</code>, or <code>[start, end]</code> with <code>range</code>."],
+              ["<code>range</code>", "Pick a start and an end date."],
+              ["<code>min</code>, <code>max</code>, <code>disabled(date)</code>", "Limit which days can be chosen."],
+              ["<code>weekStart</code>", "0 for Sunday (default), 1 for Monday."],
+              ["<code>locale</code>", "Any locale, for example <code>hi-IN</code>. Defaults to the browser's."],
+              ["<code>onChange(value)</code>", "Called with ISO date strings. The input's <code>data-value</code> holds the same."],
+              ["<code>.getValue()</code>, <code>.setValue(v)</code>, <code>.open()</code>, <code>.close()</code>", "Returned methods."]
+            ], ["Option", "Description"])
+          ]
+        },
+        {
+          slug: "combobox",
+          title: "Combobox",
+          lead: "A select you can type into. The same component does searchable select, multi-select and free-form tags.",
+          blocks: [
+            H("Searchable select"),
+            EX(`<div style="width:280px" id="cb-one"></div>`, "", `OnyxPro.combobox("#cb-one", {
+  label: "Country",
+  placeholder: "Choose a country…",
+  options: [
+    { value: "in", label: "India", hint: "+91" },
+    { value: "us", label: "United States", hint: "+1" },
+    { value: "gb", label: "United Kingdom", hint: "+44" },
+    { value: "de", label: "Germany", hint: "+49" },
+    { value: "jp", label: "Japan", hint: "+81" },
+    { value: "br", label: "Brazil", hint: "+55" }
+  ]
+});`),
+            H("Multi-select"),
+            EX(`<div style="width:340px" id="cb-multi"></div>`, "", `OnyxPro.combobox("#cb-multi", {
+  label: "Assignees",
+  multiple: true,
+  placeholder: "Add people…",
+  value: ["ada"],
+  options: [
+    { value: "ada", label: "Ada Lovelace" },
+    { value: "grace", label: "Grace Hopper" },
+    { value: "alan", label: "Alan Turing" },
+    { value: "katherine", label: "Katherine Johnson" }
+  ]
+});`),
+            H("Tag input"),
+            P("With <code>creatable</code>, people can add their own values. Press Enter or comma to add, Backspace to remove the last one."),
+            EX(`<div style="width:340px" id="cb-tags"></div>`, "", `OnyxPro.combobox("#cb-tags", {
+  label: "Tags",
+  multiple: true,
+  creatable: true,
+  placeholder: "Add tags…",
+  value: ["design", "launch"],
+  options: ["design", "launch", "bug", "research", "marketing"]
+});`),
+            H("API"),
+            API([
+              ["<code>options</code>", "Strings, or <code>{ value, label, hint }</code> objects."],
+              ["<code>multiple</code>", "Select several values, shown as removable tags."],
+              ["<code>creatable</code>", "Allow values that aren't in the list."],
+              ["<code>value</code>, <code>placeholder</code>, <code>label</code>, <code>max</code>", "Initial value, placeholder, accessible name and the most tags allowed."],
+              ["<code>onChange(value)</code> / <code>oxp:change</code>", "Called (and fired) when the value changes."],
+              ["<code>.getValue()</code>, <code>.setValue(v)</code>, <code>.setOptions(list)</code>", "Returned methods."]
+            ], ["Option", "Description"])
+          ]
+        },
+        {
+          slug: "code-input",
+          title: "Code input",
+          lead: "Boxes for one-time passcodes. Typing moves forward, Backspace moves back, and pasting or SMS autofill fills every box.",
+          blocks: [
+            H("Example"),
+            P("The demo accepts <code>123456</code>. Anything else shakes."),
+            EX(`<div id="otp-demo"></div>`, "", `const code = OnyxPro.otp("#otp-demo", {
+  length: 6,
+  onComplete: (value) => {
+    if (value === "123456") {
+      code.setState("success");
+      Onyx.toast("Verified");
+    } else {
+      code.setState("error");
+      setTimeout(code.clear, 700);
+    }
+  }
+});`),
+            H("API"),
+            API([
+              ["<code>length</code>", "Number of boxes. Default 6."],
+              ["<code>separator</code>", "Show a dash before this box (default 3). Use 0 for none."],
+              ["<code>numeric</code>", "Digits only (default). Set it to false to allow letters."],
+              ["<code>onComplete(code)</code> / <code>oxp:complete</code>", "Called when every box is filled."],
+              ["<code>.setState(state)</code>", "<code>error</code> shakes, <code>success</code> fills solid, an empty string resets."],
+              ["<code>.getValue()</code>, <code>.clear()</code>, <code>.focus()</code>", "Returned methods."]
+            ], ["Option", "Description"])
+          ]
+        },
+        {
+          slug: "task-board",
+          title: "Task board",
+          lead: "A kanban board with drag and drop that works with a mouse, touch, and the keyboard.",
+          blocks: [
+            H("Example"),
+            P("Drag cards between columns. With the keyboard: focus a card, press Space to pick it up, arrow keys to move, Space to drop."),
+            EX(`<div id="kb-demo" style="width:100%"></div>`, "wide", `OnyxPro.kanban("#kb-demo", {
+  columns: [
+    { id: "todo", title: "To do", cards: [
+      { id: "1", title: "Write launch post", tag: "Marketing", assignee: "AL" },
+      { id: "2", title: "Fix date picker focus", tag: "Bug", assignee: "GH" }
+    ]},
+    { id: "doing", title: "In progress", cards: [
+      { id: "3", title: "Pricing page copy", tag: "Design", assignee: "KJ" }
+    ]},
+    { id: "done", title: "Done", cards: [
+      { id: "4", title: "Set up analytics", tag: "Ops", assignee: "AT" }
+    ]}
+  ],
+  onMove: ({ card, to }) => Onyx.toast(card.title + " → " + to)
+});`),
+            H("API"),
+            API([
+              ["<code>columns</code>", "<code>[{ id, title, cards: [{ id, title, tag, assignee }] }]</code>."],
+              ["<code>renderCard(card)</code>", "Return your own HTML for a card."],
+              ["<code>onMove({ card, from, to, index })</code> / <code>oxp:move</code>", "Called after a card is dropped somewhere new. Save the change here."],
+              ["<code>.getColumns()</code>", "Current order of every column."]
+            ], ["Option", "Description"])
+          ]
+        },
+        {
+          slug: "rich-toast",
+          title: "Rich toast",
+          lead: "Toasts with a title, a description, actions, and a loading state that turns into success or failure.",
+          blocks: [
+            H("With an action"),
+            EX(`<button class="ox-btn ox-btn-outline" id="rt-undo">Archive project</button>`, "", `document.getElementById("rt-undo").addEventListener("click", () => {
+  OnyxPro.toast({
+    title: "Project archived",
+    description: "Landing v2 moved to the archive.",
+    action: { label: "Undo", onClick: () => Onyx.toast("Restored") }
+  });
+});`),
+            H("Loading to done"),
+            EX(`<button class="ox-btn ox-btn-outline" id="rt-ok">Upload (succeeds)</button>
+<button class="ox-btn ox-btn-outline" id="rt-fail">Upload (fails)</button>`, "", `const upload = (ok) => new Promise((resolve, reject) =>
+  setTimeout(() => (ok ? resolve(3) : reject(new Error("Network"))), 1500));
+
+document.getElementById("rt-ok").addEventListener("click", () =>
+  OnyxPro.toast.promise(upload(true), {
+    loading: "Uploading 3 files…",
+    success: (n) => ({ title: n + " files uploaded", description: "They're ready to share." }),
+    error: "Upload failed"
+  }));
+
+document.getElementById("rt-fail").addEventListener("click", () =>
+  OnyxPro.toast.promise(upload(false), {
+    loading: "Uploading 3 files…",
+    success: "Uploaded",
+    error: (e) => ({ title: "Upload failed", description: e.message + " error. Try again." })
+  }).catch(() => {}));`),
+            H("API"),
+            API([
+              ["<code>OnyxPro.toast(options)</code>", "Shows a toast and returns <code>{ update, dismiss }</code>."],
+              ["<code>title</code>, <code>description</code>", "The text."],
+              ["<code>variant</code>", "<code>success</code> (default), <code>error</code>, <code>info</code>, <code>loading</code>, or <code>plain</code> for no icon."],
+              ["<code>action</code>, <code>cancel</code>", "<code>{ label, onClick }</code> buttons."],
+              ["<code>duration</code>", "Milliseconds before it closes. Hovering pauses it. Loading toasts stay until updated."],
+              ["<code>OnyxPro.toast.promise(promise, messages)</code>", "Loading toast that turns into success or error. <code>loading</code>, <code>success</code> and <code>error</code> can be strings or functions."]
+            ], ["Option", "Description"])
           ]
         },
         {

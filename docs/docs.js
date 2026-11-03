@@ -201,6 +201,8 @@
 
   /* ---------- Copy buttons ---------- */
   main.addEventListener("click", function (e) {
+    var token = e.target.closest("[data-copy-token]");
+    if (token) { Onyx.copy(token.getAttribute("data-copy-token")); return; }
     var btn = e.target.closest(".d-copy");
     if (!btn) return;
     Onyx.copy(btn.getAttribute("data-src"));
@@ -311,4 +313,12 @@
 
   window.addEventListener("hashchange", route);
   route();
+
+  // Foundations pages show live token values, so redraw them when the theme flips
+  if ("MutationObserver" in window) {
+    new MutationObserver(function () {
+      var slug = (location.hash.replace(/^#\/?/, "") || "").split("/")[0];
+      if (bySlug[slug] && bySlug[slug].group === "Foundations") route();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  }
 })();

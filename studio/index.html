@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Theme Studio · Onyx</title>
+  <meta name="description" content="Design your own Onyx theme, check its contrast, and export it as CSS, JSON or Tailwind." />
+  <link rel="canonical" href="https://onyxdesign.vercel.app/studio/" />
+  <meta property="og:title" content="Onyx Theme Studio" />
+  <meta property="og:description" content="Design your own Onyx theme, check its contrast, and export it as CSS, JSON or Tailwind." />
+  <meta property="og:image" content="https://onyxdesign.vercel.app/brand/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/onyx.css?v=1.1.1" />
+  <link rel="stylesheet" href="/assets/site.css?v=2" />
+  <style>
+    .studio { display: grid; gap: var(--ox-space-6); grid-template-columns: 340px minmax(0, 1fr); align-items: start; }
+    .panel { position: sticky; top: 5rem; max-height: calc(100vh - 6rem); overflow-y: auto; padding: var(--ox-space-5); display: grid; gap: var(--ox-space-6); scrollbar-width: thin; }
+    .ctl { display: grid; gap: var(--ox-space-2); }
+    .ctl .ox-label { display: flex; justify-content: space-between; align-items: center; }
+    .ctl output { font: 400 var(--ox-text-xs) var(--ox-font-mono); color: var(--ox-fg-muted); }
+    .presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--ox-space-2); }
+    .preset { display: grid; gap: 6px; padding: var(--ox-space-2); font: 500 var(--ox-text-xs) var(--ox-font-sans); color: var(--ox-fg); text-align: left; background: var(--ox-surface); border: 1px solid var(--ox-border); border-radius: var(--ox-radius); cursor: pointer; transition: border-color var(--ox-duration); }
+    .preset:hover { border-color: var(--ox-border-strong); }
+    .preset[aria-pressed="true"] { border-color: var(--ox-fg); box-shadow: 0 0 0 1px var(--ox-fg); }
+    .preset .sw { display: flex; height: 22px; border-radius: 5px; overflow: hidden; border: 1px solid var(--ox-border); }
+    .preset .sw i { flex: 1; }
+    .ink-row { display: flex; align-items: center; gap: var(--ox-space-2); }
+    .ink-row input[type="color"] { width: 2.5rem; height: 2.5rem; padding: 0; border: 1px solid var(--ox-border); border-radius: var(--ox-radius); background: none; cursor: pointer; }
+    .ink-row .ox-input { font-family: var(--ox-font-mono); text-transform: lowercase; }
+    .contrast { display: grid; gap: var(--ox-space-2); }
+    .contrast div { display: flex; justify-content: space-between; align-items: center; font-size: var(--ox-text-sm); }
+    .contrast b { font-weight: 500; font-variant-numeric: tabular-nums; }
+    .panel-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ox-space-2); }
+
+    .stage { padding: clamp(1rem, 3vw, 2rem); background-color: var(--ox-bg-subtle); background-image: radial-gradient(var(--ox-border) 1px, transparent 1px); background-size: 16px 16px; border: 1px solid var(--ox-border); border-radius: var(--ox-radius-xl); }
+    #preview { color: var(--ox-fg); background: var(--ox-bg); font-family: var(--ox-font-sans); padding: var(--ox-space-6); border: 1px solid var(--ox-border); border-radius: var(--ox-radius-xl); box-shadow: var(--ox-shadow-lg); transition: background 250ms var(--ox-ease), color 250ms var(--ox-ease); }
+    .pv-grid { display: grid; gap: var(--ox-space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pv-grid .ox-card { padding: var(--ox-space-5); }
+    .pv-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--ox-space-3); margin-bottom: var(--ox-space-5); }
+    .pv-stat { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .export { margin-top: var(--ox-space-6); }
+    .export .ox-code { max-height: 360px; margin-top: var(--ox-space-3); }
+    .export-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--ox-space-3); }
+
+    @media (max-width: 980px) { .studio { grid-template-columns: minmax(0, 1fr); } .panel { position: static; max-height: none; } }
+    @media (max-width: 640px) { .pv-grid { grid-template-columns: minmax(0, 1fr); } #preview { padding: var(--ox-space-4); } .presets { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+  <style id="live-theme"></style>
+</head>
+<body class="ox" data-page="studio">
+  <header data-site-header></header>
+
+  <section class="page-hero">
+    <div class="ox-container">
+      <span class="ox-eyebrow">Theme Studio</span>
+      <h1>Make Onyx yours.</h1>
+      <p class="ox-lead">Start from a preset, tune every token, check contrast as you go, and export to CSS, JSON or Tailwind. Share a link to come back to it later.</p>
+    </div>
+  </section>
+
+  <main class="ox-container studio">
+    <aside class="ox-card panel" aria-label="Theme controls">
+      <div class="ctl">
+        <span class="ox-label">Presets</span>
+        <div class="presets" id="presets"></div>
+      </div>
+
+      <div class="ctl">
+        <label class="ox-label" for="ink-hex">Ink <output id="ink-name"></output></label>
+        <div class="ink-row">
+          <input type="color" id="ink" aria-label="Ink color" />
+          <input class="ox-input" id="ink-hex" maxlength="7" spellcheck="false" />
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ox-label">Paper</span>
+        <div class="ox-segmented" id="tone" aria-label="Background tone" style="width:100%">
+          <button value="neutral" style="flex:1">Neutral</button>
+          <button value="warm" style="flex:1">Warm</button>
+          <button value="cool" style="flex:1">Cool</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <label class="ox-label" for="radius">Corner radius <output id="radius-out"></output></label>
+        <input class="ox-range" id="radius" type="range" min="0" max="20" />
+      </div>
+
+      <div class="ctl">
+        <span class="ox-label">Density</span>
+        <div class="ox-segmented" id="density" aria-label="Density" style="width:100%">
+          <button value="0.85" style="flex:1">Compact</button>
+          <button value="1" style="flex:1">Default</button>
+          <button value="1.2" style="flex:1">Roomy</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ox-label">Shadows</span>
+        <div class="ox-segmented" id="shadow" aria-label="Shadows" style="width:100%">
+          <button value="none" style="flex:1">None</button>
+          <button value="soft" style="flex:1">Soft</button>
+          <button value="strong" style="flex:1">Strong</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <label class="ox-label" for="font">Typeface</label>
+        <select class="ox-select" id="font">
+          <option>Geist</option><option>Inter</option><option>IBM Plex Sans</option><option>Space Grotesk</option><option>Instrument Sans</option><option>Manrope</option><option>DM Sans</option>
+        </select>
+      </div>
+
+      <div class="ctl">
+        <span class="ox-label">Preview</span>
+        <div class="ox-segmented" id="mode" aria-label="Preview mode" style="width:100%">
+          <button value="light" style="flex:1">Light</button>
+          <button value="dark" style="flex:1">Dark</button>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <span class="ox-label">Contrast <output id="contrast-mode"></output></span>
+        <div class="contrast" id="contrast" aria-live="polite"></div>
+      </div>
+
+      <div class="panel-actions">
+        <button class="ox-btn ox-btn-outline ox-btn-sm" id="share">Copy share link</button>
+        <button class="ox-btn ox-btn-outline ox-btn-sm" id="try" aria-pressed="false">Try on this page</button>
+        <button class="ox-btn ox-btn-ghost ox-btn-sm" id="random">Surprise me</button>
+        <button class="ox-btn ox-btn-ghost ox-btn-sm" id="reset">Reset</button>
+      </div>
+    </aside>
+
+    <div>
+      <div class="stage">
+        <div id="preview" data-theme="light">
+          <div class="pv-head">
+            <div>
+              <div style="font-size:var(--ox-text-lg);font-weight:600;letter-spacing:-0.02em">Acme Studio</div>
+              <nav class="ox-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="#">Workspace</a></li><li><span aria-current="page">Overview</span></li></ol></nav>
+            </div>
+            <div class="ox-row"><span class="ox-badge ox-badge-dot ox-badge-live">Live</span><button class="ox-btn ox-btn-sm">New project</button></div>
+          </div>
+          <div class="pv-grid">
+            <div class="ox-card ox-stack">
+              <div class="ox-row ox-between"><span class="ox-muted" style="font-size:var(--ox-text-sm)">Revenue</span><span class="ox-badge ox-badge-outline">+12.4%</span></div>
+              <div class="pv-stat">$48,210</div>
+              <div class="ox-progress"><div class="ox-progress-bar" style="--value:68%"></div></div>
+              <div class="ox-chips"><button class="ox-chip" aria-pressed="true">30 days</button><button class="ox-chip" aria-pressed="false">90 days</button></div>
+            </div>
+            <div class="ox-card ox-stack">
+              <div class="ox-field"><label class="ox-label" for="pv-email">Invite by email</label><input class="ox-input" id="pv-email" placeholder="name@company.com" /></div>
+              <div class="ox-row"><button class="ox-btn">Send invite</button><button class="ox-btn ox-btn-outline">Cancel</button></div>
+              <label class="ox-switch"><input type="checkbox" checked /><span class="ox-switch-track"></span>Email notifications</label>
+            </div>
+            <div class="ox-card" style="grid-column:1/-1;padding:0;overflow:hidden">
+              <div class="ox-table-wrap" style="border:0;border-radius:0">
+                <table class="ox-table">
+                  <thead><tr><th>Member</th><th>Role</th><th class="num">Projects</th></tr></thead>
+                  <tbody>
+                    <tr><td><div class="ox-row" style="flex-wrap:nowrap"><span class="ox-avatar ox-avatar-sm ox-avatar-solid" data-status="online">AL</span>Ada Lovelace</div></td><td>Owner</td><td class="num">14</td></tr>
+                    <tr><td><div class="ox-row" style="flex-wrap:nowrap"><span class="ox-avatar ox-avatar-sm" data-status="away">GH</span>Grace Hopper</div></td><td>Editor</td><td class="num">9</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="ox-alert" style="grid-column:1/-1"><span class="ox-alert-icon">i</span><div><strong>Heads up</strong>Every color here comes from just two choices: ink and paper.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <section class="export" aria-labelledby="export-title">
+        <div class="export-bar">
+          <h2 id="export-title" class="ox-h2" style="margin:0">Export</h2>
+          <div class="ox-row">
+            <div class="ox-segmented" id="format" aria-label="Export format">
+              <button value="css" aria-pressed="true">CSS</button>
+              <button value="json" aria-pressed="false">JSON</button>
+              <button value="tailwind" aria-pressed="false">Tailwind</button>
+            </div>
+            <button class="ox-btn ox-btn-sm" id="copy">Copy</button>
+            <button class="ox-btn ox-btn-sm ox-btn-outline" id="download">Download</button>
+          </div>
+        </div>
+        <pre class="ox-code" id="out" tabindex="0" aria-label="Exported theme code"></pre>
+      </section>
+    </div>
+  </main>
+
+  <footer data-site-footer></footer>
+
+  <script src="/src/onyx.js?v=1.1.1"></script>
+  <script src="/assets/site.js?v=2"></script>
+  <script>
+    // ================= Color math =================
+    function hexToRgb(h) {
+      h = h.replace("#", "");
+      if (h.length === 3) h = h.split("").map(function (c) { return c + c; }).join("");
+      var n = parseInt(h, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+    function rgbToHex(c) { return "#" + c.map(function (v) { return Math.round(v).toString(16).padStart(2, "0"); }).join(""); }
+    // Blend a toward b by t (0..1)
+    function mix(a, b, t) { var x = hexToRgb(a), y = hexToRgb(b); return rgbToHex(x.map(function (v, i) { return v + (y[i] - v) * t; })); }
+    function luminance(hex) {
+      return hexToRgb(hex).map(function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); })
+        .reduce(function (s, v, i) { return s + v * [0.2126, 0.7152, 0.0722][i]; }, 0);
+    }
+    function contrast(a, b) { var l1 = luminance(a), l2 = luminance(b); return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05); }
+    var validHex = function (h) { return /^#[0-9a-f]{6}$/i.test(h); };
+
+    // ================= Theme model =================
+    var PAPER = {
+      neutral: { light: "#ffffff", dark: "#000000" },
+      warm: { light: "#faf8f5", dark: "#0c0a09" },
+      cool: { light: "#f9fafc", dark: "#080b11" }
+    };
+    var SHADOWS = {
+      none: { sm: "none", md: "none", lg: "0 0 0 1px rgba(0,0,0,0.04)" },
+      soft: { sm: "0 1px 2px rgba(0,0,0,0.04)", md: "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px -6px rgba(0,0,0,0.08)", lg: "0 2px 4px rgba(0,0,0,0.04), 0 32px 64px -16px rgba(0,0,0,0.18)" },
+      strong: { sm: "0 1px 3px rgba(0,0,0,0.10)", md: "0 2px 4px rgba(0,0,0,0.08), 0 12px 32px -8px rgba(0,0,0,0.22)", lg: "0 4px 8px rgba(0,0,0,0.08), 0 40px 80px -20px rgba(0,0,0,0.38)" }
+    };
+    var PRESETS = {
+      onyx: { name: "Onyx", ink: "#0a0a0a", tone: "neutral", radius: 8, density: 1, shadow: "soft", font: "Geist" },
+      paper: { name: "Paper", ink: "#1c1917", tone: "warm", radius: 10, density: 1.2, shadow: "none", font: "Instrument Sans" },
+      graphite: { name: "Graphite", ink: "#1f2328", tone: "cool", radius: 6, density: 1, shadow: "soft", font: "Inter" },
+      midnight: { name: "Midnight", ink: "#0f172a", tone: "cool", radius: 12, density: 1, shadow: "strong", font: "Manrope" },
+      brutal: { name: "Brutalist", ink: "#000000", tone: "neutral", radius: 0, density: 0.85, shadow: "none", font: "Space Grotesk" },
+      soft: { name: "Soft", ink: "#27272a", tone: "warm", radius: 16, density: 1.2, shadow: "soft", font: "DM Sans" }
+    };
+    var SPACES = [1, 2, 3, 4, 5, 6, 8, 10, 12, 16];
+    var state = Object.assign({ mode: "light", preset: "onyx" }, PRESETS.onyx);
+
+    function colors(s, mode) {
+      var paper = PAPER[s.tone][mode];
+      // Light: ink on paper. Dark: paper-tinted near-white on a near-black that leans toward the ink.
+      var bg = mode === "light" ? paper : mix(paper, s.ink, 0.25);
+      var fg = mode === "light" ? s.ink : mix("#fafafa", s.ink, 0.06);
+      return {
+        "--ox-bg": bg,
+        "--ox-bg-subtle": mix(bg, fg, 0.02),
+        "--ox-bg-muted": mix(bg, fg, mode === "light" ? 0.045 : 0.07),
+        "--ox-surface": mode === "light" ? (s.tone === "neutral" ? "#ffffff" : mix(bg, "#ffffff", 0.6)) : mix(bg, fg, 0.03),
+        "--ox-border": mix(bg, fg, mode === "light" ? 0.09 : 0.13),
+        "--ox-border-strong": mix(bg, fg, mode === "light" ? 0.17 : 0.22),
+        "--ox-fg": fg,
+        "--ox-fg-muted": mix(fg, bg, 0.42),
+        "--ox-fg-subtle": mix(fg, bg, 0.62),
+        "--ox-inverse": bg
+      };
+    }
+    function shape(s) {
+      var r = s.radius, t = {
+        "--ox-radius-sm": Math.max(0, r - 2) + "px", "--ox-radius": r + "px", "--ox-radius-lg": Math.round(r * 1.5) + "px",
+        "--ox-radius-xl": Math.round(r * 2.5) + "px", "--ox-radius-full": r === 0 ? "0px" : "999px",
+        "--ox-font-sans": '"' + s.font + '", system-ui, sans-serif',
+        "--ox-shadow-sm": SHADOWS[s.shadow].sm, "--ox-shadow": SHADOWS[s.shadow].md, "--ox-shadow-lg": SHADOWS[s.shadow].lg
+      };
+      SPACES.forEach(function (n) { t["--ox-space-" + n] = +(n * 0.25 * s.density).toFixed(3) + "rem"; });
+      return t;
+    }
+
+    // ================= Rendering =================
+    var preview = document.getElementById("preview");
+    var applied = [];
+    var loadedFonts = { Geist: true };
+    function loadFont(name) {
+      if (loadedFonts[name]) return;
+      var l = document.createElement("link");
+      l.rel = "stylesheet";
+      l.href = "https://fonts.googleapis.com/css2?family=" + name.replace(/ /g, "+") + ":wght@400;500;600;700&display=swap";
+      document.head.appendChild(l);
+      loadedFonts[name] = true;
+    }
+
+    function badge(ratio, min) {
+      var level = ratio >= 7 ? "AAA" : ratio >= min ? "AA" : "Fail";
+      var cls = level === "Fail" ? "ox-badge ox-badge-outline" : level === "AAA" ? "ox-badge ox-badge-solid" : "ox-badge";
+      return '<span class="' + cls + '">' + level + "</span>";
+    }
+
+    function render() {
+      var tokens = Object.assign({}, colors(state, state.mode), shape(state));
+      applied.forEach(function (k) { preview.style.removeProperty(k); });
+      applied = Object.keys(tokens);
+      applied.forEach(function (k) { preview.style.setProperty(k, tokens[k]); });
+      preview.setAttribute("data-theme", state.mode);
+      loadFont(state.font);
+
+      // Controls reflect state
+      document.getElementById("ink").value = state.ink;
+      document.getElementById("ink-hex").value = state.ink;
+      document.getElementById("ink-name").textContent = PRESETS[state.preset] ? PRESETS[state.preset].name : "Custom";
+      document.getElementById("radius").value = state.radius;
+      document.getElementById("radius-out").textContent = state.radius + "px";
+      document.getElementById("font").value = state.font;
+      [["tone", state.tone], ["density", String(state.density)], ["shadow", state.shadow], ["mode", state.mode]].forEach(function (p) {
+        document.querySelectorAll("#" + p[0] + " button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.value === p[1])); });
+      });
+      document.querySelectorAll(".preset").forEach(function (b) { b.setAttribute("aria-pressed", String(b.value === state.preset)); });
+      Onyx.init(document);
+
+      // Contrast for the colors in the current preview mode
+      var c = colors(state, state.mode);
+      var rows = [
+        ["Text on background", contrast(c["--ox-fg"], c["--ox-bg"]), 4.5],
+        ["Muted text", contrast(c["--ox-fg-muted"], c["--ox-bg"]), 4.5],
+        ["Button label", contrast(c["--ox-inverse"], c["--ox-fg"]), 4.5],
+        ["Borders", contrast(c["--ox-border-strong"], c["--ox-bg"]), 1.5]
+      ];
+      document.getElementById("contrast-mode").textContent = state.mode;
+      document.getElementById("contrast").innerHTML = rows.map(function (r) {
+        return "<div><span>" + r[0] + '</span><span class="ox-row" style="gap:6px"><b>' + r[1].toFixed(2) + ":1</b>" + (r[2] < 3 ? '<span class="ox-badge ox-badge-outline">' + (r[1] >= r[2] ? "Visible" : "Faint") + "</span>" : badge(r[1], r[2])) + "</span></div>";
+      }).join("");
+
+      renderExport();
+      if (trying) applyToPage();
+      writeHash();
+    }
+
+    // ================= Export =================
+    var format = "css";
+    function block(sel, obj, indent) {
+      indent = indent || "";
+      return indent + sel + " {\n" + Object.keys(obj).map(function (k) { return indent + "  " + k + ": " + obj[k] + ";"; }).join("\n") + "\n" + indent + "}";
+    }
+    function exportText() {
+      var light = colors(state, "light"), dark = colors(state, "dark"), shp = shape(state);
+      if (format === "css") {
+        return "/* Onyx theme: " + themeName() + ". Paste after onyx.css. */\n" +
+          block(":root", Object.assign({}, light, shp)) + "\n\n" +
+          block('[data-theme="dark"]', dark) + "\n\n" +
+          "@media (prefers-color-scheme: dark) {\n" + block(':root:not([data-theme="light"])', dark, "  ") + "\n}\n";
+      }
+      if (format === "json") {
+        var strip = function (o) { var r = {}; Object.keys(o).forEach(function (k) { r[k.replace("--ox-", "")] = o[k]; }); return r; };
+        return JSON.stringify({ name: themeName(), color: { light: strip(light), dark: strip(dark) }, shape: strip(shp) }, null, 2);
+      }
+      var colorsTw = {};
+      Object.keys(light).forEach(function (k) { colorsTw[k.replace("--ox-", "")] = "var(" + k + ")"; });
+      return "// tailwind.config.js — Onyx theme: " + themeName() + "\n" +
+        "// Include the CSS export too: it defines the variables these point to.\n" +
+        "module.exports = {\n  darkMode: [\"selector\", '[data-theme=\"dark\"]'],\n  theme: {\n    extend: {\n" +
+        "      colors: " + JSON.stringify(colorsTw, null, 2).replace(/\n/g, "\n      ") + ",\n" +
+        "      borderRadius: { sm: \"var(--ox-radius-sm)\", DEFAULT: \"var(--ox-radius)\", lg: \"var(--ox-radius-lg)\", xl: \"var(--ox-radius-xl)\" },\n" +
+        "      fontFamily: { sans: [\"" + state.font + "\", \"system-ui\", \"sans-serif\"] },\n" +
+        "      boxShadow: { sm: \"var(--ox-shadow-sm)\", DEFAULT: \"var(--ox-shadow)\", lg: \"var(--ox-shadow-lg)\" }\n" +
+        "    }\n  }\n};\n";
+    }
+    function themeName() { return PRESETS[state.preset] ? PRESETS[state.preset].name : "Custom (" + state.ink + ")"; }
+    function renderExport() { document.getElementById("out").textContent = exportText(); }
+
+    // ================= Share links: the whole theme lives in the URL hash =================
+    var KEYS = ["ink", "tone", "radius", "density", "shadow", "font", "mode"];
+    function writeHash() {
+      var p = new URLSearchParams();
+      KEYS.forEach(function (k) { p.set(k, state[k]); });
+      history.replaceState(null, "", "#" + p.toString());
+    }
+    function readHash() {
+      var p = new URLSearchParams(location.hash.slice(1));
+      if (!p.get("ink")) return false;
+      var next = {
+        ink: validHex(p.get("ink")) ? p.get("ink").toLowerCase() : state.ink,
+        tone: PAPER[p.get("tone")] ? p.get("tone") : state.tone,
+        radius: Math.max(0, Math.min(20, parseInt(p.get("radius"), 10) || 0)),
+        density: [0.85, 1, 1.2].indexOf(+p.get("density")) > -1 ? +p.get("density") : 1,
+        shadow: SHADOWS[p.get("shadow")] ? p.get("shadow") : "soft",
+        font: Array.prototype.some.call(document.getElementById("font").options, function (o) { return o.value === p.get("font"); }) ? p.get("font") : "Geist",
+        mode: p.get("mode") === "dark" ? "dark" : "light"
+      };
+      Object.assign(state, next);
+      state.preset = matchPreset();
+      return true;
+    }
+    function matchPreset() {
+      return Object.keys(PRESETS).filter(function (id) {
+        var p = PRESETS[id];
+        return ["ink", "tone", "radius", "density", "shadow", "font"].every(function (k) { return String(p[k]) === String(state[k]); });
+      })[0] || null;
+    }
+
+    // ================= "Try on this page" =================
+    var trying = false;
+    function applyToPage() {
+      var light = colors(state, "light"), dark = colors(state, "dark"), shp = shape(state);
+      document.getElementById("live-theme").textContent = trying
+        ? block(":root, [data-theme=\"light\"]", Object.assign({}, light, shp)) + "\n" + block('[data-theme="dark"]', dark) +
+          "\n@media (prefers-color-scheme: dark) {" + block(':root:not([data-theme="light"])', dark) + "}"
+        : "";
+    }
+
+    // ================= Wire up controls =================
+    document.getElementById("presets").innerHTML = Object.keys(PRESETS).map(function (id) {
+      var p = PRESETS[id], light = colors(p, "light");
+      return '<button class="preset" value="' + id + '" aria-pressed="false"><span class="sw" aria-hidden="true"><i style="background:' + light["--ox-bg"] + '"></i><i style="background:' + light["--ox-border-strong"] + '"></i><i style="background:' + p.ink + '"></i></span>' + p.name + "</button>";
+    }).join("");
+
+    function set(changes) { Object.assign(state, changes); state.preset = matchPreset(); render(); }
+
+    document.getElementById("presets").addEventListener("click", function (e) {
+      var b = e.target.closest(".preset");
+      if (b) set(Object.assign({}, PRESETS[b.value], { name: undefined }));
+    });
+    document.getElementById("ink").addEventListener("input", function () { set({ ink: this.value }); });
+    document.getElementById("ink-hex").addEventListener("input", function () {
+      var v = this.value.trim();
+      if (v[0] !== "#") v = "#" + v;
+      if (validHex(v)) set({ ink: v.toLowerCase() });
+    });
+    document.getElementById("radius").addEventListener("input", function () { set({ radius: +this.value }); });
+    document.getElementById("font").addEventListener("change", function () { set({ font: this.value }); });
+    document.getElementById("tone").addEventListener("ox:change", function (e) { set({ tone: e.detail.value }); });
+    document.getElementById("density").addEventListener("ox:change", function (e) { set({ density: +e.detail.value }); });
+    document.getElementById("shadow").addEventListener("ox:change", function (e) { set({ shadow: e.detail.value }); });
+    document.getElementById("mode").addEventListener("ox:change", function (e) { set({ mode: e.detail.value }); });
+    document.getElementById("format").addEventListener("ox:change", function (e) { format = e.detail.value; renderExport(); });
+
+    document.getElementById("copy").addEventListener("click", function () { Onyx.copy(exportText()); });
+    document.getElementById("download").addEventListener("click", function () {
+      var ext = { css: "css", json: "json", tailwind: "js" }[format];
+      var name = format === "tailwind" ? "tailwind.config.js" : "onyx-theme." + ext;
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([exportText()], { type: format === "json" ? "application/json" : "text/plain" }));
+      a.download = name;
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      Onyx.toast("Downloaded " + name);
+    });
+    document.getElementById("share").addEventListener("click", function () {
+      if (navigator.clipboard) navigator.clipboard.writeText(location.href).catch(function () {});
+      Onyx.toast("Share link copied");
+    });
+    document.getElementById("try").addEventListener("click", function () {
+      trying = !trying;
+      this.setAttribute("aria-pressed", String(trying));
+      this.textContent = trying ? "Stop trying" : "Try on this page";
+      applyToPage();
+      Onyx.toast(trying ? "Your theme now styles this whole page" : "Back to the Onyx theme");
+    });
+    document.getElementById("reset").addEventListener("click", function () { set(Object.assign({}, PRESETS.onyx, { name: undefined, mode: "light" })); });
+    document.getElementById("random").addEventListener("click", function () {
+      var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
+      var hue = Math.floor(Math.random() * 360);
+      // Dark, slightly tinted inks keep contrast high
+      var ink = "hsl(" + hue + "," + (10 + Math.random() * 30) + "%," + (8 + Math.random() * 10) + "%)";
+      var probe = document.createElement("span"); probe.style.color = ink; document.body.appendChild(probe);
+      var rgb = getComputedStyle(probe).color.match(/\d+/g).map(Number); probe.remove();
+      set({ ink: rgbToHex(rgb), tone: pick(["neutral", "warm", "cool"]), radius: pick([0, 4, 6, 8, 10, 12, 16]), density: pick([0.85, 1, 1.2]), shadow: pick(["none", "soft", "strong"]), font: pick(["Geist", "Inter", "IBM Plex Sans", "Space Grotesk", "Instrument Sans", "Manrope", "DM Sans"]) });
+    });
+
+    if (!readHash()) state.preset = "onyx";
+    render();
+  </script>
+</body>
+</html>

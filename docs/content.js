@@ -237,6 +237,113 @@ function ThemeButton() {
     },
 
     {
+      group: "Foundations",
+      pages: [
+        {
+          slug: "color",
+          title: "Color",
+          lead: "Ten color tokens, two palettes. Values below are read live from the stylesheet, so switch the theme and they change. Click a swatch to copy it.",
+          blocks: [
+            H("Tokens"),
+            EX(`<div id="fd-colors" class="fd-swatches"></div>`, "wide", `const tokens = [
+  ["bg", "Page background"], ["bg-subtle", "Slightly raised areas"], ["bg-muted", "Hover and pressed fills"],
+  ["surface", "Cards, inputs, menus"], ["border", "Hairlines"], ["border-strong", "Hover borders, dividers"],
+  ["fg", "Text and solid fills"], ["fg-muted", "Secondary text"], ["fg-subtle", "Tertiary text, placeholders"],
+  ["inverse", "Text on solid fills"]
+];
+const root = document.getElementById("fd-colors");
+const css = getComputedStyle(root);
+root.innerHTML = tokens.map(([t, use]) =>
+  '<button class="fd-swatch" data-copy-token="var(--ox-' + t + ')">' +
+    '<span class="fd-chip" style="background:var(--ox-' + t + ')"></span>' +
+    '<b>--ox-' + t + '</b><span>' + css.getPropertyValue("--ox-" + t).trim() + '</span><small>' + use + '</small>' +
+  '</button>').join("");`),
+            H("Inverting"),
+            P("Add <code>.ox-invert</code> to any element and these tokens flip to the other palette inside it."),
+            NOTE("<b>Want color?</b> Change <code>--ox-fg</code> to tint every button, link and focus ring at once, or build a full theme in the <a href=\"/studio/\">Theme Studio</a>.")
+          ]
+        },
+        {
+          slug: "typography-scale",
+          title: "Type scale",
+          lead: "Eight text sizes on a calm scale, set in Geist and Geist Mono.",
+          blocks: [
+            H("Scale"),
+            EX(`<div id="fd-type" class="fd-list"></div>`, "wide", `const sizes = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl"];
+const root = document.getElementById("fd-type");
+const css = getComputedStyle(root);
+root.innerHTML = sizes.map(s => {
+  const v = css.getPropertyValue("--ox-text-" + s).trim();
+  return '<button class="fd-row" data-copy-token="var(--ox-text-' + s + ')"><code>--ox-text-' + s + '</code><span class="fd-meta">' + v + ' · ' + Math.round(parseFloat(v) * 16) + 'px</span>' +
+    '<span style="font-size:var(--ox-text-' + s + ');letter-spacing:-0.02em;font-weight:500">The quick brown fox</span></button>';
+}).join("");`),
+            H("Families"),
+            API([
+              ["<code>--ox-font-sans</code>", "Geist, falling back to the system font. All interface text."],
+              ["<code>--ox-font-mono</code>", "Geist Mono. Code, keyboard keys, numbers in tables."]
+            ], ["Token", "Use"])
+          ]
+        },
+        {
+          slug: "spacing",
+          title: "Spacing",
+          lead: "A 4px grid. Every gap and padding in Onyx is one of these steps.",
+          blocks: [
+            H("Scale"),
+            EX(`<div id="fd-space" class="fd-list"></div>`, "wide", `const steps = [1, 2, 3, 4, 5, 6, 8, 10, 12, 16];
+const root = document.getElementById("fd-space");
+const css = getComputedStyle(root);
+root.innerHTML = steps.map(n => {
+  const v = css.getPropertyValue("--ox-space-" + n).trim();
+  return '<button class="fd-row" data-copy-token="var(--ox-space-' + n + ')"><code>--ox-space-' + n + '</code><span class="fd-meta">' + v + ' · ' + Math.round(parseFloat(v) * 16) + 'px</span>' +
+    '<span class="fd-bar" style="width:var(--ox-space-' + n + ')"></span></button>';
+}).join("");`)
+          ]
+        },
+        {
+          slug: "radius-elevation",
+          title: "Radius & elevation",
+          lead: "Four corner radii and three shadows. Together they set how soft or crisp Onyx feels.",
+          blocks: [
+            H("Radius"),
+            EX(`<div id="fd-radius" class="fd-tiles"></div>`, "wide", `const r = [["sm", "Small buttons, menu items"], ["", "Buttons, inputs"], ["lg", "Cards, alerts"], ["xl", "Modals, large panels"], ["full", "Pills, avatars"]];
+const root = document.getElementById("fd-radius");
+const css = getComputedStyle(root);
+root.innerHTML = r.map(([k, use]) => {
+  const name = "--ox-radius" + (k ? "-" + k : "");
+  return '<button class="fd-tile" data-copy-token="var(' + name + ')"><span class="fd-shape" style="border-radius:var(' + name + ')"></span><b>' + name + '</b><span>' + css.getPropertyValue(name).trim() + '</span><small>' + use + '</small></button>';
+}).join("");`),
+            H("Elevation"),
+            EX(`<div id="fd-shadow" class="fd-tiles"></div>`, "wide", `const s = [["sm", "Resting cards"], ["", "Hover, dropdowns"], ["lg", "Modals, popovers"]];
+document.getElementById("fd-shadow").innerHTML = s.map(([k, use]) => {
+  const name = "--ox-shadow" + (k ? "-" + k : "");
+  return '<button class="fd-tile" data-copy-token="var(' + name + ')"><span class="fd-shape" style="box-shadow:var(' + name + ');border-color:transparent"></span><b>' + name + '</b><small>' + use + '</small></button>';
+}).join("");`)
+          ]
+        },
+        {
+          slug: "motion",
+          title: "Motion",
+          lead: "One easing curve and one base duration keep every transition consistent. Motion turns off for people who ask for reduced motion.",
+          blocks: [
+            H("Try it"),
+            EX(`<div class="fd-motion">
+  <div class="fd-track"><span class="fd-dot" id="fd-dot"></span></div>
+  <button class="ox-btn ox-btn-outline ox-btn-sm" id="fd-play">Play</button>
+</div>`, "wide", `const dot = document.getElementById("fd-dot");
+document.getElementById("fd-play").addEventListener("click", () => dot.classList.toggle("go"));`),
+            H("Tokens"),
+            API([
+              ["<code>--ox-ease</code>", "<code>cubic-bezier(0.2, 0.8, 0.2, 1)</code>. Starts quick, settles gently."],
+              ["<code>--ox-duration</code>", "160ms. Hovers and small state changes. Larger movements use 220–360ms."],
+              ["<code>prefers-reduced-motion</code>", "Onyx shortens every animation to almost nothing when this is on."]
+            ], ["Token", "Value"])
+          ]
+        }
+      ]
+    },
+
+    {
       group: "Components",
       pages: [
         {

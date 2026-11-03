@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Components · Onyx</title>
+  <meta name="description" content="Every Onyx component in one place — live, searchable, and ready to copy." />
+  <link rel="canonical" href="https://onyxdesign.vercel.app/components/" />
+  <meta property="og:title" content="Onyx Components" />
+  <meta property="og:description" content="Every Onyx component in one place — live, searchable, and ready to copy." />
+  <meta property="og:image" content="https://onyxdesign.vercel.app/brand/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/onyx.css?v=1.1.1" />
+  <link rel="stylesheet" href="/docs/pro-preview/onyx-pro.css?v=1.1.1" />
+  <link rel="stylesheet" href="/assets/site.css?v=2" />
+  <style>
+    .toolbar { position: sticky; top: 3.75rem; z-index: 50; display: grid; gap: var(--ox-space-3); padding: var(--ox-space-4) 0; background: color-mix(in srgb, var(--ox-bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--ox-border); }
+    .toolbar { grid-template-columns: minmax(0, 1fr); }
+    .toolbar-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ox-space-3); min-width: 0; }
+    .toolbar .ox-chips { flex: 1 1 0; min-width: 0; }
+    .toolbar .ox-input-group { flex: 1 1 260px; }
+    .toolbar .ox-input-group .ox-input { height: 2.75rem; border-radius: var(--ox-radius-full); padding-left: 2.5rem; }
+    .toolbar .ox-input-group .ox-input-icon { left: 1rem; }
+    .toolbar .ox-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+    .count { font-size: var(--ox-text-sm); color: var(--ox-fg-muted); white-space: nowrap; }
+    .grid { display: grid; gap: var(--ox-space-4); grid-template-columns: repeat(3, minmax(0, 1fr)); padding-top: var(--ox-space-6); }
+    .item { display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+    .item[hidden] { display: none; }
+    .item.wide { grid-column: span 2; }
+    .item-preview {
+      position: relative; display: grid; place-items: center; min-height: 220px; padding: var(--ox-space-6); overflow: hidden;
+      background-color: var(--ox-bg-subtle);
+      background-image: radial-gradient(var(--ox-border) 1px, transparent 1px); background-size: 16px 16px;
+      border-bottom: 1px solid var(--ox-border);
+    }
+    .item-preview > .stage { width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--ox-space-3); }
+    .item-preview > .stage.block > * { width: 100%; max-width: 360px; }
+    .item-preview > .stage.wide > * { width: 100%; }
+    .item-preview .placeholder { width: 60%; height: 12px; }
+    .item-body { display: flex; flex-direction: column; gap: var(--ox-space-2); padding: var(--ox-space-5); flex: 1; }
+    .item-title { display: flex; align-items: center; justify-content: space-between; gap: var(--ox-space-3); }
+    .item-title h2 { margin: 0; font-size: var(--ox-text-base); font-weight: 600; letter-spacing: -0.01em; }
+    .item-body p { margin: 0; font-size: var(--ox-text-sm); color: var(--ox-fg-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .item-actions { display: flex; gap: var(--ox-space-2); margin-top: auto; padding-top: var(--ox-space-3); }
+    .item mark { background: none; color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+    .empty-wrap { padding-top: var(--ox-space-6); }
+    @media (max-width: 1080px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 680px) { .grid { grid-template-columns: minmax(0, 1fr); } .item.wide { grid-column: auto; } .toolbar { top: 3.75rem; } }
+    .item { animation: item-in 420ms var(--ox-ease) both; }
+    @keyframes item-in { from { opacity: 0; transform: translateY(8px); } }
+    @media (prefers-reduced-motion: reduce) { .item { animation: none; } }
+  </style>
+</head>
+<body class="ox" data-page="components">
+  <header data-site-header></header>
+
+  <section class="page-hero">
+    <div class="ox-container">
+      <span class="ox-eyebrow">Components</span>
+      <h1>Everything, live.</h1>
+      <p class="ox-lead"><span id="total">All</span> components, working right here. Search, filter, copy the code, or open the docs for the full API.</p>
+    </div>
+  </section>
+
+  <main class="ox-container">
+    <div class="toolbar">
+      <div class="toolbar-row">
+        <div class="ox-input-group">
+          <svg class="ox-input-icon" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></g></svg>
+          <input class="ox-input" id="q" type="search" placeholder="Search components…" aria-label="Search components" aria-controls="grid" autocomplete="off" />
+          <span class="ox-kbd">/</span>
+        </div>
+        <div class="ox-segmented" id="tier" aria-label="Plan">
+          <button value="all" aria-pressed="true">All</button>
+          <button value="free" aria-pressed="false">Free</button>
+          <button value="pro" aria-pressed="false">Pro</button>
+        </div>
+      </div>
+      <div class="toolbar-row">
+        <div class="ox-chips" data-single id="cats" aria-label="Category"></div>
+        <span class="count" id="count" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <div class="empty-wrap" id="empty" hidden>
+      <div class="ox-empty">
+        <span class="ox-empty-icon" aria-hidden="true">⌕</span>
+        <h2 class="ox-empty-title">No components match</h2>
+        <p class="ox-empty-text">Try a different word, or clear the filters.</p>
+        <button class="ox-btn ox-btn-outline ox-btn-pill" id="clear">Clear filters</button>
+      </div>
+    </div>
+  </main>
+
+  <footer data-site-footer></footer>
+
+  <script src="/src/onyx.js?v=1.1.1"></script>
+  <script src="/docs/pro-preview/onyx-pro.js?v=1.1.1"></script>
+  <script src="/docs/content.js"></script>
+  <script src="/assets/site.js?v=2"></script>
+  <script>
+    // ---- Which category each docs page belongs to ----
+    var CATEGORY = {
+      "button": "Actions", "segmented": "Actions", "chips": "Actions",
+      "input": "Forms", "select": "Forms", "checkbox-radio": "Forms", "switch": "Forms", "range": "Forms", "number-stepper": "Forms",
+      "date-picker": "Forms", "combobox": "Forms", "code-input": "Forms", "dropzone": "Forms",
+      "navbar": "Navigation", "tabs": "Navigation", "breadcrumb": "Navigation", "pagination": "Navigation", "accordion": "Navigation", "command-menu": "Navigation", "stepper": "Navigation",
+      "modal": "Overlays", "dropdown": "Overlays", "tooltip": "Overlays", "toast": "Overlays", "sheet": "Overlays", "rich-toast": "Overlays",
+      "alert": "Feedback", "progress": "Feedback", "skeleton-spinner": "Feedback", "banner": "Feedback", "empty-state": "Feedback",
+      "badge": "Data display", "avatar": "Data display", "card": "Data display", "table": "Data display", "timeline": "Data display", "kbd": "Data display", "code": "Data display",
+      "data-table": "Data display", "charts": "Data display", "stat-card": "Data display", "task-board": "Data display",
+      "layout": "Layout", "typography": "Layout"
+    };
+    var CATS = ["All", "Actions", "Forms", "Navigation", "Overlays", "Feedback", "Data display", "Layout"];
+
+    // ---- Build the catalog from the docs content ----
+    var items = [];
+    window.ONYX_DOCS.forEach(function (g) {
+      g.pages.forEach(function (p) {
+        if (!CATEGORY[p.slug]) return;
+        var ex = p.blocks.filter(function (b) { return b.type === "example"; })[0];
+        if (!ex) return;
+        items.push({ slug: p.slug, title: p.title, lead: p.lead, category: CATEGORY[p.slug], pro: !!g.pro, example: ex });
+      });
+    });
+    items.sort(function (a, b) { return a.title.localeCompare(b.title); });
+    document.getElementById("total").textContent = items.length;
+
+    var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); };
+    var grid = document.getElementById("grid");
+    var q = document.getElementById("q");
+    var state = { q: "", cat: "All", tier: "all" };
+
+    // ---- Filters live in the URL, so a filtered view can be shared ----
+    function readURL() {
+      var u = new URLSearchParams(location.search);
+      state.q = u.get("q") || "";
+      state.cat = CATS.indexOf(u.get("cat")) > -1 ? u.get("cat") : "All";
+      state.tier = ["free", "pro"].indexOf(u.get("tier")) > -1 ? u.get("tier") : "all";
+    }
+    function writeURL() {
+      var u = new URLSearchParams();
+      if (state.q) u.set("q", state.q);
+      if (state.cat !== "All") u.set("cat", state.cat);
+      if (state.tier !== "all") u.set("tier", state.tier);
+      history.replaceState(null, "", location.pathname + (u.toString() ? "?" + u : ""));
+    }
+
+    document.getElementById("cats").innerHTML = CATS.map(function (c) { return '<button class="ox-chip" value="' + c + '" aria-pressed="false">' + c + "</button>"; }).join("");
+
+    function syncControls() {
+      q.value = state.q;
+      document.querySelectorAll("#cats .ox-chip").forEach(function (c) { c.setAttribute("aria-pressed", String(c.value === state.cat)); });
+      document.querySelectorAll("#tier button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.value === state.tier)); });
+    }
+
+    function highlight(text, query) {
+      if (!query) return esc(text);
+      var at = text.toLowerCase().indexOf(query.toLowerCase());
+      return at < 0 ? esc(text) : esc(text.slice(0, at)) + "<mark>" + esc(text.slice(at, at + query.length)) + "</mark>" + esc(text.slice(at + query.length));
+    }
+
+    // ---- Previews render only when a card scrolls near the screen ----
+    var io = "IntersectionObserver" in window ? new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { mount(en.target); io.unobserve(en.target); } });
+    }, { rootMargin: "300px 0px" }) : null;
+
+    var mounted = {};
+    function mount(stage) {
+      var item = items.filter(function (i) { return i.slug === stage.dataset.slug; })[0];
+      if (!item || stage.dataset.mounted) return;
+      stage.dataset.mounted = "1";
+      // Element ids in examples must be unique on the page: skip if this example is already live elsewhere
+      if (mounted[item.slug]) return;
+      mounted[item.slug] = true;
+      stage.innerHTML = item.example.html;
+      if (item.example.js) { try { new Function(item.example.js)(); } catch (e) { console.error("Preview failed: " + item.slug, e); } }
+      Onyx.init(stage);
+    }
+
+    function render() {
+      var term = state.q.trim().toLowerCase();
+      var shown = items.filter(function (i) {
+        if (state.cat !== "All" && i.category !== state.cat) return false;
+        if (state.tier === "free" && i.pro) return false;
+        if (state.tier === "pro" && !i.pro) return false;
+        return !term || (i.title + " " + i.lead + " " + i.category).toLowerCase().indexOf(term) > -1;
+      });
+
+      // Keep already-mounted previews alive: hide cards instead of rebuilding them
+      if (!grid.children.length) {
+        grid.innerHTML = items.map(function (i) {
+          var layout = (i.example.layout || "").split(" ").filter(function (x) { return x === "block" || x === "wide"; }).join(" ");
+          return '<article class="ox-card item' + (layout.indexOf("wide") > -1 ? " wide" : "") + '" data-slug="' + i.slug + '">' +
+            '<div class="item-preview"><div class="stage ' + layout + '" data-slug="' + i.slug + '"><div class="ox-skeleton placeholder"></div></div></div>' +
+            '<div class="item-body">' +
+              '<div class="item-title"><h2></h2>' + (i.pro ? '<span class="ox-badge ox-badge-solid">Pro</span>' : '<span class="ox-badge ox-badge-outline">Free</span>') + "</div>" +
+              "<p>" + esc(i.lead) + '</p><span class="ox-subtle" style="font-size:var(--ox-text-xs)">' + i.category + "</span>" +
+              '<div class="item-actions">' +
+                '<a class="ox-btn ox-btn-sm ox-btn-outline" href="/docs/#/' + i.slug + '">Docs <span aria-hidden="true">→</span></a>' +
+                '<button class="ox-btn ox-btn-sm ox-btn-ghost" data-copy="' + i.slug + '">Copy code</button>' +
+              "</div>" +
+            "</div></article>";
+        }).join("");
+        grid.querySelectorAll(".stage").forEach(function (s) { if (io) io.observe(s); else mount(s); });
+      }
+      var visible = {};
+      shown.forEach(function (i) { visible[i.slug] = true; });
+      grid.querySelectorAll(".item").forEach(function (card, n) {
+        var slug = card.dataset.slug;
+        card.hidden = !visible[slug];
+        var item = items.filter(function (i) { return i.slug === slug; })[0];
+        card.querySelector("h2").innerHTML = highlight(item.title, state.q.trim());
+      });
+      document.getElementById("count").textContent = shown.length + " of " + items.length;
+      document.getElementById("empty").hidden = shown.length > 0;
+      writeURL();
+    }
+
+    q.addEventListener("input", function () { state.q = q.value; render(); });
+    document.getElementById("cats").addEventListener("ox:change", function (e) { state.cat = e.detail.value[0] || "All"; render(); });
+    document.getElementById("tier").addEventListener("ox:change", function (e) { state.tier = e.detail.value; render(); });
+    document.getElementById("clear").addEventListener("click", function () { state = { q: "", cat: "All", tier: "all" }; syncControls(); render(); q.focus(); });
+    grid.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-copy]");
+      if (!b) return;
+      var item = items.filter(function (i) { return i.slug === b.dataset.copy; })[0];
+      Onyx.copy(item.example.html.trim() + (item.example.js ? "\n\n<script>\n" + item.example.js.trim() + "\n<\/script>" : ""));
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); q.focus(); }
+    });
+
+    readURL();
+    syncControls();
+    render();
+
+    // After the first screen settles, mount the rest a few at a time, so search results are ready
+    // and previews still appear if the browser holds back scroll observers
+    setTimeout(function next() {
+      var stage = grid.querySelector(".stage:not([data-mounted])");
+      if (!stage) return;
+      mount(stage);
+      if (io) io.unobserve(stage);
+      setTimeout(next, 60);
+    }, 1500);
+  </script>
+</body>
+</html>

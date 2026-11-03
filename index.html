@@ -324,12 +324,11 @@
     <div class="ox-container ox-navbar-inner">
       <a href="#" class="logo" aria-label="Onyx home"><svg><use href="#i-logo"/></svg>Onyx</a>
       <div class="ox-navbar-links">
-        <a href="#components">Components</a>
+        <a href="components/">Components</a>
+        <a href="studio/">Theme Studio</a>
         <a href="docs/">Docs</a>
-        <a href="#playground">Playground</a>
-        <a href="#developers">Developers</a>
         <a href="#pricing">Pricing</a>
-        <a href="#faq">FAQ</a>
+        <a href="changelog/">Changelog</a>
       </div>
       <div class="ox-row" style="gap:var(--ox-space-1)">
         <button class="cmd-hint" id="cmd-open" aria-label="Open command menu"><svg><use href="#i-search"/></svg><span>Jump to…</span><span class="ox-kbd">Ctrl K</span></button>
@@ -342,7 +341,7 @@
       </div>
     </div>
     <div class="ox-navbar-menu" id="site-menu">
-      <a href="#components">Components</a><a href="#more">New in 1.1</a><a href="docs/">Docs</a><a href="#playground">Playground</a><a href="#developers">Developers</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+      <a href="components/">Components</a><a href="studio/">Theme Studio</a><a href="docs/">Docs</a><a href="#pricing">Pricing</a><a href="changelog/">Changelog</a><a href="#faq">FAQ</a>
       <a href="#pricing" class="ox-btn ox-btn-lg ox-btn-pill ox-btn-block">Get Onyx Pro</a>
     </div>
   </nav>
@@ -453,6 +452,7 @@
         <span class="ox-eyebrow">Components</span>
         <h2 class="ox-h1">Fewer colors.<br />More craft.</h2>
         <p class="ox-lead">Without color to lean on, everything else has to be right — spacing, weight, rhythm, motion. Every piece below is live. Go ahead, click around.</p>
+        <a href="components/" class="ox-btn ox-btn-outline ox-btn-pill" style="margin-top:var(--ox-space-6)">Browse all components <svg class="ox-arrow"><use href="#i-arrow"/></svg></a>
       </div>
 
       <div class="bento stagger">
@@ -662,6 +662,7 @@
         <span class="ox-eyebrow">Playground</span>
         <h2 class="ox-h1">Make it yours<br />in ten seconds.</h2>
         <p class="ox-lead">Everything in Onyx is a token. Drag a slider and watch every component follow, then copy the CSS into your project.</p>
+        <a href="studio/" class="ox-btn ox-btn-outline ox-btn-pill" style="margin-top:var(--ox-space-6)">Open the full Theme Studio <svg class="ox-arrow"><use href="#i-arrow"/></svg></a>
       </div>
 
       <div class="pg">
@@ -900,9 +901,9 @@
           <a href="#" class="logo"><svg><use href="#i-logo"/></svg>Onyx</a>
           <p class="ox-muted" style="font-size:var(--ox-text-sm);max-width:30ch;margin:var(--ox-space-3) 0 0">A black &amp; white component library for people who care about the details.</p>
         </div>
-        <div><h4>Product</h4><ul><li><a href="#components">Components</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Changelog</a></li></ul></div>
-        <div><h4>Resources</h4><ul><li><a href="docs/">Documentation</a></li><li><a href="#">Figma kit</a></li><li><a href="https://github.com/codewithanshuman/Onyx" target="_blank" rel="noopener">GitHub</a></li></ul></div>
-        <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="LICENSE">License</a></li><li><a href="#">Contact</a></li></ul></div>
+        <div><h4>Product</h4><ul><li><a href="components/">Components</a></li><li><a href="studio/">Theme Studio</a></li><li><a href="#pricing">Pricing</a></li><li><a href="changelog/">Changelog</a></li></ul></div>
+        <div><h4>Resources</h4><ul><li><a href="docs/">Documentation</a></li><li><a href="docs/#/react">React</a></li><li><a href="https://github.com/codewithanshuman/Onyx" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+        <div><h4>Company</h4><ul><li><a href="#faq">FAQ</a></li><li><a href="https://github.com/codewithanshuman/Onyx/blob/main/LICENSE" target="_blank" rel="noopener">License</a></li><li><a href="https://github.com/codewithanshuman/Onyx/issues" target="_blank" rel="noopener">Contact</a></li></ul></div>
       </div>
       <div class="foot-bottom">
         <span>© 2026 Onyx UI</span>
@@ -1104,6 +1105,9 @@
         items: [
           { group: "Sections", label: "Components", action: go("#components") },
           { group: "Sections", label: "New in 1.1", keywords: "breadcrumb pagination table slider timeline", action: go("#more") },
+          { group: "Pages", label: "Components gallery", keywords: "browse search all", href: "components/" },
+          { group: "Pages", label: "Theme Studio", keywords: "theme builder customize export tailwind", href: "studio/" },
+          { group: "Pages", label: "Changelog", keywords: "releases what's new", href: "changelog/" },
           { group: "Sections", label: "Playground", keywords: "theme customize tokens", action: go("#playground") },
           { group: "Sections", label: "Developers", keywords: "code install", action: go("#developers") },
           { group: "Sections", label: "Pricing", keywords: "plans pro team", action: go("#pricing") },

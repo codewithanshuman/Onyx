@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Changelog · Onyx</title>
+  <meta name="description" content="Every Onyx release: new components, fixes and improvements." />
+  <link rel="canonical" href="https://onyxdesign.vercel.app/changelog/" />
+  <meta property="og:title" content="Onyx Changelog" />
+  <meta property="og:image" content="https://onyxdesign.vercel.app/brand/og-image.png" />
+  <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/onyx.css?v=1.1.1" />
+  <link rel="stylesheet" href="/assets/site.css?v=2" />
+  <style>
+    .log { display: grid; gap: var(--ox-space-12); grid-template-columns: 220px minmax(0, 1fr); align-items: start; }
+    .log-filter { position: sticky; top: 5rem; display: grid; gap: var(--ox-space-3); }
+    .release { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: var(--ox-space-6); padding: var(--ox-space-8) 0; border-top: 1px solid var(--ox-border); }
+    .release:first-child { border-top: 0; padding-top: 0; }
+    .release time { font: 400 var(--ox-text-sm) var(--ox-font-mono); color: var(--ox-fg-subtle); }
+    .release h2 { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ox-space-3); margin: 0 0 var(--ox-space-2); font-size: var(--ox-text-xl); font-weight: 600; letter-spacing: -0.02em; }
+    .release p { margin: 0 0 var(--ox-space-4); color: var(--ox-fg-muted); }
+    .release ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--ox-space-2); font-size: var(--ox-text-sm); color: var(--ox-fg-muted); }
+    .release li::marker { color: var(--ox-fg-subtle); }
+    .release li b { color: var(--ox-fg); font-weight: 500; }
+    .release .install { margin-top: var(--ox-space-4); }
+    .release .install code { font: 400 var(--ox-text-xs) var(--ox-font-mono); padding: 0.3rem 0.6rem; background: var(--ox-bg-muted); border: 1px solid var(--ox-border); border-radius: var(--ox-radius-sm); }
+    @media (max-width: 860px) { .log { grid-template-columns: minmax(0, 1fr); } .log-filter { position: static; } }
+    @media (max-width: 560px) { .release { grid-template-columns: minmax(0, 1fr); gap: var(--ox-space-2); } }
+  </style>
+</head>
+<body class="ox" data-page="changelog">
+  <header data-site-header></header>
+
+  <section class="page-hero">
+    <div class="ox-container">
+      <span class="ox-eyebrow">Changelog</span>
+      <h1>What's new in Onyx.</h1>
+      <p class="ox-lead">Every release of the core library, the React package and Onyx Pro.</p>
+    </div>
+  </section>
+
+  <main class="ox-container log">
+    <div class="log-filter">
+      <span class="ox-label">Package</span>
+      <div class="ox-chips" data-single id="pkg" aria-label="Filter by package">
+        <button class="ox-chip" value="all" aria-pressed="true">All</button>
+        <button class="ox-chip" value="core" aria-pressed="false">Core</button>
+        <button class="ox-chip" value="react" aria-pressed="false">React</button>
+        <button class="ox-chip" value="pro" aria-pressed="false">Pro</button>
+      </div>
+    </div>
+    <div id="releases" aria-live="polite"></div>
+  </main>
+
+  <footer data-site-footer></footer>
+
+  <script src="/src/onyx.js?v=1.1.1"></script>
+  <script src="/assets/site.js?v=2"></script>
+  <script>
+    // Newest first. Add a release by adding an object here.
+    var RELEASES = [
+      { pkg: "core", version: "1.1.0", date: "2026-11-03", title: "Ten new components and a mobile menu",
+        summary: "Navigation, data and input components, plus touch-friendly sizing everywhere.",
+        items: ["<b>New:</b> breadcrumb, pagination, range slider, number stepper, chips, table, empty state, timeline, banner.",
+                "<b>New:</b> built-in mobile menu for the navbar, with <code>data-collapse=\"lg\"</code> for wider breakpoints.",
+                "<b>New:</b> avatar presence dots (<code>data-status</code>).",
+                "<b>Improved:</b> larger tap targets on touch screens.",
+                "<b>Improved:</b> theme switching spreads from the toggle with a circular transition.",
+                "<b>Improved:</b> <code>data-theme=\"light\"</code> now works on any element."],
+        install: "npm i @onyxdesign/core@1.1.0" },
+      { pkg: "pro", version: "1.1.0", date: "2026-11-03", title: "Date picker, combobox and more",
+        summary: "Six advanced components for real products.",
+        items: ["<b>New:</b> date picker and inline calendar, with ranges and full keyboard support.",
+                "<b>New:</b> combobox for searchable select, multi-select and tag input.",
+                "<b>New:</b> code input for one-time passcodes, with paste and SMS autofill.",
+                "<b>New:</b> task board with drag and drop by mouse, touch and keyboard.",
+                "<b>New:</b> rich toasts with actions and loading-to-done states.",
+                "<b>New:</b> landing, pricing, sign-in and settings templates."] },
+      { pkg: "react", version: "1.0.0", date: "2026-11-03", title: "Onyx for React",
+        summary: "Typed React components with behavior built in — no script needed.",
+        items: ["<b>New:</b> 40 components and hooks, including Modal, Tabs, DropdownMenu and Field.",
+                "<b>New:</b> <code>ToastProvider</code> and <code>ThemeProvider</code>.",
+                "<b>Accessible:</b> focus management, keyboard navigation and labelled fields."],
+        install: "npm i @onyxdesign/react" },
+      { pkg: "pro", version: "1.0.0", date: "2026-11-03", title: "Onyx Pro",
+        summary: "Charts, data table, command menu and a full dashboard template.",
+        items: ["<b>New:</b> line, area, bar and donut charts in pure SVG.",
+                "<b>New:</b> data table with sorting, search, selection and pagination.",
+                "<b>New:</b> command menu, stat cards, sheet, stepper, dropzone and app shell."] },
+      { pkg: "core", version: "1.0.0", date: "2026-11-03", title: "Onyx 1.0",
+        summary: "The first release of the black & white component library.",
+        items: ["<b>New:</b> buttons, forms, cards, badges, avatars, alerts, tabs, accordion, modal, dropdown, tooltip, toast and more.",
+                "<b>New:</b> light and dark themes, and <code>.ox-invert</code>.",
+                "<b>New:</b> design tokens for every color, radius, shadow and spacing step."],
+        install: "npm i @onyxdesign/core@1.0.0" }
+    ];
+    var LABEL = { core: "Core", react: "React", pro: "Pro" };
+    var fmt = new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" });
+
+    function render(filter) {
+      var list = RELEASES.filter(function (r) { return filter === "all" || r.pkg === filter; });
+      document.getElementById("releases").innerHTML = list.map(function (r) {
+        var d = r.date.split("-");
+        return '<article class="release" id="' + r.pkg + "-" + r.version + '">' +
+          '<time datetime="' + r.date + '">' + fmt.format(new Date(+d[0], d[1] - 1, +d[2])) + "</time>" +
+          "<div><h2>" + r.title + '<span class="ox-badge ' + (r.pkg === "pro" ? "ox-badge-solid" : "ox-badge-outline") + '">' + LABEL[r.pkg] + " " + r.version + "</span></h2>" +
+          "<p>" + r.summary + "</p><ul>" + r.items.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</ul>" +
+          (r.install ? '<div class="install"><code>' + r.install + "</code></div>" : "") +
+          "</div></article>";
+      }).join("");
+    }
+    document.getElementById("pkg").addEventListener("ox:change", function (e) { render(e.detail.value[0] || "all"); });
+    render("all");
+  </script>
+</body>
+</html>

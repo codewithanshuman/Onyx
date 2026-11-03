@@ -3,373 +3,670 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nuvra UI</title>
-  <meta name="description" content="Nuvra UI — beautifully crafted, accessible components for modern web designers." />
+  <title>Onyx UI</title>
+  <meta name="description" content="Onyx — a black & white component library for people who care about the details." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="src/nuvra.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="src/onyx.css" />
   <style>
     body { margin: 0; }
-    section { padding: var(--nv-space-12) 0; }
-    .eyebrow { font-size: var(--nv-text-xs); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--nv-color-primary); }
-    .section-title { margin: var(--nv-space-2) 0 var(--nv-space-3); font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1.15; letter-spacing: -0.02em; }
-    .section-lead { max-width: 60ch; margin: 0 0 var(--nv-space-8); color: var(--nv-text-muted); font-size: var(--nv-text-lg); }
+    section { padding: clamp(4rem, 9vw, 7rem) 0; }
+    .section-head { max-width: 640px; margin-bottom: var(--ox-space-12); }
+    .section-head.center { margin-inline: auto; text-align: center; }
+    .section-head .ox-h1 { margin: var(--ox-space-3) 0 var(--ox-space-4); }
+    .section-head .ox-lead { margin: 0; }
+    .rule { border-top: 1px solid var(--ox-border); }
 
-    .logo { display: inline-flex; align-items: center; gap: var(--nv-space-2); font-weight: 800; font-size: var(--nv-text-lg); color: var(--nv-text); text-decoration: none; letter-spacing: -0.02em; }
-    .logo-mark { width: 28px; height: 28px; border-radius: 8px; background: conic-gradient(from 200deg, var(--nv-primary-500), var(--nv-accent), var(--nv-primary-400), var(--nv-primary-500)); display: grid; place-items: center; color: #fff; font-size: 14px; }
+    /* Logo */
+    .logo { display: inline-flex; align-items: center; gap: 0.55rem; font-weight: 600; font-size: 1.05rem; letter-spacing: -0.03em; color: var(--ox-fg); text-decoration: none; }
+    .logo svg { width: 22px; height: 22px; }
 
-    .hero { position: relative; padding: clamp(4rem, 10vw, 7rem) 0 var(--nv-space-12); text-align: center; overflow: hidden; }
-    .hero::before {
-      content: ""; position: absolute; inset: -40% -10% auto; height: 600px; z-index: -1;
-      background: radial-gradient(closest-side, color-mix(in srgb, var(--nv-primary-500) 22%, transparent), transparent),
-                  radial-gradient(closest-side at 70% 50%, color-mix(in srgb, var(--nv-accent) 18%, transparent), transparent);
-      filter: blur(20px);
+    /* Theme icon swap */
+    .icon-sun { display: none; }
+    [data-theme="dark"] .icon-sun { display: block; }
+    [data-theme="dark"] .icon-moon { display: none; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .icon-sun { display: block; }
+      :root:not([data-theme="light"]) .icon-moon { display: none; }
     }
-    .hero h1 { margin: var(--nv-space-4) auto; max-width: 16ch; font-size: clamp(2.4rem, 7vw, 4.25rem); line-height: 1.05; letter-spacing: -0.035em; }
-    .hero p { max-width: 56ch; margin: 0 auto var(--nv-space-8); font-size: var(--nv-text-lg); color: var(--nv-text-muted); }
-    .hero .nv-row { justify-content: center; }
-    .install { margin-top: var(--nv-space-8); display: inline-flex; align-items: center; gap: var(--nv-space-3); padding: var(--nv-space-2) var(--nv-space-2) var(--nv-space-2) var(--nv-space-4); font-family: var(--nv-font-mono); font-size: var(--nv-text-sm); background: var(--nv-surface); border: 1px solid var(--nv-border); border-radius: var(--nv-radius); max-width: 100%; }
-    .install code { overflow-x: auto; white-space: nowrap; }
 
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--nv-space-6); margin-top: var(--nv-space-12); text-align: center; }
-    .stats b { display: block; font-size: var(--nv-text-3xl); letter-spacing: -0.02em; }
-    .stats span { font-size: var(--nv-text-sm); color: var(--nv-text-muted); }
+    /* Hero */
+    .hero { position: relative; padding: clamp(4rem, 10vw, 7.5rem) 0 0; text-align: center; overflow: hidden; }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background-image:
+        linear-gradient(var(--ox-border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--ox-border) 1px, transparent 1px);
+      background-size: 56px 56px;
+      background-position: center top;
+      -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, #000 30%, transparent 75%);
+      mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, #000 30%, transparent 75%);
+    }
+    .announce { display: inline-flex; align-items: center; gap: var(--ox-space-2); padding: 0.3rem 0.4rem; font-size: var(--ox-text-xs); color: var(--ox-fg-muted); text-decoration: none; background: var(--ox-surface); border: 1px solid var(--ox-border); border-radius: var(--ox-radius-full); transition: border-color var(--ox-duration); max-width: 100%; }
+    .announce:hover { border-color: var(--ox-border-strong); }
+    .announce .ox-badge { height: 1.25rem; }
+    .announce span:last-child { padding-right: 0.4rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hero h1 { margin: var(--ox-space-6) auto var(--ox-space-5); max-width: 13ch; }
+    .hero .ox-lead { max-width: 52ch; margin: 0 auto var(--ox-space-8); }
+    .hero-ctas { justify-content: center; }
+    .install {
+      display: inline-flex; align-items: center; gap: var(--ox-space-3);
+      margin-top: var(--ox-space-6); padding: 0.35rem 0.35rem 0.35rem 1rem;
+      font: 400 var(--ox-text-sm) var(--ox-font-mono); color: var(--ox-fg-muted);
+      background: var(--ox-bg-subtle); border: 1px solid var(--ox-border); border-radius: var(--ox-radius-full);
+    }
+    .install b { font-weight: 400; color: var(--ox-fg); }
 
-    .demo-card { padding: var(--nv-space-6); }
-    .demo-card h3 { margin: 0 0 var(--nv-space-4); font-size: var(--nv-text-sm); text-transform: uppercase; letter-spacing: 0.08em; color: var(--nv-text-muted); }
-    .alt-bg { background: var(--nv-bg-subtle); border-block: 1px solid var(--nv-border); }
+    /* Hero product shot */
+    .shot { position: relative; margin-top: clamp(3rem, 7vw, 5rem); text-align: left; }
+    .shot::after { content: ""; position: absolute; inset: auto -1px -1px; height: 40%; background: linear-gradient(transparent, var(--ox-bg)); pointer-events: none; }
+    .shot-frame { padding: var(--ox-space-3); background: var(--ox-bg-subtle); border: 1px solid var(--ox-border); border-radius: calc(var(--ox-radius-xl) + 4px); box-shadow: var(--ox-shadow-lg); }
+    .shot-grid { display: grid; gap: var(--ox-space-3); grid-template-columns: 1.25fr 1fr 1fr; }
+    .shot-grid > .ox-card { padding: var(--ox-space-5); }
+    .shot-col { display: grid; gap: var(--ox-space-3); align-content: start; }
+    .stat { font-size: 2rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1.1; margin: var(--ox-space-4) 0 var(--ox-space-2); font-variant-numeric: tabular-nums; }
+    .bars { display: flex; align-items: flex-end; gap: 5px; height: 120px; margin-top: var(--ox-space-6); }
+    .bars i { flex: 1; height: var(--h); background: var(--ox-bg-muted); border: 1px solid var(--ox-border); border-radius: 4px 4px 2px 2px; }
+    .bars i:last-child { background: var(--ox-fg); border-color: var(--ox-fg); }
+    .bars-axis { display: flex; justify-content: space-between; margin-top: var(--ox-space-2); font: 400 0.65rem var(--ox-font-mono); color: var(--ox-fg-subtle); }
+    .list-row { display: flex; align-items: center; gap: var(--ox-space-3); padding: var(--ox-space-3) 0; font-size: var(--ox-text-sm); }
+    .list-row + .list-row { border-top: 1px solid var(--ox-border); }
+    .list-row .who { flex: 1; min-width: 0; line-height: 1.3; }
+    .list-row .who small { display: block; color: var(--ox-fg-muted); font-size: var(--ox-text-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .switch-row { display: flex; justify-content: space-between; }
+    @media (max-width: 900px) {
+      .shot-grid { grid-template-columns: 1fr 1fr; }
+      .shot-grid > :nth-child(3) { display: none; }
+    }
+    @media (max-width: 620px) {
+      .shot-grid { grid-template-columns: 1fr; }
+      .shot-grid > :nth-child(2) { display: none; }
+    }
 
-    .pricing { display: grid; gap: var(--nv-space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); align-items: stretch; }
-    .plan { display: flex; flex-direction: column; padding: var(--nv-space-8); }
-    .plan.featured { overflow: visible; border: 2px solid var(--nv-color-primary); box-shadow: 0 24px 48px -20px color-mix(in srgb, var(--nv-primary-500) 50%, transparent); position: relative; }
-    .plan.featured .nv-badge { position: absolute; top: -12px; left: 50%; translate: -50% 0; background: var(--nv-color-primary); color: #fff; }
-    .plan h3 { margin: 0; font-size: var(--nv-text-xl); }
-    .price { margin: var(--nv-space-4) 0; font-size: var(--nv-text-4xl); font-weight: 800; letter-spacing: -0.03em; }
-    .price small { font-size: var(--nv-text-base); font-weight: 500; color: var(--nv-text-muted); }
-    .plan ul { list-style: none; margin: var(--nv-space-4) 0 var(--nv-space-8); padding: 0; display: grid; align-content: start; gap: var(--nv-space-3); font-size: var(--nv-text-sm); flex: 1; }
-    .plan li { display: flex; gap: var(--nv-space-2); }
-    .plan li::before { content: "✓"; color: var(--nv-success); font-weight: 700; }
-    .billing-toggle { display: flex; justify-content: center; margin-bottom: var(--nv-space-8); }
+    /* Principles */
+    .principles { display: grid; grid-template-columns: repeat(4, 1fr); border-block: 1px solid var(--ox-border); }
+    .principles > div { padding: var(--ox-space-8) var(--ox-space-6); }
+    .principles > div + div { border-left: 1px solid var(--ox-border); }
+    .principles h3 { margin: var(--ox-space-4) 0 var(--ox-space-2); font-size: var(--ox-text-base); font-weight: 600; letter-spacing: -0.01em; }
+    .principles p { margin: 0; font-size: var(--ox-text-sm); color: var(--ox-fg-muted); }
+    @media (max-width: 900px) {
+      .principles { grid-template-columns: 1fr 1fr; }
+      .principles > div:nth-child(3) { border-left: 0; }
+      .principles > div:nth-child(n + 3) { border-top: 1px solid var(--ox-border); }
+    }
+    @media (max-width: 520px) {
+      .principles { grid-template-columns: 1fr; }
+      .principles > div + div { border-left: 0; border-top: 1px solid var(--ox-border); }
+    }
 
-    footer { padding: var(--nv-space-8) 0; border-top: 1px solid var(--nv-border); font-size: var(--nv-text-sm); color: var(--nv-text-muted); }
-    footer .nv-container { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--nv-space-4); }
+    /* Showcase bento */
+    .bento { display: grid; gap: var(--ox-space-4); grid-template-columns: repeat(6, 1fr); }
+    .bento > .ox-card { display: flex; flex-direction: column; gap: var(--ox-space-6); padding: var(--ox-space-6); min-width: 0; }
+    .span-2 { grid-column: span 2; }
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .demo-label { display: flex; justify-content: space-between; align-items: baseline; }
+    .demo-stage { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: var(--ox-space-4); }
+    @media (max-width: 960px) {
+      .bento { grid-template-columns: repeat(2, 1fr); }
+      .span-2, .span-3 { grid-column: span 1; }
+      .span-4 { grid-column: span 2; }
+    }
+    @media (max-width: 620px) {
+      .bento { grid-template-columns: 1fr; }
+      .span-2, .span-3, .span-4 { grid-column: span 1; }
+    }
+
+    /* Developer section */
+    .dev { display: grid; gap: clamp(2rem, 6vw, 5rem); grid-template-columns: 1fr 1.15fr; align-items: center; }
+    .checks { list-style: none; margin: var(--ox-space-8) 0 0; padding: 0; display: grid; gap: var(--ox-space-4); }
+    .checks li { display: flex; gap: var(--ox-space-3); font-size: var(--ox-text-sm); }
+    .checks li b { display: block; font-weight: 600; }
+    .checks li span { color: var(--ox-fg-muted); }
+    .checks svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
+    .code-card { min-width: 0; background: #0a0a0a; border: 1px solid #222; border-radius: var(--ox-radius-xl); overflow: hidden; box-shadow: var(--ox-shadow-lg); }
+    .code-card .ox-tabs-list { padding: 0 var(--ox-space-5); border-color: #222; }
+    .code-card .ox-tab { color: #8a8a8a; }
+    .code-card .ox-tab[aria-selected="true"], .code-card .ox-tab:hover { color: #fff; }
+    .code-card .ox-tab::after { background: #fff; }
+    .code-card .ox-tab:focus-visible { outline-color: #fff; }
+    .code-card .ox-tab-panel { padding: 0; }
+    .code-card .ox-code { border: 0; border-radius: 0; padding: var(--ox-space-6); min-height: 300px; }
+    .code-dots { display: flex; gap: 6px; padding: var(--ox-space-4) var(--ox-space-5) var(--ox-space-2); }
+    .code-dots i { width: 10px; height: 10px; border-radius: 50%; border: 1px solid #3a3a3a; }
+    @media (max-width: 900px) { .dev { grid-template-columns: 1fr; } }
+
+    /* Pricing */
+    .billing { display: flex; justify-content: center; align-items: center; gap: var(--ox-space-3); margin: calc(-1 * var(--ox-space-6)) 0 var(--ox-space-10); }
+    .pricing { display: grid; gap: var(--ox-space-4); grid-template-columns: repeat(3, 1fr); align-items: stretch; }
+    .plan { display: flex; flex-direction: column; padding: var(--ox-space-8); }
+    .plan.ox-invert { border-color: var(--ox-fg); box-shadow: var(--ox-shadow-lg); }
+    .plan-head { display: flex; justify-content: space-between; align-items: center; min-height: 1.5rem; }
+    .plan-head h3 { margin: 0; font-size: var(--ox-text-base); font-weight: 600; }
+    .price { display: flex; align-items: baseline; gap: var(--ox-space-2); margin: var(--ox-space-6) 0 var(--ox-space-2); }
+    .price b { font-size: 3rem; font-weight: 600; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+    .price span { color: var(--ox-fg-muted); font-size: var(--ox-text-sm); }
+    .plan .ox-btn { margin: var(--ox-space-6) 0; }
+    .plan ul { list-style: none; margin: 0; padding: var(--ox-space-6) 0 0; border-top: 1px solid var(--ox-border); display: grid; align-content: start; gap: var(--ox-space-3); font-size: var(--ox-text-sm); }
+    .plan li { display: flex; gap: var(--ox-space-3); color: var(--ox-fg-muted); }
+    .plan li::before { content: ""; width: 14px; height: 14px; margin-top: 4px; flex-shrink: 0; background: var(--ox-fg); -webkit-mask: var(--check) center / contain no-repeat; mask: var(--check) center / contain no-repeat; }
+    .plan li b { color: var(--ox-fg); font-weight: 500; }
+    :root { --check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 8.5 3.2 3L13 4.5'/%3E%3C/svg%3E"); }
+    @media (max-width: 900px) { .pricing { grid-template-columns: 1fr; max-width: 460px; margin-inline: auto; } }
+
+    /* FAQ */
+    .faq { display: grid; gap: clamp(2rem, 6vw, 5rem); grid-template-columns: 1fr 1.6fr; }
+    @media (max-width: 860px) { .faq { grid-template-columns: 1fr; } }
+
+    /* CTA */
+    .cta { position: relative; overflow: hidden; border-radius: calc(var(--ox-radius-xl) + 8px); padding: clamp(3rem, 8vw, 6rem) var(--ox-space-6); text-align: center; }
+    .cta::before {
+      content: ""; position: absolute; inset: 0;
+      background-image: radial-gradient(var(--ox-border-strong) 1px, transparent 1px);
+      background-size: 20px 20px;
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 10%, transparent 70%);
+      mask-image: radial-gradient(ellipse at center, #000 10%, transparent 70%);
+      opacity: 0.6;
+    }
+    .cta > * { position: relative; }
+    .cta h2 { margin: 0 auto var(--ox-space-4); max-width: 16ch; }
+    .cta .ox-lead { margin: 0 auto var(--ox-space-8); max-width: 44ch; }
+    .cta .ox-row { justify-content: center; }
+
+    /* Footer */
+    footer { padding: var(--ox-space-16) 0 var(--ox-space-10); }
+    .foot { display: grid; gap: var(--ox-space-8); grid-template-columns: 2fr repeat(3, 1fr); }
+    .foot h4 { margin: 0 0 var(--ox-space-4); font-size: var(--ox-text-xs); font-weight: 500; color: var(--ox-fg-subtle); }
+    .foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--ox-space-2); }
+    .foot a { color: var(--ox-fg-muted); font-size: var(--ox-text-sm); text-decoration: none; }
+    .foot a:hover { color: var(--ox-fg); }
+    .foot .logo { color: var(--ox-fg); font-size: 1.05rem; }
+    .foot-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--ox-space-4); margin-top: var(--ox-space-12); padding-top: var(--ox-space-6); border-top: 1px solid var(--ox-border); font-size: var(--ox-text-xs); color: var(--ox-fg-subtle); }
+    @media (max-width: 720px) { .foot { grid-template-columns: 1fr 1fr; } .foot > :first-child { grid-column: 1 / -1; } }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 700ms var(--ox-ease), transform 700ms var(--ox-ease); }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
   </style>
 </head>
-<body class="nv">
+<body class="ox">
+
+  <!-- SVG sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-logo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M3 8h10m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5v-.5A1.5 1.5 0 0 0 9 1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></g></symbol>
+    <symbol id="i-sun" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1 1M12 12l1 1M3 13l1-1M12 4l1-1"/></g></symbol>
+    <symbol id="i-moon" viewBox="0 0 16 16"><path d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></g></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="currentColor"/><path d="m5.5 9.2 2.3 2.2 4.7-4.8" fill="none" stroke="var(--ox-inverse)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></symbol>
+  </svg>
 
   <!-- Navbar -->
-  <nav class="nv-navbar">
-    <div class="nv-container nv-navbar-inner">
-      <a href="#" class="logo"><span class="logo-mark">N</span>Nuvra UI</a>
-      <div class="nv-navbar-links">
+  <nav class="ox-navbar">
+    <div class="ox-container ox-navbar-inner">
+      <a href="#" class="logo" aria-label="Onyx home"><svg><use href="#i-logo"/></svg>Onyx</a>
+      <div class="ox-navbar-links">
         <a href="#components">Components</a>
+        <a href="#developers">Developers</a>
         <a href="#pricing">Pricing</a>
-        <a href="docs/getting-started.md">Docs</a>
+        <a href="#faq">FAQ</a>
       </div>
-      <div class="nv-row">
-        <button class="nv-btn nv-btn-ghost nv-btn-icon" data-nv-theme-toggle aria-label="Toggle dark mode">◐</button>
-        <a href="#pricing" class="nv-btn nv-btn-sm">Get Pro</a>
+      <div class="ox-row" style="gap:var(--ox-space-1)">
+        <a href="#" class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+        <button class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon" data-ox-theme-toggle aria-label="Toggle theme">
+          <svg class="icon-moon"><use href="#i-moon"/></svg><svg class="icon-sun"><use href="#i-sun"/></svg>
+        </button>
+        <a href="#pricing" class="ox-btn ox-btn-sm ox-btn-pill" style="margin-left:var(--ox-space-2)">Get Pro</a>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
   <header class="hero">
-    <div class="nv-container">
-      <span class="nv-badge nv-badge-primary nv-badge-dot">v0.1 — now in early access</span>
-      <h1>Design faster with <span class="nv-gradient-text">Nuvra UI</span></h1>
-      <p>A crafted, accessible component library for web designers. Drop in one CSS file, get beautiful buttons, forms, modals and more — with dark mode built in.</p>
-      <div class="nv-row">
-        <a href="#pricing" class="nv-btn nv-btn-gradient nv-btn-lg">Start free</a>
-        <a href="#components" class="nv-btn nv-btn-secondary nv-btn-lg">Browse components</a>
+    <div class="ox-container">
+      <a href="#components" class="announce">
+        <span class="ox-badge ox-badge-solid">New</span>
+        <span>Onyx 1.0 — 40+ components, one stylesheet</span>
+      </a>
+      <h1 class="ox-display">The interface, in black&nbsp;&amp;&nbsp;white.</h1>
+      <p class="ox-lead">Onyx is a component library for designers who believe restraint is a feature. Two colors, perfect type, and every detail considered.</p>
+      <div class="ox-row hero-ctas">
+        <a href="#pricing" class="ox-btn ox-btn-lg ox-btn-pill">Start building free <svg class="ox-arrow"><use href="#i-arrow"/></svg></a>
+        <a href="#components" class="ox-btn ox-btn-lg ox-btn-pill ox-btn-outline">Browse components</a>
       </div>
       <div class="install">
-        <code>npm install nuvra-ui</code>
-        <button class="nv-btn nv-btn-soft nv-btn-sm" id="copy-install">Copy</button>
+        <span>$ <b>npm i onyx-ui</b></span>
+        <button class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon ox-btn-pill" data-ox-copy="npm i onyx-ui" aria-label="Copy install command"><svg><use href="#i-copy"/></svg></button>
       </div>
-      <div class="stats">
-        <div><b>30+</b><span>Core components</span></div>
-        <div><b>0 KB</b><span>Dependencies</span></div>
-        <div><b>WCAG AA</b><span>Accessible by default</span></div>
-        <div><b>Light + Dark</b><span>Themes built in</span></div>
+
+      <!-- Product shot: a real composition built only from Onyx components -->
+      <div class="shot reveal">
+        <div class="shot-frame">
+          <div class="shot-grid">
+            <div class="ox-card">
+              <div class="ox-row ox-between">
+                <span class="ox-eyebrow">Revenue</span>
+                <div class="ox-segmented" aria-label="Range"><button aria-pressed="false">7d</button><button aria-pressed="true">30d</button><button aria-pressed="false">1y</button></div>
+              </div>
+              <div class="stat">$48,210.00</div>
+              <span class="ox-badge ox-badge-outline">↑ 12.4% vs last month</span>
+              <div class="bars" aria-hidden="true">
+                <i style="--h:34%"></i><i style="--h:48%"></i><i style="--h:40%"></i><i style="--h:62%"></i><i style="--h:55%"></i><i style="--h:70%"></i><i style="--h:52%"></i><i style="--h:78%"></i><i style="--h:66%"></i><i style="--h:84%"></i><i style="--h:74%"></i><i style="--h:96%"></i>
+              </div>
+              <div class="bars-axis"><span>JAN</span><span>JUN</span><span>DEC</span></div>
+            </div>
+
+            <div class="ox-card">
+              <h3 class="ox-card-title">Welcome back</h3>
+              <p class="ox-card-text">Sign in to your workspace.</p>
+              <div class="ox-stack" style="margin-top:var(--ox-space-6)">
+                <div class="ox-field"><label class="ox-label" for="s-email">Email</label><input class="ox-input" id="s-email" placeholder="ada@studio.com" /></div>
+                <div class="ox-field"><label class="ox-label" for="s-pw">Password</label><input class="ox-input" id="s-pw" type="password" value="password" /></div>
+                <label class="ox-checkbox"><input type="checkbox" checked /> Keep me signed in</label>
+                <button class="ox-btn ox-btn-block">Sign in</button>
+                <div class="ox-divider">OR</div>
+                <button class="ox-btn ox-btn-outline ox-btn-block"><svg><use href="#i-github"/></svg> Continue with GitHub</button>
+              </div>
+            </div>
+
+            <div class="shot-col">
+              <div class="ox-card" style="padding:var(--ox-space-5)">
+                <div class="ox-row ox-between"><h3 class="ox-card-title" style="margin:0">Team</h3><span class="ox-badge ox-badge-dot ox-badge-live">3 online</span></div>
+                <div style="margin-top:var(--ox-space-3)">
+                  <div class="list-row"><span class="ox-avatar ox-avatar-solid">AL</span><div class="who">Ada Lovelace<small>ada@studio.com</small></div><span class="ox-badge">Owner</span></div>
+                  <div class="list-row"><span class="ox-avatar">GH</span><div class="who">Grace Hopper<small>grace@studio.com</small></div><span class="ox-badge ox-badge-outline">Editor</span></div>
+                  <div class="list-row"><span class="ox-avatar">AT</span><div class="who">Alan Turing<small>alan@studio.com</small></div><span class="ox-badge ox-badge-outline">Viewer</span></div>
+                </div>
+              </div>
+              <div class="ox-card" style="padding:var(--ox-space-5)">
+                <h3 class="ox-card-title">Notifications</h3>
+                <div class="ox-stack" style="margin-top:var(--ox-space-4);gap:var(--ox-space-3)">
+                  <label class="ox-switch switch-row">Comments<input type="checkbox" checked /><span class="ox-switch-track"></span></label>
+                  <label class="ox-switch switch-row">Mentions<input type="checkbox" checked /><span class="ox-switch-track"></span></label>
+                  <label class="ox-switch switch-row">Weekly digest<input type="checkbox" /><span class="ox-switch-track"></span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Components showcase -->
-  <section id="components" class="alt-bg">
-    <div class="nv-container">
-      <span class="eyebrow">Components</span>
-      <h2 class="section-title">Everything you need, nothing you don't</h2>
-      <p class="section-lead">Every component below is live. Click, type, toggle — this page is built entirely with Nuvra UI.</p>
+  <!-- Principles -->
+  <div class="ox-container">
+    <div class="principles reveal">
+      <div><span class="ox-eyebrow">01</span><h3>Zero dependencies</h3><p>One stylesheet, one tiny script. No build step, no framework lock-in.</p></div>
+      <div><span class="ox-eyebrow">02</span><h3>Accessible by default</h3><p>Focus management, keyboard navigation and maximum contrast.</p></div>
+      <div><span class="ox-eyebrow">03</span><h3>Light &amp; dark, natively</h3><p>Follows the system, flips on demand, inverts any section with one class.</p></div>
+      <div><span class="ox-eyebrow">04</span><h3>Yours to theme</h3><p>Every radius, shadow and spacing step is a CSS variable.</p></div>
+    </div>
+  </div>
 
-      <div class="nv-grid">
-        <div class="nv-card demo-card">
-          <h3>Buttons</h3>
-          <div class="nv-stack">
-            <div class="nv-row">
-              <button class="nv-btn">Primary</button>
-              <button class="nv-btn nv-btn-secondary">Secondary</button>
-              <button class="nv-btn nv-btn-ghost">Ghost</button>
+  <!-- Components -->
+  <section id="components">
+    <div class="ox-container">
+      <div class="section-head">
+        <span class="ox-eyebrow">Components</span>
+        <h2 class="ox-h1">Fewer colors.<br />More craft.</h2>
+        <p class="ox-lead">Without color to lean on, everything else has to be right — spacing, weight, rhythm, motion. Every piece below is live. Go ahead, click around.</p>
+      </div>
+
+      <div class="bento">
+        <div class="ox-card span-3 reveal">
+          <div class="demo-label"><span class="ox-eyebrow">Buttons</span><span class="ox-subtle ox-mono" style="font-size:12px">.ox-btn</span></div>
+          <div class="demo-stage">
+            <div class="ox-row">
+              <button class="ox-btn">Primary</button>
+              <button class="ox-btn ox-btn-outline">Outline</button>
+              <button class="ox-btn ox-btn-ghost">Ghost</button>
+              <button class="ox-btn ox-btn-link">Link</button>
             </div>
-            <div class="nv-row">
-              <button class="nv-btn nv-btn-soft">Soft</button>
-              <button class="nv-btn nv-btn-danger">Danger</button>
-              <button class="nv-btn nv-btn-gradient">Gradient</button>
+            <div class="ox-row">
+              <button class="ox-btn ox-btn-pill">Continue <svg class="ox-arrow"><use href="#i-arrow"/></svg></button>
+              <button class="ox-btn ox-btn-outline" id="loading-demo">Click to load</button>
+              <button class="ox-btn ox-btn-outline ox-btn-icon" aria-label="Search" data-ox-tooltip="Search"><svg><use href="#i-search"/></svg></button>
             </div>
-            <div class="nv-row">
-              <button class="nv-btn" id="loading-demo">Click to load</button>
-              <div class="nv-btn-group">
-                <button class="nv-btn nv-btn-secondary nv-btn-sm">Day</button>
-                <button class="nv-btn nv-btn-secondary nv-btn-sm">Week</button>
-                <button class="nv-btn nv-btn-secondary nv-btn-sm">Month</button>
+          </div>
+        </div>
+
+        <div class="ox-card span-3 reveal">
+          <div class="demo-label"><span class="ox-eyebrow">Inputs</span><span class="ox-subtle ox-mono" style="font-size:12px">.ox-input</span></div>
+          <div class="demo-stage">
+            <div class="ox-input-group">
+              <svg class="ox-input-icon"><use href="#i-search"/></svg>
+              <input class="ox-input" placeholder="Search components…" aria-label="Search" />
+              <span class="ox-kbd">⌘K</span>
+            </div>
+            <div class="ox-row" style="flex-wrap:nowrap;align-items:flex-start">
+              <div class="ox-field" style="flex:1;min-width:0" data-invalid>
+                <label class="ox-label" for="d-user">Username</label>
+                <input class="ox-input" id="d-user" value="ada" />
+                <span class="ox-hint">Already taken.</span>
+              </div>
+              <div class="ox-field" style="flex:1;min-width:0">
+                <label class="ox-label" for="d-role">Role</label>
+                <select class="ox-select" id="d-role"><option>Designer</option><option>Engineer</option><option>Founder</option></select>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="nv-card demo-card">
-          <h3>Forms</h3>
-          <div class="nv-stack">
-            <div class="nv-field">
-              <label class="nv-label" for="email">Email</label>
-              <input class="nv-input" id="email" type="email" placeholder="you@studio.com" />
-            </div>
-            <div class="nv-field" data-invalid>
-              <label class="nv-label" for="pw">Password</label>
-              <input class="nv-input" id="pw" type="password" value="1234" />
-              <span class="nv-hint">Must be at least 8 characters.</span>
-            </div>
-            <select class="nv-select" aria-label="Role">
-              <option>Designer</option><option>Developer</option><option>Founder</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="nv-card demo-card">
-          <h3>Toggles</h3>
-          <div class="nv-stack">
-            <label class="nv-switch"><input type="checkbox" checked /><span class="nv-switch-track"></span>Email notifications</label>
-            <label class="nv-switch"><input type="checkbox" /><span class="nv-switch-track"></span>Weekly digest</label>
-            <label class="nv-checkbox"><input type="checkbox" checked /> Remember me</label>
-            <div class="nv-row">
-              <label class="nv-radio"><input type="radio" name="plan" checked /> Monthly</label>
-              <label class="nv-radio"><input type="radio" name="plan" /> Yearly</label>
+        <div class="ox-card span-2 reveal">
+          <div class="demo-label"><span class="ox-eyebrow">Selection</span></div>
+          <div class="demo-stage">
+            <label class="ox-switch"><input type="checkbox" checked /><span class="ox-switch-track"></span>Airplane mode</label>
+            <label class="ox-checkbox"><input type="checkbox" checked /> Accept terms</label>
+            <label class="ox-checkbox"><input type="checkbox" /> Subscribe to updates</label>
+            <div class="ox-row">
+              <label class="ox-radio"><input type="radio" name="r" checked /> Monthly</label>
+              <label class="ox-radio"><input type="radio" name="r" /> Yearly</label>
             </div>
           </div>
         </div>
 
-        <div class="nv-card demo-card">
-          <h3>Badges &amp; Avatars</h3>
-          <div class="nv-stack">
-            <div class="nv-row">
-              <span class="nv-badge">Default</span>
-              <span class="nv-badge nv-badge-primary">New</span>
-              <span class="nv-badge nv-badge-success nv-badge-dot">Live</span>
-              <span class="nv-badge nv-badge-warning">Beta</span>
-              <span class="nv-badge nv-badge-danger">Error</span>
-            </div>
-            <div class="nv-row">
-              <div class="nv-avatar-stack">
-                <span class="nv-avatar">AB</span>
-                <span class="nv-avatar" style="background:linear-gradient(135deg,#0ea5e9,#22c55e)">KS</span>
-                <span class="nv-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">RM</span>
-                <span class="nv-avatar" style="background:var(--nv-bg-muted);color:var(--nv-text)">+5</span>
+        <div class="ox-card span-2 reveal">
+          <div class="demo-label"><span class="ox-eyebrow">Overlays</span></div>
+          <div class="demo-stage">
+            <button class="ox-btn ox-btn-block" data-ox-modal-open="demo-modal">Open dialog</button>
+            <button class="ox-btn ox-btn-outline ox-btn-block" data-ox-toast="Your changes have been saved">Show toast</button>
+            <div class="ox-dropdown" style="display:block">
+              <button class="ox-btn ox-btn-outline ox-btn-block" data-ox-dropdown-toggle aria-expanded="false" aria-haspopup="menu">Open menu</button>
+              <div class="ox-dropdown-menu" role="menu" style="width:100%">
+                <div class="ox-dropdown-label">My account</div>
+                <button class="ox-dropdown-item" role="menuitem">Profile <span class="ox-kbd">⇧P</span></button>
+                <button class="ox-dropdown-item" role="menuitem">Billing <span class="ox-kbd">⌘B</span></button>
+                <hr class="ox-separator" />
+                <button class="ox-dropdown-item" role="menuitem">Log out</button>
               </div>
-              <span class="nv-muted" style="font-size:var(--nv-text-sm)">8 collaborators</span>
             </div>
           </div>
         </div>
 
-        <div class="nv-card demo-card">
-          <h3>Alerts</h3>
-          <div class="nv-stack">
-            <div class="nv-alert nv-alert-success" role="status"><div><strong>Published</strong>Your design system is live.</div></div>
-            <div class="nv-alert nv-alert-warning" role="alert"><div><strong>Heads up</strong>Your trial ends in 3 days.</div></div>
+        <div class="ox-card span-2 reveal">
+          <div class="demo-label"><span class="ox-eyebrow">Identity</span></div>
+          <div class="demo-stage">
+            <div class="ox-row">
+              <span class="ox-badge ox-badge-solid">Solid</span>
+              <span class="ox-badge">Subtle</span>
+              <span class="ox-badge ox-badge-outline">Outline</span>
+              <span class="ox-badge ox-badge-dot ox-badge-live">Live</span>
+            </div>
+            <div class="ox-row">
+              <div class="ox-avatar-stack">
+                <span class="ox-avatar ox-avatar-solid">AL</span><span class="ox-avatar">GH</span><span class="ox-avatar">AT</span><span class="ox-avatar">+9</span>
+              </div>
+              <span class="ox-muted" style="font-size:var(--ox-text-sm)">12 members</span>
+            </div>
           </div>
         </div>
 
-        <div class="nv-card demo-card">
-          <h3>Overlays</h3>
-          <div class="nv-stack">
-            <div class="nv-row">
-              <button class="nv-btn" data-nv-modal-open="demo-modal">Open modal</button>
-              <button class="nv-btn nv-btn-secondary" data-nv-toast="Changes saved" data-nv-toast-variant="success">Show toast</button>
+        <div class="ox-card span-4 reveal">
+          <div class="demo-label"><span class="ox-eyebrow">Tabs &amp; Feedback</span></div>
+          <div>
+            <div class="ox-tabs-list" role="tablist" aria-label="Project">
+              <button class="ox-tab" role="tab" aria-selected="true" aria-controls="tp-1" id="t-1">Overview</button>
+              <button class="ox-tab" role="tab" aria-selected="false" aria-controls="tp-2" id="t-2" tabindex="-1">Deployments</button>
+              <button class="ox-tab" role="tab" aria-selected="false" aria-controls="tp-3" id="t-3" tabindex="-1">Settings</button>
             </div>
-            <div class="nv-row">
-              <div class="nv-dropdown">
-                <button class="nv-btn nv-btn-secondary" data-nv-dropdown-toggle aria-expanded="false" aria-haspopup="menu">Options ▾</button>
-                <div class="nv-dropdown-menu" role="menu">
-                  <button class="nv-dropdown-item" role="menuitem">Edit</button>
-                  <button class="nv-dropdown-item" role="menuitem">Duplicate</button>
-                  <button class="nv-dropdown-item" role="menuitem" style="color:var(--nv-danger)">Delete</button>
+            <div class="ox-tab-panel" role="tabpanel" id="tp-1" aria-labelledby="t-1">
+              <div class="ox-stack">
+                <div class="ox-row ox-between" style="font-size:var(--ox-text-sm)"><span>Storage used</span><span class="ox-muted ox-mono">6.8 / 10 GB</span></div>
+                <div class="ox-progress" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"><div class="ox-progress-bar" style="--value:68%"></div></div>
+                <div class="ox-alert"><span class="ox-alert-icon">i</span><div><strong>Heads up</strong>You'll reach your limit in about 12 days.</div></div>
+              </div>
+            </div>
+            <div class="ox-tab-panel" role="tabpanel" id="tp-2" aria-labelledby="t-2" hidden>
+              <div class="list-row"><div class="ox-spinner" aria-label="Building"></div><div class="who">feat/new-pricing<small>Building · started 12s ago</small></div><span class="ox-badge ox-badge-outline">Preview</span></div>
+              <div class="list-row"><svg width="18" height="18"><use href="#i-check-circle"/></svg><div class="who">main<small>Ready · 4m ago</small></div><span class="ox-badge ox-badge-solid">Production</span></div>
+            </div>
+            <div class="ox-tab-panel" role="tabpanel" id="tp-3" aria-labelledby="t-3" hidden>
+              <div class="ox-row" style="flex-wrap:nowrap">
+                <div class="ox-skeleton" style="width:40px;height:40px;border-radius:50%;flex-shrink:0"></div>
+                <div class="ox-stack" style="gap:8px;flex:1">
+                  <div class="ox-skeleton" style="height:10px;width:60%"></div>
+                  <div class="ox-skeleton" style="height:10px;width:35%"></div>
                 </div>
               </div>
-              <button class="nv-btn nv-btn-ghost" data-nv-tooltip="I'm a tooltip!">Hover me</button>
             </div>
           </div>
         </div>
 
-        <div class="nv-card demo-card">
-          <h3>Tabs</h3>
-          <div class="nv-tabs-list" role="tablist" aria-label="Project">
-            <button class="nv-tab" role="tab" aria-selected="true" aria-controls="tp-1" id="t-1">Overview</button>
-            <button class="nv-tab" role="tab" aria-selected="false" aria-controls="tp-2" id="t-2" tabindex="-1">Activity</button>
-            <button class="nv-tab" role="tab" aria-selected="false" aria-controls="tp-3" id="t-3" tabindex="-1">Settings</button>
-          </div>
-          <div class="nv-tab-panel" role="tabpanel" id="tp-1" aria-labelledby="t-1"><p class="nv-card-text">Your project at a glance: 12 screens, 48 components.</p></div>
-          <div class="nv-tab-panel" role="tabpanel" id="tp-2" aria-labelledby="t-2" hidden><p class="nv-card-text">Kavya updated the color tokens 2 hours ago.</p></div>
-          <div class="nv-tab-panel" role="tabpanel" id="tp-3" aria-labelledby="t-3" hidden><p class="nv-card-text">Manage members, billing and integrations.</p></div>
-        </div>
-
-        <div class="nv-card demo-card">
-          <h3>Feedback</h3>
-          <div class="nv-stack">
-            <div class="nv-progress" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"><div class="nv-progress-bar" style="--value:68%"></div></div>
-            <div class="nv-row"><div class="nv-spinner" aria-label="Loading"></div><span class="nv-muted" style="font-size:var(--nv-text-sm)">Syncing assets…</span></div>
-            <div class="nv-row" style="flex-wrap:nowrap">
-              <div class="nv-skeleton" style="width:40px;height:40px;border-radius:50%;flex-shrink:0"></div>
-              <div class="nv-stack" style="gap:6px;flex:1">
-                <div class="nv-skeleton" style="height:12px;width:70%"></div>
-                <div class="nv-skeleton" style="height:12px;width:45%"></div>
-              </div>
+        <div class="ox-card span-2 ox-invert reveal">
+          <div class="demo-label"><span class="ox-eyebrow" style="text-transform:none">.ox-invert</span></div>
+          <div class="demo-stage">
+            <p style="margin:0;font-size:var(--ox-text-xl);font-weight:600;letter-spacing:-0.02em;line-height:1.3">Flip any section to the opposite theme with a single class.</p>
+            <div class="ox-row">
+              <button class="ox-btn ox-btn-sm">Primary</button>
+              <button class="ox-btn ox-btn-sm ox-btn-outline">Outline</button>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="nv-card nv-card-hover">
-          <div class="nv-card-body">
-            <span class="nv-badge nv-badge-primary">Pro</span>
-            <h3 class="nv-card-title" style="margin-top:var(--nv-space-3)">Card component</h3>
-            <p class="nv-card-text">Cards with header, body and footer slots. Add <code>.nv-card-hover</code> for lift on hover.</p>
-          </div>
-          <div class="nv-card-footer nv-row" style="justify-content:space-between">
-            <span class="nv-muted" style="font-size:var(--nv-text-xs)">Updated today</span>
-            <button class="nv-btn nv-btn-sm nv-btn-soft">View</button>
-          </div>
+  <!-- Developers -->
+  <section id="developers" class="rule">
+    <div class="ox-container dev">
+      <div>
+        <span class="ox-eyebrow">Developers</span>
+        <h2 class="ox-h1" style="margin:var(--ox-space-3) 0 var(--ox-space-4)">Drop it in.<br />Ship today.</h2>
+        <p class="ox-lead" style="margin:0">Plain HTML classes and data attributes. Works with React, Vue, Svelte, Astro, or a single <span class="ox-mono">index.html</span>.</p>
+        <ul class="checks">
+          <li><svg><use href="#i-check-circle"/></svg><div><b>No build step</b><span>Link one CSS file and you're done.</span></div></li>
+          <li><svg><use href="#i-check-circle"/></svg><div><b>Behaviors without boilerplate</b><span>Modals, tabs, menus and toasts wire themselves up.</span></div></li>
+          <li><svg><use href="#i-check-circle"/></svg><div><b>Brand it in minutes</b><span>Override tokens like <span class="ox-mono">--ox-radius</span> to make it yours.</span></div></li>
+        </ul>
+      </div>
+
+      <div class="code-card reveal">
+        <div class="code-dots"><i></i><i></i><i></i></div>
+        <div class="ox-tabs-list" role="tablist" aria-label="Code example">
+          <button class="ox-tab" role="tab" aria-selected="true" aria-controls="c-1" id="ct-1">index.html</button>
+          <button class="ox-tab" role="tab" aria-selected="false" aria-controls="c-2" id="ct-2" tabindex="-1">app.js</button>
+          <button class="ox-tab" role="tab" aria-selected="false" aria-controls="c-3" id="ct-3" tabindex="-1">theme.css</button>
+        </div>
+        <div class="ox-tab-panel" role="tabpanel" id="c-1" aria-labelledby="ct-1">
+<pre class="ox-code"><span class="c">&lt;!-- 1. Add Onyx --&gt;</span>
+<span class="t">&lt;link</span> <span class="a">rel</span>=<span class="s">"stylesheet"</span> <span class="a">href</span>=<span class="s">"onyx.css"</span><span class="t">&gt;</span>
+
+<span class="c">&lt;!-- 2. Use it --&gt;</span>
+<span class="t">&lt;body</span> <span class="a">class</span>=<span class="s">"ox"</span><span class="t">&gt;</span>
+  <span class="t">&lt;button</span> <span class="a">class</span>=<span class="s">"ox-btn"</span>
+          <span class="a">data-ox-modal-open</span>=<span class="s">"hello"</span><span class="t">&gt;</span>
+    Say hello
+  <span class="t">&lt;/button&gt;</span>
+  <span class="t">&lt;script</span> <span class="a">src</span>=<span class="s">"onyx.js"</span><span class="t">&gt;&lt;/script&gt;</span>
+<span class="t">&lt;/body&gt;</span></pre>
+        </div>
+        <div class="ox-tab-panel" role="tabpanel" id="c-2" aria-labelledby="ct-2" hidden>
+<pre class="ox-code"><span class="c">// Everything also has a tiny JS API</span>
+<span class="t">Onyx</span>.modal.<span class="t">open</span>(<span class="s">"hello"</span>);
+
+<span class="t">Onyx</span>.<span class="t">toast</span>(<span class="s">"Saved"</span>, { <span class="a">duration</span>: 3000 });
+
+<span class="t">Onyx</span>.theme.<span class="t">set</span>(<span class="s">"dark"</span>);
+<span class="t">Onyx</span>.theme.<span class="t">get</span>(); <span class="c">// → "dark"</span></pre>
+        </div>
+        <div class="ox-tab-panel" role="tabpanel" id="c-3" aria-labelledby="ct-3" hidden>
+<pre class="ox-code"><span class="c">/* Make it yours */</span>
+<span class="t">:root</span> {
+  <span class="a">--ox-radius</span>: 2px;
+  <span class="a">--ox-radius-lg</span>: 4px;
+  <span class="a">--ox-font-sans</span>: <span class="s">"Inter"</span>, sans-serif;
+}
+
+<span class="c">/* Invert any region */</span>
+<span class="t">&lt;section</span> <span class="a">class</span>=<span class="s">"ox-invert"</span><span class="t">&gt;</span>…<span class="t">&lt;/section&gt;</span></pre>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Pricing -->
-  <section id="pricing">
-    <div class="nv-container">
-      <div style="text-align:center">
-        <span class="eyebrow">Pricing</span>
-        <h2 class="section-title">Start free. Upgrade when you're ready.</h2>
-        <p class="section-lead" style="margin-inline:auto">The core library is free forever. Pro unlocks premium components, page templates, and Figma kits.</p>
+  <section id="pricing" class="rule">
+    <div class="ox-container">
+      <div class="section-head center">
+        <span class="ox-eyebrow">Pricing</span>
+        <h2 class="ox-h1">Simple, like everything else.</h2>
+        <p class="ox-lead">The core library is free forever. Pro adds premium components, templates and a Figma kit.</p>
       </div>
 
-      <div class="billing-toggle">
-        <label class="nv-switch">Monthly<input type="checkbox" id="billing-yearly" /><span class="nv-switch-track"></span>Yearly <span class="nv-badge nv-badge-success">Save 20%</span></label>
+      <div class="billing">
+        <div class="ox-segmented" id="billing" aria-label="Billing period">
+          <button value="monthly" aria-pressed="true">Monthly</button>
+          <button value="yearly" aria-pressed="false">Yearly</button>
+        </div>
+        <span class="ox-badge ox-badge-outline">2 months free</span>
       </div>
 
       <div class="pricing">
-        <div class="nv-card plan">
-          <h3>Free</h3>
-          <p class="nv-card-text">For side projects and learning.</p>
-          <div class="price">$0<small> / forever</small></div>
+        <div class="ox-card plan reveal">
+          <div class="plan-head"><h3>Free</h3></div>
+          <div class="price"><b>$0</b><span>forever</span></div>
+          <p class="ox-card-text">For side projects and getting started.</p>
+          <a href="#" class="ox-btn ox-btn-outline ox-btn-block">Get started</a>
           <ul>
-            <li>30+ core components</li>
+            <li><span><b>40+</b> core components</span></li>
             <li>Light &amp; dark themes</li>
             <li>Design tokens</li>
             <li>MIT license</li>
           </ul>
-          <a href="#" class="nv-btn nv-btn-secondary nv-btn-block">Get started</a>
         </div>
 
-        <div class="nv-card plan featured">
-          <span class="nv-badge">Most popular</span>
-          <h3>Pro</h3>
-          <p class="nv-card-text">For freelancers and serious designers.</p>
-          <div class="price"><span data-price-monthly="12" data-price-yearly="9">$12</span><small> / month</small></div>
+        <div class="ox-card plan ox-invert reveal">
+          <div class="plan-head"><h3>Pro</h3><span class="ox-badge ox-badge-solid">Most popular</span></div>
+          <div class="price"><b data-monthly="12" data-yearly="10">$12</b><span>/ month</span></div>
+          <p class="ox-card-text">For freelancers and serious designers.</p>
+          <button class="ox-btn ox-btn-block" data-ox-modal-open="checkout-modal" data-plan="Pro">Upgrade to Pro <svg class="ox-arrow"><use href="#i-arrow"/></svg></button>
           <ul>
             <li>Everything in Free</li>
-            <li>80+ Pro components (data tables, charts, command palette)</li>
-            <li>40+ ready-made page templates</li>
+            <li><span><b>80+</b> Pro components — tables, charts, command menu</span></li>
+            <li><span><b>40+</b> page templates</span></li>
             <li>Figma UI kit</li>
             <li>Commercial license, unlimited projects</li>
-            <li>Priority email support</li>
+            <li>Priority support</li>
           </ul>
-          <button class="nv-btn nv-btn-gradient nv-btn-block" data-nv-modal-open="checkout-modal" data-plan="Pro">Upgrade to Pro</button>
         </div>
 
-        <div class="nv-card plan">
-          <h3>Team</h3>
-          <p class="nv-card-text">For agencies and product teams.</p>
-          <div class="price"><span data-price-monthly="39" data-price-yearly="31">$39</span><small> / month</small></div>
+        <div class="ox-card plan reveal">
+          <div class="plan-head"><h3>Team</h3></div>
+          <div class="price"><b data-monthly="39" data-yearly="32">$39</b><span>/ month</span></div>
+          <p class="ox-card-text">For agencies and product teams.</p>
+          <button class="ox-btn ox-btn-outline ox-btn-block" data-ox-modal-open="checkout-modal" data-plan="Team">Start Team trial</button>
           <ul>
             <li>Everything in Pro</li>
-            <li>Up to 10 seats</li>
-            <li>Custom theme generator</li>
-            <li>Shared private component library</li>
-            <li>Dedicated Slack support</li>
+            <li><span>Up to <b>10</b> seats</span></li>
+            <li>Theme generator</li>
+            <li>Shared private library</li>
+            <li>Dedicated Slack channel</li>
           </ul>
-          <button class="nv-btn nv-btn-secondary nv-btn-block" data-nv-modal-open="checkout-modal" data-plan="Team">Start Team trial</button>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section id="faq" class="rule">
+    <div class="ox-container faq">
+      <div>
+        <span class="ox-eyebrow">FAQ</span>
+        <h2 class="ox-h1" style="margin-top:var(--ox-space-3)">Questions,<br />answered.</h2>
+      </div>
+      <div class="ox-accordion">
+        <details open><summary>Can I really use only black and white?</summary><p>Yes — that's the point. Onyx is built so hierarchy comes from type, weight, space and contrast. If your brand needs a color, set it on a single token and everything follows.</p></details>
+        <details><summary>Do I need React or a build tool?</summary><p>No. Onyx is plain CSS plus a small script. It works in any framework, or none at all.</p></details>
+        <details><summary>What's the difference between Free and Pro?</summary><p>Free includes every core component under the MIT license. Pro adds advanced components, full page templates, the Figma kit and a commercial license.</p></details>
+        <details><summary>Can I cancel anytime?</summary><p>Of course. Cancel from your account in one click — you keep access until the end of the billing period.</p></details>
+        <details><summary>Is it accessible?</summary><p>Every interactive component supports the keyboard, manages focus and uses proper ARIA roles. Black on white also gives you the highest contrast possible.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="ox-container">
+    <div class="cta ox-invert reveal">
+      <h2 class="ox-display" style="font-size:clamp(2.25rem,6vw,4rem)">Less, but better.</h2>
+      <p class="ox-lead">Start with the free core today. Upgrade when your work asks for more.</p>
+      <div class="ox-row">
+        <a href="#pricing" class="ox-btn ox-btn-lg ox-btn-pill">Get Onyx free <svg class="ox-arrow"><use href="#i-arrow"/></svg></a>
+        <a href="#components" class="ox-btn ox-btn-lg ox-btn-pill ox-btn-ghost">See components</a>
+      </div>
+    </div>
+  </div>
+
   <footer>
-    <div class="nv-container">
-      <span>© 2026 Nuvra UI. Crafted for designers.</span>
-      <span>Core library MIT-licensed · Pro under commercial license</span>
+    <div class="ox-container">
+      <div class="foot">
+        <div>
+          <a href="#" class="logo"><svg><use href="#i-logo"/></svg>Onyx</a>
+          <p class="ox-muted" style="font-size:var(--ox-text-sm);max-width:30ch;margin:var(--ox-space-3) 0 0">A black &amp; white component library for people who care about the details.</p>
+        </div>
+        <div><h4>Product</h4><ul><li><a href="#components">Components</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Changelog</a></li></ul></div>
+        <div><h4>Resources</h4><ul><li><a href="docs/getting-started.md">Documentation</a></li><li><a href="#">Figma kit</a></li><li><a href="#">GitHub</a></li></ul></div>
+        <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="LICENSE">License</a></li><li><a href="#">Contact</a></li></ul></div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Onyx UI</span>
+        <span>Core MIT · Pro commercial license</span>
+      </div>
     </div>
   </footer>
 
   <!-- Demo modal -->
-  <div class="nv-modal" id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="demo-modal-title" aria-hidden="true">
-    <div class="nv-modal-dialog">
-      <div class="nv-modal-header">
-        <h3 class="nv-modal-title" id="demo-modal-title">Delete project?</h3>
-        <button class="nv-btn nv-btn-ghost nv-btn-icon nv-btn-sm" data-nv-modal-close aria-label="Close">✕</button>
+  <div class="ox-modal" id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="demo-modal-title" aria-hidden="true">
+    <div class="ox-modal-dialog">
+      <div class="ox-modal-header">
+        <h3 class="ox-modal-title" id="demo-modal-title">Archive this project?</h3>
+        <button class="ox-btn ox-btn-ghost ox-btn-icon ox-btn-sm" data-ox-modal-close aria-label="Close">✕</button>
       </div>
-      <div class="nv-modal-body">This will permanently remove “Landing v2” and all of its screens. This action can't be undone.</div>
-      <div class="nv-modal-footer">
-        <button class="nv-btn nv-btn-secondary" data-nv-modal-close>Cancel</button>
-        <button class="nv-btn nv-btn-danger" data-nv-modal-close data-nv-toast="Project deleted" data-nv-toast-variant="danger">Delete</button>
+      <div class="ox-modal-body">“Landing v2” and its 14 screens will move to the archive. You can restore it any time within 30 days.</div>
+      <div class="ox-modal-footer">
+        <button class="ox-btn ox-btn-outline" data-ox-modal-close>Cancel</button>
+        <button class="ox-btn" data-ox-modal-close data-ox-toast="Project archived">Archive</button>
       </div>
     </div>
   </div>
 
-  <!-- Checkout placeholder modal (payments wired up later) -->
-  <div class="nv-modal" id="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title" aria-hidden="true">
-    <div class="nv-modal-dialog">
-      <div class="nv-modal-header">
-        <h3 class="nv-modal-title" id="checkout-title">Join the <span id="checkout-plan">Pro</span> waitlist</h3>
-        <button class="nv-btn nv-btn-ghost nv-btn-icon nv-btn-sm" data-nv-modal-close aria-label="Close">✕</button>
-      </div>
-      <form class="nv-modal-body nv-stack" id="waitlist-form">
-        <p style="margin:0">Payments launch soon. Leave your email and get <b>40% off</b> your first year.</p>
-        <div class="nv-field">
-          <label class="nv-label" for="wl-email">Email</label>
-          <input class="nv-input" id="wl-email" type="email" required placeholder="you@studio.com" />
+  <!-- Checkout placeholder (payments wired up later) -->
+  <div class="ox-modal" id="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title" aria-hidden="true">
+    <div class="ox-modal-dialog">
+      <div class="ox-modal-header">
+        <div>
+          <span class="ox-badge ox-badge-outline">Early access</span>
+          <h3 class="ox-modal-title" id="checkout-title" style="margin-top:var(--ox-space-3)">Join the <span id="checkout-plan">Pro</span> waitlist</h3>
         </div>
-        <button class="nv-btn nv-btn-gradient nv-btn-block" type="submit">Reserve my discount</button>
+        <button class="ox-btn ox-btn-ghost ox-btn-icon ox-btn-sm" data-ox-modal-close aria-label="Close">✕</button>
+      </div>
+      <form class="ox-modal-body ox-stack" id="waitlist-form">
+        <p style="margin:0">Payments open soon. Reserve your spot and get <b style="color:var(--ox-fg)">40% off</b> your first year.</p>
+        <div class="ox-field">
+          <label class="ox-label" for="wl-email">Email</label>
+          <input class="ox-input" id="wl-email" type="email" required placeholder="you@studio.com" />
+        </div>
+        <button class="ox-btn ox-btn-block" type="submit">Reserve my spot</button>
       </form>
     </div>
   </div>
 
-  <script src="src/nuvra.js"></script>
+  <script src="src/onyx.js"></script>
   <script>
     // Page-specific demo wiring
-    document.getElementById("copy-install").addEventListener("click", function () {
-      navigator.clipboard && navigator.clipboard.writeText("npm install nuvra-ui");
-      Nuvra.toast("Copied to clipboard", { variant: "success" });
-    });
-
     document.getElementById("loading-demo").addEventListener("click", function () {
       var btn = this;
       btn.dataset.loading = "true";
       setTimeout(function () { btn.dataset.loading = "false"; }, 1500);
     });
 
-    document.getElementById("billing-yearly").addEventListener("change", function () {
-      var yearly = this.checked;
-      document.querySelectorAll("[data-price-monthly]").forEach(function (el) {
-        el.textContent = "$" + (yearly ? el.dataset.priceYearly : el.dataset.priceMonthly);
+    document.getElementById("billing").addEventListener("ox:change", function (e) {
+      var yearly = e.detail.value === "yearly";
+      document.querySelectorAll("[data-monthly]").forEach(function (el) {
+        el.textContent = "$" + (yearly ? el.dataset.yearly : el.dataset.monthly);
       });
     });
 
@@ -381,10 +678,22 @@
 
     document.getElementById("waitlist-form").addEventListener("submit", function (e) {
       e.preventDefault();
-      Nuvra.modal.close("checkout-modal");
-      Nuvra.toast("You're on the list! 🎉", { variant: "success" });
+      Onyx.modal.close("checkout-modal");
+      Onyx.toast("You're on the list");
       this.reset();
     });
+
+    // Reveal on scroll
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+        });
+      }, { rootMargin: "0px 0px -8% 0px" });
+      document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+    } else {
+      document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
+    }
   </script>
 </body>
 </html>

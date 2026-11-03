@@ -1,23 +1,23 @@
-# Nuvra UI
+# Onyx
 
-**Beautiful, accessible, zero-dependency UI components for web designers.**
+**The interface, in black & white.**
 
-Drop in one CSS file and one tiny JS file and you get buttons, forms, cards, modals, tabs, dropdowns, toasts and more — with light and dark themes built in.
+Onyx is a zero-dependency UI component library for designers who believe restraint is a feature. Two colors, sharp typography, and every detail considered. One CSS file, one small script, light and dark themes built in.
 
 ## Quick start
 
 ```html
-<link rel="stylesheet" href="nuvra.css">
-<body class="nv">
-  <button class="nv-btn">Hello Nuvra</button>
-  <script src="nuvra.js"></script>
+<link rel="stylesheet" href="onyx.css">
+<body class="ox">
+  <button class="ox-btn">Hello Onyx</button>
+  <script src="onyx.js"></script>
 </body>
 ```
 
 Or via npm (once published):
 
 ```bash
-npm install nuvra-ui
+npm install onyx-ui
 ```
 
 ## Run the showcase locally
@@ -30,30 +30,31 @@ Then open http://localhost:5173.
 
 ## What's inside
 
-| Category  | Components |
-|-----------|------------|
-| Actions   | Button (primary, secondary, ghost, soft, danger, gradient, sizes, loading), Button group |
-| Forms     | Input, Select, Textarea, Checkbox, Radio, Switch, Field + hint + validation state |
-| Layout    | Container, Card, Navbar, Stack, Row, Grid |
-| Display   | Badge, Avatar, Avatar stack, Alert, Progress, Skeleton, Spinner |
-| Overlays  | Modal (focus trap, Esc to close), Dropdown, Tooltip, Toast |
-| Navigation| Tabs (keyboard arrows) |
+| Category   | Components |
+|------------|------------|
+| Actions    | Button (primary, outline, ghost, link, pill, sizes, icon, loading), Segmented control |
+| Forms      | Input, Input group with icon, Select, Textarea, Checkbox, Radio, Switch, Field + hint + invalid state |
+| Layout     | Container, Card, Navbar, Stack, Row, Grid, Divider, Separator |
+| Display    | Badge, Avatar, Avatar stack, Alert, Kbd, Code block, Progress, Skeleton, Spinner |
+| Overlays   | Modal (focus trap, Esc to close), Dropdown, Tooltip, Toast |
+| Navigation | Tabs (arrow-key support), Accordion |
 
 See [docs/getting-started.md](docs/getting-started.md) for usage.
 
 ## Theming
 
-Everything is driven by CSS custom properties (`--nv-*`). Override them to brand the library:
+Everything is driven by CSS custom properties (`--ox-*`):
 
 ```css
 :root {
-  --nv-primary-500: #10b981;
-  --nv-primary-600: #059669;
-  --nv-radius: 4px;
+  --ox-radius: 2px;
+  --ox-radius-lg: 4px;
+  --ox-font-sans: "Inter", sans-serif;
 }
 ```
 
-Dark mode follows the OS automatically. Force it with `<html data-theme="dark">` or call `Nuvra.theme.set("dark")`.
+- Dark mode follows the OS. Force it with `<html data-theme="dark">` or `Onyx.theme.set("dark")`.
+- Add `.ox-invert` to any element to flip it to the opposite theme (a black card on a white page, or the other way round).
 
 ## Plans
 

@@ -1,6 +1,6 @@
 /*!
- * Nuvra UI v0.1.0 — interactive behaviors
- * Zero dependencies. Works via data attributes, or the window.Nuvra API.
+ * Onyx v1.0.0 — interactive behaviors
+ * Zero dependencies. Works via data attributes, or the window.Onyx API.
  */
 (function (global) {
   "use strict";
@@ -17,7 +17,7 @@
     modal.setAttribute("data-open", "true");
     modal.setAttribute("aria-hidden", "false");
     var first = modal.querySelector(FOCUSABLE);
-    if (first) setTimeout(function () { first.focus(); }, 50);
+    if (first) setTimeout(function () { first.focus(); }, 60);
   }
 
   function closeModal(modal) {
@@ -50,12 +50,21 @@
     });
   }
 
+  /* ---------- Segmented control ---------- */
+  function pressSegment(btn) {
+    var group = btn.closest(".ox-segmented");
+    group.querySelectorAll("button").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b === btn));
+    });
+    group.dispatchEvent(new CustomEvent("ox:change", { bubbles: true, detail: { value: btn.value || btn.textContent.trim() } }));
+  }
+
   /* ---------- Dropdown ---------- */
   function closeAllDropdowns(except) {
-    document.querySelectorAll('.nv-dropdown[data-open="true"]').forEach(function (d) {
+    document.querySelectorAll('.ox-dropdown[data-open="true"]').forEach(function (d) {
       if (d !== except) {
         d.setAttribute("data-open", "false");
-        var trigger = d.querySelector("[data-nv-dropdown-toggle]");
+        var trigger = d.querySelector("[data-ox-dropdown-toggle]");
         if (trigger) trigger.setAttribute("aria-expanded", "false");
       }
     });
@@ -64,27 +73,33 @@
   /* ---------- Toast ---------- */
   function toast(message, opts) {
     opts = opts || {};
-    var region = document.querySelector(".nv-toast-region");
+    var region = document.querySelector(".ox-toast-region");
     if (!region) {
       region = document.createElement("div");
-      region.className = "nv-toast-region nv";
+      region.className = "ox-toast-region ox";
       region.setAttribute("aria-live", "polite");
       document.body.appendChild(region);
     }
     var el = document.createElement("div");
-    el.className = "nv-toast" + (opts.variant ? " nv-toast-" + opts.variant : "");
+    el.className = "ox-toast";
     el.setAttribute("role", "status");
     el.textContent = message;
     region.appendChild(el);
     setTimeout(function () {
       el.setAttribute("data-leaving", "");
       el.addEventListener("animationend", function () { el.remove(); });
-    }, opts.duration || 3000);
+    }, opts.duration || 2800);
     return el;
   }
 
+  /* ---------- Copy ---------- */
+  function copy(text) {
+    if (navigator.clipboard) navigator.clipboard.writeText(text).catch(function () {});
+    toast("Copied to clipboard");
+  }
+
   /* ---------- Theme ---------- */
-  var THEME_KEY = "nuvra-theme";
+  var THEME_KEY = "onyx-theme";
 
   function currentTheme() {
     var attr = document.documentElement.getAttribute("data-theme");
@@ -104,40 +119,52 @@
     } catch (e) { /* storage unavailable */ }
   }
 
+  /* ---------- Navbar border on scroll ---------- */
+  function syncNavbars() {
+    var scrolled = String(global.scrollY > 4);
+    document.querySelectorAll(".ox-navbar").forEach(function (n) { n.setAttribute("data-scrolled", scrolled); });
+  }
+
   /* ---------- Event delegation ---------- */
   document.addEventListener("click", function (e) {
     var t = e.target;
 
-    var opener = t.closest("[data-nv-modal-open]");
-    if (opener) { openModal(opener.getAttribute("data-nv-modal-open")); return; }
+    var opener = t.closest("[data-ox-modal-open]");
+    if (opener) { openModal(opener.getAttribute("data-ox-modal-open")); return; }
 
-    var closer = t.closest("[data-nv-modal-close]");
-    if (closer) { closeModal(closer.closest(".nv-modal")); return; }
+    var closer = t.closest("[data-ox-modal-close]");
+    if (closer) closeModal(closer.closest(".ox-modal"));
 
-    if (t.classList && t.classList.contains("nv-modal")) { closeModal(t); return; }
+    if (t.classList && t.classList.contains("ox-modal")) { closeModal(t); return; }
 
     var tab = t.closest('[role="tab"]');
     if (tab) { selectTab(tab); return; }
 
-    var ddToggle = t.closest("[data-nv-dropdown-toggle]");
+    var seg = t.closest(".ox-segmented button");
+    if (seg) { pressSegment(seg); return; }
+
+    var ddToggle = t.closest("[data-ox-dropdown-toggle]");
     if (ddToggle) {
-      var dd = ddToggle.closest(".nv-dropdown");
+      var dd = ddToggle.closest(".ox-dropdown");
       var open = dd.getAttribute("data-open") === "true";
       closeAllDropdowns(dd);
       dd.setAttribute("data-open", String(!open));
       ddToggle.setAttribute("aria-expanded", String(!open));
       return;
     }
-    if (!t.closest(".nv-dropdown-menu")) closeAllDropdowns();
+    if (!t.closest(".ox-dropdown-menu") || t.closest(".ox-dropdown-item")) closeAllDropdowns();
 
-    var toaster = t.closest("[data-nv-toast]");
-    if (toaster) toast(toaster.getAttribute("data-nv-toast"), { variant: toaster.getAttribute("data-nv-toast-variant") });
+    var copier = t.closest("[data-ox-copy]");
+    if (copier) copy(copier.getAttribute("data-ox-copy"));
 
-    if (t.closest("[data-nv-theme-toggle]")) setTheme(currentTheme() === "dark" ? "light" : "dark");
+    var toaster = t.closest("[data-ox-toast]");
+    if (toaster) toast(toaster.getAttribute("data-ox-toast"));
+
+    if (t.closest("[data-ox-theme-toggle]")) setTheme(currentTheme() === "dark" ? "light" : "dark");
   });
 
   document.addEventListener("keydown", function (e) {
-    var openModalEl = document.querySelector('.nv-modal[data-open="true"]');
+    var openModalEl = document.querySelector('.ox-modal[data-open="true"]');
     if (e.key === "Escape") {
       if (openModalEl) closeModal(openModalEl);
       closeAllDropdowns();
@@ -155,12 +182,15 @@
     }
   });
 
+  global.addEventListener("scroll", syncNavbars, { passive: true });
+  document.addEventListener("DOMContentLoaded", syncNavbars);
   restoreTheme();
 
-  global.Nuvra = {
-    version: "0.1.0",
+  global.Onyx = {
+    version: "1.0.0",
     modal: { open: openModal, close: closeModal },
     toast: toast,
+    copy: copy,
     theme: { get: currentTheme, set: setTheme }
   };
 })(window);

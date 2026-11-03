@@ -1,0 +1,885 @@
+/*!
+ * Onyx v1.0.0 — a black & white component library for the web
+ * Core: MIT License. Onyx Pro components require a commercial license.
+ */
+
+/* =========================================================
+   1. Design tokens
+   ---------------------------------------------------------
+   Two palettes only: light and dark. Everything else is
+   built from these. `.ox-invert` flips a region to the
+   opposite palette (black card on a white page, and back).
+   ========================================================= */
+:root,
+[data-theme="dark"] .ox-invert {
+  --ox-bg: #ffffff;
+  --ox-bg-subtle: #fafafa;
+  --ox-bg-muted: #f4f4f4;
+  --ox-surface: #ffffff;
+  --ox-border: #e8e8e8;
+  --ox-border-strong: #d4d4d4;
+  --ox-fg: #0a0a0a;
+  --ox-fg-muted: #6b6b6b;
+  --ox-fg-subtle: #a3a3a3;
+  --ox-inverse: #ffffff;
+  --ox-ring: rgba(10, 10, 10, 0.12);
+  --ox-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --ox-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -6px rgba(0, 0, 0, 0.08);
+  --ox-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.04), 0 32px 64px -16px rgba(0, 0, 0, 0.18);
+  color-scheme: light;
+}
+
+[data-theme="dark"],
+.ox-invert {
+  --ox-bg: #000000;
+  --ox-bg-subtle: #0a0a0a;
+  --ox-bg-muted: #161616;
+  --ox-surface: #0a0a0a;
+  --ox-border: #222222;
+  --ox-border-strong: #383838;
+  --ox-fg: #fafafa;
+  --ox-fg-muted: #a1a1a1;
+  --ox-fg-subtle: #6b6b6b;
+  --ox-inverse: #000000;
+  --ox-ring: rgba(255, 255, 255, 0.18);
+  --ox-shadow-sm: 0 0 0 1px rgba(255, 255, 255, 0.02);
+  --ox-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 8px 24px -6px rgba(0, 0, 0, 0.6);
+  --ox-shadow-lg: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 32px 64px -16px rgba(0, 0, 0, 0.8);
+  color-scheme: dark;
+}
+
+[data-theme="dark"] .ox-invert {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ox-bg: #000000;
+    --ox-bg-subtle: #0a0a0a;
+    --ox-bg-muted: #161616;
+    --ox-surface: #0a0a0a;
+    --ox-border: #222222;
+    --ox-border-strong: #383838;
+    --ox-fg: #fafafa;
+    --ox-fg-muted: #a1a1a1;
+    --ox-fg-subtle: #6b6b6b;
+    --ox-inverse: #000000;
+    --ox-ring: rgba(255, 255, 255, 0.18);
+    --ox-shadow-sm: 0 0 0 1px rgba(255, 255, 255, 0.02);
+    --ox-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 8px 24px -6px rgba(0, 0, 0, 0.6);
+    --ox-shadow-lg: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 32px 64px -16px rgba(0, 0, 0, 0.8);
+    color-scheme: dark;
+  }
+  :root:not([data-theme="light"]) .ox-invert {
+    --ox-bg: #ffffff;
+    --ox-bg-subtle: #fafafa;
+    --ox-bg-muted: #f4f4f4;
+    --ox-surface: #ffffff;
+    --ox-border: #e8e8e8;
+    --ox-border-strong: #d4d4d4;
+    --ox-fg: #0a0a0a;
+    --ox-fg-muted: #6b6b6b;
+    --ox-fg-subtle: #a3a3a3;
+    --ox-inverse: #ffffff;
+    --ox-ring: rgba(10, 10, 10, 0.12);
+    --ox-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --ox-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -6px rgba(0, 0, 0, 0.08);
+    --ox-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.04), 0 32px 64px -16px rgba(0, 0, 0, 0.18);
+    color-scheme: light;
+  }
+}
+
+:root {
+  /* Typography */
+  --ox-font-sans: "Geist", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ox-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --ox-text-xs: 0.75rem;
+  --ox-text-sm: 0.875rem;
+  --ox-text-base: 1rem;
+  --ox-text-lg: 1.125rem;
+  --ox-text-xl: 1.25rem;
+  --ox-text-2xl: 1.5rem;
+  --ox-text-3xl: 2rem;
+  --ox-text-4xl: 2.75rem;
+
+  /* Spacing (4px base) */
+  --ox-space-1: 0.25rem;
+  --ox-space-2: 0.5rem;
+  --ox-space-3: 0.75rem;
+  --ox-space-4: 1rem;
+  --ox-space-5: 1.25rem;
+  --ox-space-6: 1.5rem;
+  --ox-space-8: 2rem;
+  --ox-space-10: 2.5rem;
+  --ox-space-12: 3rem;
+  --ox-space-16: 4rem;
+
+  /* Shape */
+  --ox-radius-sm: 6px;
+  --ox-radius: 8px;
+  --ox-radius-lg: 12px;
+  --ox-radius-xl: 20px;
+  --ox-radius-full: 999px;
+
+  /* Motion */
+  --ox-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ox-duration: 160ms;
+}
+
+/* =========================================================
+   2. Base
+   ========================================================= */
+.ox,
+.ox *,
+.ox *::before,
+.ox *::after {
+  box-sizing: border-box;
+}
+
+.ox {
+  font-family: var(--ox-font-sans);
+  font-size: var(--ox-text-base);
+  line-height: 1.6;
+  color: var(--ox-fg);
+  background: var(--ox-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv11";
+}
+
+.ox ::selection {
+  background: var(--ox-fg);
+  color: var(--ox-inverse);
+}
+
+.ox-invert {
+  color: var(--ox-fg);
+  background: var(--ox-bg);
+}
+
+.ox-container {
+  width: 100%;
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-inline: var(--ox-space-4);
+}
+@media (min-width: 640px) {
+  .ox-container { padding-inline: var(--ox-space-6); }
+}
+
+.ox :focus-visible {
+  outline: 2px solid var(--ox-fg);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   3. Typography helpers
+   ========================================================= */
+.ox-display {
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+.ox-h1 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.035em; }
+.ox-h2 { font-size: var(--ox-text-2xl); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.ox-lead { font-size: var(--ox-text-lg); line-height: 1.6; color: var(--ox-fg-muted); }
+.ox-eyebrow {
+  font-family: var(--ox-font-mono);
+  font-size: var(--ox-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ox-fg-muted);
+}
+.ox-muted { color: var(--ox-fg-muted); }
+.ox-subtle { color: var(--ox-fg-subtle); }
+.ox-mono { font-family: var(--ox-font-mono); }
+
+.ox-kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.35rem;
+  font: 500 0.7rem / 1 var(--ox-font-mono);
+  color: var(--ox-fg-muted);
+  background: var(--ox-bg-subtle);
+  border: 1px solid var(--ox-border);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+}
+
+/* =========================================================
+   4. Buttons
+   ========================================================= */
+.ox-btn {
+  --_bg: var(--ox-fg);
+  --_bg-hover: color-mix(in srgb, var(--ox-fg) 86%, var(--ox-bg));
+  --_fg: var(--ox-inverse);
+  --_border: var(--ox-fg);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ox-space-2);
+  height: 2.5rem;
+  padding: 0 var(--ox-space-4);
+  font: 500 var(--ox-text-sm) / 1 var(--ox-font-sans);
+  letter-spacing: -0.005em;
+  color: var(--_fg);
+  background: var(--_bg);
+  border: 1px solid var(--_border);
+  border-radius: var(--ox-radius);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  transition: background var(--ox-duration) var(--ox-ease),
+    border-color var(--ox-duration) var(--ox-ease),
+    color var(--ox-duration) var(--ox-ease),
+    transform var(--ox-duration) var(--ox-ease);
+}
+.ox-btn:hover { background: var(--_bg-hover); }
+.ox-btn:active { transform: scale(0.98); }
+.ox-btn:disabled,
+.ox-btn[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+.ox-btn svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+
+.ox-btn-outline {
+  --_bg: var(--ox-bg);
+  --_bg-hover: var(--ox-bg-muted);
+  --_fg: var(--ox-fg);
+  --_border: var(--ox-border-strong);
+}
+.ox-btn-ghost {
+  --_bg: transparent;
+  --_bg-hover: var(--ox-bg-muted);
+  --_fg: var(--ox-fg);
+  --_border: transparent;
+}
+.ox-btn-link {
+  --_bg: transparent;
+  --_bg-hover: transparent;
+  --_fg: var(--ox-fg);
+  --_border: transparent;
+  height: auto;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: var(--ox-border-strong);
+  text-underline-offset: 4px;
+}
+.ox-btn-link:hover { text-decoration-color: var(--ox-fg); }
+
+.ox-btn-sm { height: 2rem; padding: 0 var(--ox-space-3); font-size: var(--ox-text-xs); border-radius: var(--ox-radius-sm); }
+.ox-btn-lg { height: 3rem; padding: 0 var(--ox-space-6); font-size: var(--ox-text-base); }
+.ox-btn-pill { border-radius: var(--ox-radius-full); }
+.ox-btn-block { width: 100%; }
+.ox-btn-icon { width: 2.5rem; padding: 0; }
+.ox-btn-sm.ox-btn-icon { width: 2rem; }
+
+.ox-btn .ox-arrow { transition: transform var(--ox-duration) var(--ox-ease); }
+.ox-btn:hover .ox-arrow { transform: translateX(3px); }
+
+.ox-btn[data-loading="true"] { color: transparent; pointer-events: none; }
+.ox-btn[data-loading="true"]::after {
+  content: "";
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border: 1.5px solid var(--_fg);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: ox-spin 0.7s linear infinite;
+}
+
+/* Segmented control */
+.ox-segmented {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  background: var(--ox-bg-muted);
+  border: 1px solid var(--ox-border);
+  border-radius: var(--ox-radius);
+}
+.ox-segmented button {
+  height: 1.9rem;
+  padding: 0 var(--ox-space-3);
+  font: 500 var(--ox-text-xs) var(--ox-font-sans);
+  color: var(--ox-fg-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: color var(--ox-duration) var(--ox-ease), background var(--ox-duration) var(--ox-ease);
+}
+.ox-segmented button:hover { color: var(--ox-fg); }
+.ox-segmented button[aria-pressed="true"] {
+  color: var(--ox-fg);
+  background: var(--ox-surface);
+  box-shadow: 0 0 0 1px var(--ox-border), var(--ox-shadow-sm);
+}
+
+/* =========================================================
+   5. Forms
+   ========================================================= */
+.ox-field { display: grid; gap: 0.4rem; }
+.ox-label { font-size: var(--ox-text-sm); font-weight: 500; color: var(--ox-fg); }
+.ox-hint { font-size: var(--ox-text-xs); color: var(--ox-fg-muted); }
+.ox-field[data-invalid] .ox-hint { color: var(--ox-fg); font-weight: 500; }
+.ox-field[data-invalid] .ox-hint::before { content: "⚠ "; }
+
+.ox-input,
+.ox-select,
+.ox-textarea {
+  width: 100%;
+  height: 2.5rem;
+  padding: 0 var(--ox-space-3);
+  font: inherit;
+  font-size: var(--ox-text-sm);
+  color: var(--ox-fg);
+  background: var(--ox-surface);
+  border: 1px solid var(--ox-border);
+  border-radius: var(--ox-radius);
+  transition: border-color var(--ox-duration) var(--ox-ease), box-shadow var(--ox-duration) var(--ox-ease);
+}
+.ox-input::placeholder,
+.ox-textarea::placeholder { color: var(--ox-fg-subtle); }
+.ox-input:hover,
+.ox-select:hover,
+.ox-textarea:hover { border-color: var(--ox-border-strong); }
+.ox-input:focus,
+.ox-select:focus,
+.ox-textarea:focus {
+  outline: none;
+  border-color: var(--ox-fg);
+  box-shadow: 0 0 0 3px var(--ox-ring);
+}
+.ox-field[data-invalid] .ox-input {
+  border-color: var(--ox-fg);
+  border-style: dashed;
+}
+.ox-textarea { height: auto; min-height: 6rem; padding: var(--ox-space-3); resize: vertical; }
+.ox-select {
+  appearance: none;
+  padding-right: var(--ox-space-8);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ox-fg-muted) 50%),
+    linear-gradient(135deg, var(--ox-fg-muted) 50%, transparent 50%);
+  background-position: calc(100% - 17px) 52%, calc(100% - 12px) 52%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.ox-input-group { position: relative; display: flex; align-items: center; }
+.ox-input-group > .ox-input { padding-left: 2.25rem; }
+.ox-input-group > .ox-input-icon {
+  position: absolute;
+  left: 0.75rem;
+  width: 1rem;
+  height: 1rem;
+  color: var(--ox-fg-subtle);
+  pointer-events: none;
+}
+.ox-input-group > .ox-kbd { position: absolute; right: 0.5rem; }
+
+/* Checkbox & radio: custom, monochrome */
+.ox-checkbox,
+.ox-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ox-space-2);
+  font-size: var(--ox-text-sm);
+  cursor: pointer;
+}
+.ox-checkbox input,
+.ox-radio input {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  background: var(--ox-surface);
+  border: 1px solid var(--ox-border-strong);
+  cursor: pointer;
+  transition: background var(--ox-duration) var(--ox-ease), border-color var(--ox-duration) var(--ox-ease);
+}
+.ox-checkbox input { border-radius: 4px; }
+.ox-radio input { border-radius: 50%; }
+.ox-checkbox input::after {
+  content: "";
+  width: 0.55rem;
+  height: 0.3rem;
+  border: 1.75px solid var(--ox-inverse);
+  border-top: 0;
+  border-right: 0;
+  transform: translateY(-1px) rotate(-45deg) scale(0);
+  transition: transform var(--ox-duration) var(--ox-ease);
+}
+.ox-radio input::after {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--ox-inverse);
+  transform: scale(0);
+  transition: transform var(--ox-duration) var(--ox-ease);
+}
+.ox-checkbox input:checked,
+.ox-radio input:checked { background: var(--ox-fg); border-color: var(--ox-fg); }
+.ox-checkbox input:checked::after { transform: translateY(-1px) rotate(-45deg) scale(1); }
+.ox-radio input:checked::after { transform: scale(1); }
+
+/* Switch */
+.ox-switch { display: inline-flex; align-items: center; gap: var(--ox-space-3); cursor: pointer; font-size: var(--ox-text-sm); }
+.ox-switch input { position: absolute; opacity: 0; pointer-events: none; }
+.ox-switch-track {
+  position: relative;
+  width: 2.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  background: var(--ox-border-strong);
+  border-radius: var(--ox-radius-full);
+  transition: background var(--ox-duration) var(--ox-ease);
+}
+.ox-switch-track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1rem;
+  height: 1rem;
+  background: var(--ox-bg);
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 220ms var(--ox-ease);
+}
+.ox-switch input:checked + .ox-switch-track { background: var(--ox-fg); }
+.ox-switch input:checked + .ox-switch-track::after { transform: translateX(1rem); }
+.ox-switch input:focus-visible + .ox-switch-track { outline: 2px solid var(--ox-fg); outline-offset: 2px; }
+
+/* =========================================================
+   6. Cards
+   ========================================================= */
+.ox-card {
+  background: var(--ox-surface);
+  border: 1px solid var(--ox-border);
+  border-radius: var(--ox-radius-lg);
+  box-shadow: var(--ox-shadow-sm);
+}
+.ox-card-body { padding: var(--ox-space-6); }
+.ox-card-header,
+.ox-card-footer { padding: var(--ox-space-4) var(--ox-space-6); }
+.ox-card-header { border-bottom: 1px solid var(--ox-border); }
+.ox-card-footer {
+  border-top: 1px solid var(--ox-border);
+  background: var(--ox-bg-subtle);
+  border-radius: 0 0 var(--ox-radius-lg) var(--ox-radius-lg);
+}
+.ox-card-title { margin: 0 0 var(--ox-space-1); font-size: var(--ox-text-base); font-weight: 600; letter-spacing: -0.01em; }
+.ox-card-text { margin: 0; color: var(--ox-fg-muted); font-size: var(--ox-text-sm); }
+.ox-card-interactive { transition: border-color var(--ox-duration) var(--ox-ease), box-shadow 240ms var(--ox-ease), transform 240ms var(--ox-ease); }
+.ox-card-interactive:hover { border-color: var(--ox-border-strong); box-shadow: var(--ox-shadow); transform: translateY(-2px); }
+
+/* =========================================================
+   7. Badges, avatars
+   ========================================================= */
+.ox-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 1.375rem;
+  padding: 0 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: var(--ox-fg);
+  background: var(--ox-bg-muted);
+  border: 1px solid var(--ox-border);
+  border-radius: var(--ox-radius-full);
+}
+.ox-badge-solid { color: var(--ox-inverse); background: var(--ox-fg); border-color: var(--ox-fg); }
+.ox-badge-outline { background: transparent; border-color: var(--ox-border-strong); }
+.ox-badge-dot::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.ox-badge-live::before { animation: ox-pulse 1.8s ease-in-out infinite; }
+
+.ox-avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  font-size: var(--ox-text-xs);
+  font-weight: 600;
+  color: var(--ox-fg);
+  background: var(--ox-bg-muted);
+  border: 1px solid var(--ox-border);
+  border-radius: 50%;
+  overflow: hidden;
+}
+.ox-avatar-solid { color: var(--ox-inverse); background: var(--ox-fg); border-color: var(--ox-fg); }
+.ox-avatar img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); }
+.ox-avatar-sm { width: 1.75rem; height: 1.75rem; font-size: 0.65rem; }
+.ox-avatar-lg { width: 3rem; height: 3rem; font-size: var(--ox-text-sm); }
+.ox-avatar-stack { display: inline-flex; }
+.ox-avatar-stack > .ox-avatar { box-shadow: 0 0 0 2px var(--ox-surface); }
+.ox-avatar-stack > .ox-avatar + .ox-avatar { margin-left: -0.5rem; }
+
+/* =========================================================
+   8. Alerts
+   ========================================================= */
+.ox-alert {
+  display: flex;
+  gap: var(--ox-space-3);
+  padding: var(--ox-space-4);
+  font-size: var(--ox-text-sm);
+  color: var(--ox-fg-muted);
+  background: var(--ox-surface);
+  border: 1px solid var(--ox-border);
+  border-radius: var(--ox-radius-lg);
+}
+.ox-alert strong { display: block; margin-bottom: 2px; font-weight: 600; color: var(--ox-fg); }
+.ox-alert-icon {
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ox-inverse);
+  background: var(--ox-fg);
+  border-radius: 50%;
+}
+.ox-alert-solid { color: color-mix(in srgb, var(--ox-inverse) 70%, transparent); background: var(--ox-fg); border-color: var(--ox-fg); }
+.ox-alert-solid strong { color: var(--ox-inverse); }
+.ox-alert-solid .ox-alert-icon { color: var(--ox-fg); background: var(--ox-inverse); }
+
+/* =========================================================
+   9. Tabs
+   ========================================================= */
+.ox-tabs-list {
+  display: flex;
+  gap: var(--ox-space-5);
+  border-bottom: 1px solid var(--ox-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ox-tab {
+  position: relative;
+  padding: var(--ox-space-2) 0 var(--ox-space-3);
+  font: 500 var(--ox-text-sm) var(--ox-font-sans);
+  color: var(--ox-fg-muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--ox-duration) var(--ox-ease);
+}
+.ox-tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--ox-fg);
+  transform: scaleX(0);
+  transition: transform 220ms var(--ox-ease);
+}
+.ox-tab:hover { color: var(--ox-fg); }
+.ox-tab[aria-selected="true"] { color: var(--ox-fg); }
+.ox-tab[aria-selected="true"]::after { transform: scaleX(1); }
+.ox-tab-panel { padding-top: var(--ox-space-4); }
+.ox-tab-panel[hidden] { display: none; }
+
+/* =========================================================
+   10. Accordion (native <details>)
+   ========================================================= */
+.ox-accordion { border-top: 1px solid var(--ox-border); }
+.ox-accordion details { border-bottom: 1px solid var(--ox-border); }
+.ox-accordion summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ox-space-4);
+  padding: var(--ox-space-5) 0;
+  font-weight: 500;
+  list-style: none;
+  cursor: pointer;
+}
+.ox-accordion summary::-webkit-details-marker { display: none; }
+.ox-accordion summary::after {
+  content: "+";
+  font: 300 1.4rem / 1 var(--ox-font-sans);
+  color: var(--ox-fg-muted);
+  transition: transform 220ms var(--ox-ease);
+}
+.ox-accordion details[open] summary::after { transform: rotate(45deg); }
+.ox-accordion details > :not(summary) {
+  margin: 0;
+  padding-bottom: var(--ox-space-5);
+  max-width: 65ch;
+  color: var(--ox-fg-muted);
+}
+
+/* =========================================================
+   11. Modal
+   ========================================================= */
+.ox-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: var(--ox-space-4);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms var(--ox-ease), visibility 200ms;
+}
+.ox-modal[data-open="true"] { opacity: 1; visibility: visible; }
+.ox-modal-dialog {
+  width: 100%;
+  max-width: 440px;
+  color: var(--ox-fg);
+  background: var(--ox-surface);
+  border: 1px solid var(--ox-border);
+  border-radius: var(--ox-radius-xl);
+  box-shadow: var(--ox-shadow-lg);
+  transform: translateY(8px) scale(0.97);
+  transition: transform 260ms var(--ox-ease);
+}
+.ox-modal[data-open="true"] .ox-modal-dialog { transform: none; }
+.ox-modal-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--ox-space-4); padding: var(--ox-space-6) var(--ox-space-6) 0; }
+.ox-modal-title { margin: 0; font-size: var(--ox-text-lg); font-weight: 600; letter-spacing: -0.015em; }
+.ox-modal-body { padding: var(--ox-space-3) var(--ox-space-6) var(--ox-space-6); color: var(--ox-fg-muted); font-size: var(--ox-text-sm); }
+.ox-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ox-space-2);
+  padding: var(--ox-space-4) var(--ox-space-6);
+  background: var(--ox-bg-subtle);
+  border-top: 1px solid var(--ox-border);
+  border-radius: 0 0 var(--ox-radius-xl) var(--ox-radius-xl);
+}
+
+/* =========================================================
+   12. Dropdown
+   ========================================================= */
+.ox-dropdown { position: relative; display: inline-block; }
+.ox-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 50;
+  min-width: 13rem;
+  padding: var(--ox-space-1);
+  background: var(--ox-surface);
+  border: 1px solid var(--ox-border);
+  border-radius: var(--ox-radius-lg);
+  box-shadow: var(--ox-shadow-lg);
+  opacity: 0;
+  transform: translateY(-4px) scale(0.98);
+  transform-origin: top left;
+  pointer-events: none;
+  transition: opacity var(--ox-duration) var(--ox-ease), transform var(--ox-duration) var(--ox-ease);
+}
+.ox-dropdown[data-open="true"] .ox-dropdown-menu { opacity: 1; transform: none; pointer-events: auto; }
+.ox-dropdown-label { padding: var(--ox-space-2) var(--ox-space-3) var(--ox-space-1); font-size: var(--ox-text-xs); color: var(--ox-fg-subtle); }
+.ox-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ox-space-4);
+  width: 100%;
+  padding: 0.45rem var(--ox-space-3);
+  font: inherit;
+  font-size: var(--ox-text-sm);
+  text-align: left;
+  color: var(--ox-fg);
+  background: none;
+  border: 0;
+  border-radius: var(--ox-radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+}
+.ox-dropdown-item:hover,
+.ox-dropdown-item:focus-visible { background: var(--ox-bg-muted); outline: none; }
+.ox-dropdown-item .ox-kbd { background: transparent; }
+.ox-separator { height: 1px; margin: var(--ox-space-1) 0; background: var(--ox-border); border: 0; }
+
+/* =========================================================
+   13. Tooltip (CSS only)
+   ========================================================= */
+[data-ox-tooltip] { position: relative; }
+[data-ox-tooltip]::after {
+  content: attr(data-ox-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 60;
+  translate: -50% 4px;
+  padding: 0.3rem 0.55rem;
+  font: 500 var(--ox-text-xs) / 1.3 var(--ox-font-sans);
+  color: var(--ox-inverse);
+  background: var(--ox-fg);
+  border-radius: var(--ox-radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ox-duration) var(--ox-ease), translate var(--ox-duration) var(--ox-ease);
+}
+[data-ox-tooltip]:hover::after,
+[data-ox-tooltip]:focus-visible::after { opacity: 1; translate: -50% 0; }
+
+/* =========================================================
+   14. Toast
+   ========================================================= */
+.ox-toast-region {
+  position: fixed;
+  right: var(--ox-space-4);
+  bottom: var(--ox-space-4);
+  z-index: 1100;
+  display: grid;
+  gap: var(--ox-space-2);
+  max-width: calc(100vw - 2rem);
+}
+.ox-toast {
+  display: flex;
+  align-items: center;
+  gap: var(--ox-space-3);
+  min-width: 260px;
+  padding: var(--ox-space-3) var(--ox-space-4);
+  font: 500 var(--ox-text-sm) var(--ox-font-sans);
+  color: var(--ox-inverse);
+  background: var(--ox-fg);
+  border-radius: var(--ox-radius-lg);
+  box-shadow: var(--ox-shadow-lg);
+  animation: ox-toast-in 320ms var(--ox-ease);
+}
+.ox-toast::before {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  font-size: 0.65rem;
+  color: var(--ox-fg);
+  background: var(--ox-inverse);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ox-toast[data-leaving] { animation: ox-toast-out 200ms var(--ox-ease) forwards; }
+
+/* =========================================================
+   15. Progress, skeleton, spinner
+   ========================================================= */
+.ox-progress { height: 4px; background: var(--ox-bg-muted); border-radius: var(--ox-radius-full); overflow: hidden; }
+.ox-progress-bar {
+  height: 100%;
+  width: var(--value, 0%);
+  background: var(--ox-fg);
+  border-radius: inherit;
+  transition: width 500ms var(--ox-ease);
+}
+.ox-skeleton {
+  background: linear-gradient(90deg, var(--ox-bg-muted) 30%, var(--ox-border) 50%, var(--ox-bg-muted) 70%);
+  background-size: 300% 100%;
+  border-radius: var(--ox-radius-sm);
+  animation: ox-shimmer 1.6s ease-in-out infinite;
+}
+.ox-spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1.5px solid var(--ox-border-strong);
+  border-top-color: var(--ox-fg);
+  border-radius: 50%;
+  animation: ox-spin 0.7s linear infinite;
+}
+
+/* =========================================================
+   16. Code block
+   ========================================================= */
+.ox-code {
+  margin: 0;
+  padding: var(--ox-space-5);
+  font: 400 0.8125rem / 1.75 var(--ox-font-mono);
+  color: #d4d4d4;
+  background: #0a0a0a;
+  border: 1px solid #222;
+  border-radius: var(--ox-radius-lg);
+  overflow-x: auto;
+  tab-size: 2;
+}
+.ox-code .c { color: #5f5f5f; }
+.ox-code .t { color: #ffffff; }
+.ox-code .a { color: #9a9a9a; }
+.ox-code .s { color: #e5e5e5; font-style: italic; }
+
+/* =========================================================
+   17. Navbar
+   ========================================================= */
+.ox-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--ox-bg) 75%, transparent);
+  backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms var(--ox-ease);
+}
+.ox-navbar[data-scrolled="true"] { border-bottom-color: var(--ox-border); }
+.ox-navbar-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--ox-space-4); height: 3.75rem; }
+.ox-navbar-links { display: flex; gap: var(--ox-space-1); }
+.ox-navbar-links a {
+  padding: 0.4rem 0.75rem;
+  font-size: var(--ox-text-sm);
+  color: var(--ox-fg-muted);
+  text-decoration: none;
+  border-radius: var(--ox-radius-full);
+  transition: color var(--ox-duration) var(--ox-ease), background var(--ox-duration) var(--ox-ease);
+}
+.ox-navbar-links a:hover { color: var(--ox-fg); background: var(--ox-bg-muted); }
+@media (max-width: 760px) {
+  .ox-navbar-links { display: none; }
+}
+
+/* =========================================================
+   18. Utilities
+   ========================================================= */
+.ox-stack { display: flex; flex-direction: column; gap: var(--ox-space-4); }
+.ox-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ox-space-3); }
+.ox-between { justify-content: space-between; }
+.ox-grid { display: grid; gap: var(--ox-space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.ox-divider { display: flex; align-items: center; gap: var(--ox-space-3); font-size: var(--ox-text-xs); color: var(--ox-fg-subtle); }
+.ox-divider::before,
+.ox-divider::after { content: ""; flex: 1; height: 1px; background: var(--ox-border); }
+.ox-sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* =========================================================
+   19. Keyframes & motion preferences
+   ========================================================= */
+@keyframes ox-spin { to { transform: rotate(360deg); } }
+@keyframes ox-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+@keyframes ox-pulse { 50% { opacity: 0.3; } }
+@keyframes ox-toast-in { from { opacity: 0; transform: translateY(12px) scale(0.96); } }
+@keyframes ox-toast-out { to { opacity: 0; transform: translateY(6px) scale(0.98); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ox *,
+  .ox *::before,
+  .ox *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

@@ -6,3 +6,5 @@ node_modules/
 .nojekyll
 .env*
 .vercel/
+# React package sources and build output are published to npm, not the website
+packages/

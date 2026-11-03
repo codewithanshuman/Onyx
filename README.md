@@ -24,6 +24,21 @@ Or via npm (once published):
 npm install onyx-ui
 ```
 
+## React
+
+Onyx is also available as typed React components:
+
+```bash
+npm install @onyx-ui/react
+```
+
+```tsx
+import "@onyx-ui/react/styles.css";
+import { Button, Modal, Tabs, useToast } from "@onyx-ui/react";
+```
+
+See [packages/react](packages/react) for details.
+
 ## Run the showcase locally
 
 ```bash

@@ -167,6 +167,72 @@ Onyx.theme.get();                // → "dark"`),
             ], ["Event", "Description"])
           ]
         }
+      ,
+        {
+          slug: "react",
+          title: "React",
+          lead: "Onyx as typed React components. Behavior lives in the components, so there's no script to add.",
+          blocks: [
+            H("Install"),
+            CODE("bash", `npm install @onyx-ui/react`, "Terminal"),
+            P("Import the styles once at the root of your app, and add the <code>ox</code> class to <code>&lt;body&gt;</code>."),
+            CODE("js", `import "@onyx-ui/react/styles.css";`, "main.tsx"),
+            H("Example"),
+            CODE("js", `import { Button, Field, Input, Modal, ToastProvider, useToast } from "@onyx-ui/react";
+import { useState } from "react";
+
+function Invite() {
+  const toast = useToast();
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Invite teammate</Button>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Invite a teammate"
+        footer={<Button onClick={() => { setOpen(false); toast("Invite sent"); }}>Send</Button>}
+      >
+        <Field label="Email" hint="They'll get a link to join.">
+          <Input type="email" />
+        </Field>
+      </Modal>
+    </>
+  );
+}
+
+export default function App() {
+  return <ToastProvider><Invite /></ToastProvider>;
+}`, "App.tsx"),
+            H("Components"),
+            API([
+              ["Actions", "<code>Button</code>, <code>SegmentedControl</code>"],
+              ["Forms", "<code>Field</code>, <code>Input</code>, <code>Textarea</code>, <code>Select</code>, <code>Checkbox</code>, <code>Radio</code>, <code>Switch</code>"],
+              ["Layout", "<code>Container</code>, <code>Stack</code>, <code>Row</code>, <code>Divider</code>, <code>Card</code> and its parts"],
+              ["Display", "<code>Badge</code>, <code>Avatar</code>, <code>AvatarStack</code>, <code>Kbd</code>, <code>Alert</code>, <code>Progress</code>, <code>Spinner</code>, <code>Skeleton</code>"],
+              ["Overlays", "<code>Modal</code>, <code>DropdownMenu</code>, <code>Tooltip</code>"],
+              ["Navigation", "<code>Tabs</code>, <code>TabList</code>, <code>Tab</code>, <code>TabPanel</code>, <code>Accordion</code>, <code>AccordionItem</code>"],
+              ["Providers", "<code>ToastProvider</code> + <code>useToast</code>, <code>ThemeProvider</code> + <code>useTheme</code>"]
+            ], ["Group", "Components"]),
+            H("Accessibility built in"),
+            LIST([
+              "<code>Field</code> links the label, hint and error to the control and marks it invalid.",
+              "<code>Modal</code> traps focus, closes on Escape and returns focus to what opened it.",
+              "<code>Tabs</code> and <code>DropdownMenu</code> work with arrow keys, Home and End.",
+              "<code>Switch</code> uses the switch role, and <code>Progress</code> reports its value."
+            ]),
+            H("Theme"),
+            CODE("js", `import { ThemeProvider, useTheme, Button } from "@onyx-ui/react";
+
+function ThemeButton() {
+  const { resolved, toggle } = useTheme();
+  return <Button variant="ghost" onClick={toggle}>{resolved === "dark" ? "Light" : "Dark"}</Button>;
+}
+
+// "system" follows the OS; the choice is remembered
+<ThemeProvider defaultTheme="system">{/* app */}</ThemeProvider>`, "Theme.tsx")
+          ]
+        }
       ]
     },
 

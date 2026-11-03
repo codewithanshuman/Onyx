@@ -39,7 +39,7 @@ Then open http://localhost:5173.
 | Overlays   | Modal (focus trap, Esc to close), Dropdown, Tooltip, Toast |
 | Navigation | Tabs (arrow-key support), Accordion |
 
-See [docs/getting-started.md](docs/getting-started.md) for usage.
+Full documentation with live examples lives in [docs/](docs/index.html) — run `npm run dev` and open http://localhost:5173/docs/.
 
 ## Theming
 

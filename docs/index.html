@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Onyx Docs</title>
+  <meta name="description" content="Documentation for Onyx, the black & white component library." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../src/onyx.css" />
+  <link rel="stylesheet" href="docs.css" />
+</head>
+<body class="ox">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-logo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M3 8h10m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-back" viewBox="0 0 16 16"><path d="M13 8H3m4-4L3 8l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5v-.5A1.5 1.5 0 0 0 9 1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5"/></g></symbol>
+    <symbol id="i-sun" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1 1M12 12l1 1M3 13l1-1M12 4l1-1"/></g></symbol>
+    <symbol id="i-moon" viewBox="0 0 16 16"><path d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></g></symbol>
+    <symbol id="i-menu" viewBox="0 0 16 16"><path d="M2 4.5h12M2 8h12M2 11.5h12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></symbol>
+  </svg>
+
+  <nav class="ox-navbar" data-scrolled="true">
+    <div class="d-topbar ox-navbar-inner">
+      <div class="ox-row" style="gap:var(--ox-space-2)">
+        <button class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon d-menu-btn" id="menu-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar"><svg><use href="#i-menu"/></svg></button>
+        <a href="../" class="d-logo"><svg><use href="#i-logo"/></svg>Onyx</a>
+        <span class="ox-badge ox-badge-outline d-version">v1.0</span>
+      </div>
+      <button class="d-search-trigger" id="search-trigger" aria-label="Search docs">
+        <svg><use href="#i-search"/></svg><span>Search docs…</span><span class="ox-kbd">Ctrl K</span>
+      </button>
+      <div class="ox-row" style="gap:var(--ox-space-1)">
+        <a href="../#pricing" class="ox-btn ox-btn-ghost ox-btn-sm d-hide-sm">Pricing</a>
+        <a href="#" class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon" aria-label="GitHub"><svg><use href="#i-github"/></svg></a>
+        <button class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-icon" data-ox-theme-toggle aria-label="Toggle theme">
+          <svg class="icon-moon"><use href="#i-moon"/></svg><svg class="icon-sun"><use href="#i-sun"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="d-layout">
+    <aside class="d-sidebar" id="sidebar" aria-label="Documentation"></aside>
+    <div class="d-scrim" id="scrim"></div>
+    <main class="d-main" id="main" tabindex="-1"></main>
+    <aside class="d-toc" id="toc" aria-label="On this page"></aside>
+  </div>
+
+  <!-- Search dialog -->
+  <div class="ox-modal d-search" id="search-modal" role="dialog" aria-modal="true" aria-label="Search documentation" aria-hidden="true">
+    <div class="ox-modal-dialog">
+      <div class="d-search-field">
+        <svg><use href="#i-search"/></svg>
+        <input id="search-input" type="text" placeholder="Search components and guides…" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" />
+        <span class="ox-kbd">Esc</span>
+      </div>
+      <div class="d-search-results" id="search-results" role="listbox"></div>
+    </div>
+  </div>
+
+  <script src="../src/onyx.js"></script>
+  <script src="content.js"></script>
+  <script src="docs.js"></script>
+</body>
+</html>

@@ -695,7 +695,11 @@ Onyx.toast("Link copied", { duration: 5000 });`),
 <script src="onyx-pro.js"></script>`, "index.html"),
             H("Templates"),
             { type: "cards", items: [
-              ["template-dashboard", "Dashboard", "Analytics overview with charts, orders table and command menu."]
+              ["template-landing", "Landing page", "Marketing page with product preview, features and testimonials."],
+              ["template-pricing", "Pricing", "Plans, a comparison table and a billing FAQ."],
+              ["template-auth", "Sign in & sign up", "Sign in, create account and reset password, with validation."],
+              ["template-dashboard", "Dashboard", "Analytics overview with charts, orders table and command menu."],
+              ["template-settings", "Settings", "Profile, billing and team settings with an unsaved-changes bar."]
             ] },
             NOTE("<b>License.</b> Onyx Pro is covered by a commercial license. You can use it in unlimited projects for yourself or your clients, but you can't resell or redistribute the Pro source files.")
           ]
@@ -932,6 +936,112 @@ document.getElementById("demo-cmd").addEventListener("click", menu.open);`),
             ]),
             H("Using it"),
             P("Copy <code>pro/templates/dashboard.html</code> into your project, fix the paths to the CSS and JS files, and replace the sample data with your own.")
+          ]
+        },
+        {
+          slug: "building-blocks",
+          title: "Page building blocks",
+          lead: "Smaller pieces the templates are made of, available to use on their own.",
+          blocks: [
+            H("Password strength"),
+            P("Set <code>data-score</code> from 0 to 4 as the user types."),
+            EX(`<div class="ox-field" style="width:280px">
+  <label class="ox-label" for="bb-pw">Password</label>
+  <input class="ox-input" id="bb-pw" type="password" value="Onyx2026">
+  <div class="oxp-strength" data-score="3"><i></i><i></i><i></i><i></i></div>
+</div>`),
+            H("Save bar"),
+            P("A floating bar for unsaved changes. Add <code>data-show</code> to slide it up."),
+            EX(`<button class="ox-btn ox-btn-outline" id="bb-toggle">Toggle save bar</button>
+<div class="oxp-savebar" id="bb-savebar">
+  <span>You have unsaved changes</span>
+  <button class="ox-btn ox-btn-ghost ox-btn-sm ox-btn-pill">Discard</button>
+  <button class="ox-btn ox-btn-sm ox-btn-pill">Save</button>
+</div>`, "", `document.getElementById("bb-toggle").addEventListener("click", () => {
+  document.getElementById("bb-savebar").toggleAttribute("data-show");
+});`),
+            H("Comparison table"),
+            EX(`<table class="oxp-compare">
+  <thead><tr><th>Feature</th><th>Free</th><th class="hl">Pro</th></tr></thead>
+  <tbody>
+    <tr><td>Projects</td><td>3</td><td class="hl">Unlimited</td></tr>
+    <tr><td>Version history</td><td class="no"></td><td class="yes hl"></td></tr>
+  </tbody>
+</table>`, "wide"),
+            H("API"),
+            API([
+              ["<code>.oxp-mark</code>", "Neutral placeholder logo used in the templates."],
+              ["<code>.oxp-auth</code>, <code>-form</code>, <code>-body</code>, <code>-side</code>", "Split sign-in layout. The side panel hides on small screens."],
+              ["<code>.oxp-strength[data-score]</code>", "Four-segment strength meter."],
+              ["<code>.oxp-savebar[data-show]</code>", "Floating unsaved-changes bar."],
+              ["<code>.oxp-compare</code>, <code>.yes</code>, <code>.no</code>, <code>.hl</code>", "Comparison table with check marks and a highlighted column."],
+              ["<code>.oxp-subnav</code>, <code>.oxp-setting</code>", "Sticky section navigation and two-column setting rows."]
+            ])
+          ]
+        },
+        {
+          slug: "template-landing",
+          title: "Landing page template",
+          lead: "A complete marketing page for a software product.",
+          blocks: [
+            NOTE('<b>Included with Pro and Team.</b> Customers get the full template source along with the Pro components.'),
+            H("What's inside"),
+            LIST([
+              "Hero with an animated product window (a kanban board built from Onyx components).",
+              "Logo strip, a features grid, three-step how-it-works and numbers that count up on scroll.",
+              "Testimonial wall in a masonry layout and an email capture call to action."
+            ]),
+            H("Using it"),
+            P("Copy <code>pro/templates/landing.html</code> into your project, fix the paths to the CSS and JS files, and replace the sample content with your own.")
+          ]
+        },
+        {
+          slug: "template-pricing",
+          title: "Pricing template",
+          lead: "Plans, a full comparison table and a billing FAQ.",
+          blocks: [
+            NOTE('<b>Included with Pro and Team.</b> Customers get the full template source along with the Pro components.'),
+            H("What's inside"),
+            LIST([
+              "Four plans with a monthly / yearly switch that recalculates prices.",
+              "Plans and features live in one data object, so you edit them in one place.",
+              "Sticky-header comparison table with check marks and a highlighted plan."
+            ]),
+            H("Using it"),
+            P("Copy <code>pro/templates/pricing.html</code> into your project, fix the paths to the CSS and JS files, and replace the sample content with your own.")
+          ]
+        },
+        {
+          slug: "template-auth",
+          title: "Sign in & sign up template",
+          lead: "Sign in, create account and reset password in one file.",
+          blocks: [
+            NOTE('<b>Included with Pro and Team.</b> Customers get the full template source along with the Pro components.'),
+            H("What's inside"),
+            LIST([
+              "Three views switched by URL: <code>#signin</code>, <code>#signup</code> and <code>#forgot</code>.",
+              "Field validation with clear error messages, show / hide password and a strength meter.",
+              "Loading states, social sign-in buttons and a “check your inbox” confirmation."
+            ]),
+            H("Using it"),
+            P("Copy <code>pro/templates/auth.html</code> into your project, fix the paths to the CSS and JS files, and replace the sample content with your own.")
+          ]
+        },
+        {
+          slug: "template-settings",
+          title: "Settings template",
+          lead: "Profile, account, notifications, billing and team settings.",
+          blocks: [
+            NOTE('<b>Included with Pro and Team.</b> Customers get the full template source along with the Pro components.'),
+            H("What's inside"),
+            LIST([
+              "A save bar slides up when anything changes, with Discard and Save.",
+              "Avatar upload with preview, username with prefix and a bio character counter.",
+              "Invoices table, team table with role changes and an invite dialog that adds people live.",
+              "Danger zone with a type-the-name-to-confirm delete."
+            ]),
+            H("Using it"),
+            P("Copy <code>pro/templates/settings.html</code> into your project, fix the paths to the CSS and JS files, and replace the sample content with your own.")
           ]
         }
       ]

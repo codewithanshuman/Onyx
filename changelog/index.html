@@ -63,6 +63,14 @@
   <script>
     // Newest first. Add a release by adding an object here.
     var RELEASES = [
+      { pkg: "react", version: "1.1.0", date: "2026-11-04", title: "React catches up with 1.1",
+        summary: "Every new core component, as typed React components with behavior built in.",
+        items: ["<b>New:</b> <code>Navbar</code> with a mobile menu (Escape and link taps close it, page scroll locks while open).",
+                "<b>New:</b> <code>Breadcrumb</code>, <code>Pagination</code> (with a reusable <code>pageRange</code> helper), <code>SkipLink</code>.",
+                "<b>New:</b> <code>RangeSlider</code>, <code>NumberStepper</code> (clamped to min/max), <code>ChipGroup</code> (single or multiple).",
+                "<b>New:</b> <code>Table</code>, <code>Timeline</code>, <code>EmptyState</code>, <code>Banner</code> (remembers dismissal), and <code>Avatar status</code>.",
+                "<b>Included:</b> the 1.1.1 stylesheet with the accessibility fixes."],
+        install: "npm i @onyxdesign/react@1.1.0" },
       { pkg: "core", version: "1.1.1", date: "2026-11-03", title: "Accessibility pass",
         summary: "Every page and template now passes an automated WCAG audit with zero violations.",
         items: ["<b>Fixed:</b> secondary and subtle text now meet 4.5:1 contrast in light and dark mode.",

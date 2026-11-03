@@ -8,26 +8,34 @@ export function cx(...parts: Array<string | false | null | undefined>): string {
 /**
  * State that can be controlled (value + onChange from the parent)
  * or uncontrolled (defaultValue, managed internally).
+ * The setter also takes an updater, `(prev) => next`, which always sees the latest value,
+ * even when several updates happen before React re-renders (fast repeated clicks).
  */
 export function useControllableState<T>(
   value: T | undefined,
   defaultValue: T,
   onChange?: (next: T) => void
-): [T, (next: T) => void] {
+): [T, (next: T | ((prev: T) => T)) => void] {
   const [inner, setInner] = useState(defaultValue);
   const controlled = value !== undefined;
+  const current = controlled ? (value as T) : inner;
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
+  // Latest value, updated on every render and immediately on every set
+  const latest = useRef(current);
+  latest.current = current;
 
   const set = useCallback(
-    (next: T) => {
-      if (!controlled) setInner(next);
-      onChangeRef.current?.(next);
+    (next: T | ((prev: T) => T)) => {
+      const resolved = typeof next === "function" ? (next as (prev: T) => T)(latest.current) : next;
+      latest.current = resolved;
+      if (!controlled) setInner(resolved);
+      onChangeRef.current?.(resolved);
     },
     [controlled]
   );
 
-  return [controlled ? (value as T) : inner, set];
+  return [current, set];
 }
 
 export const FOCUSABLE =

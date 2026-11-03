@@ -68,11 +68,13 @@ export interface AvatarProps extends HTMLAttributes<HTMLSpanElement> {
   alt?: string;
   size?: "sm" | "md" | "lg";
   solid?: boolean;
+  /** Adds a presence dot. */
+  status?: "online" | "away" | "offline";
 }
 
-export function Avatar({ initials, src, alt = "", size = "md", solid, className, ...rest }: AvatarProps) {
+export function Avatar({ initials, src, alt = "", size = "md", solid, status, className, ...rest }: AvatarProps) {
   return (
-    <span className={cx("ox-avatar", size !== "md" && `ox-avatar-${size}`, solid && "ox-avatar-solid", className)} {...rest}>
+    <span className={cx("ox-avatar", size !== "md" && `ox-avatar-${size}`, solid && "ox-avatar-solid", className)} data-status={status} {...rest}>
       {src ? <img src={src} alt={alt} /> : initials}
     </span>
   );

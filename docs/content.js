@@ -206,12 +206,12 @@ export default function App() {
 }`, "App.tsx"),
             H("Components"),
             API([
-              ["Actions", "<code>Button</code>, <code>SegmentedControl</code>"],
-              ["Forms", "<code>Field</code>, <code>Input</code>, <code>Textarea</code>, <code>Select</code>, <code>Checkbox</code>, <code>Radio</code>, <code>Switch</code>"],
+              ["Actions", "<code>Button</code>, <code>SegmentedControl</code>, <code>ChipGroup</code>"],
+              ["Forms", "<code>Field</code>, <code>Input</code>, <code>Textarea</code>, <code>Select</code>, <code>Checkbox</code>, <code>Radio</code>, <code>Switch</code>, <code>RangeSlider</code>, <code>NumberStepper</code>"],
               ["Layout", "<code>Container</code>, <code>Stack</code>, <code>Row</code>, <code>Divider</code>, <code>Card</code> and its parts"],
-              ["Display", "<code>Badge</code>, <code>Avatar</code>, <code>AvatarStack</code>, <code>Kbd</code>, <code>Alert</code>, <code>Progress</code>, <code>Spinner</code>, <code>Skeleton</code>"],
+              ["Display", "<code>Badge</code>, <code>Avatar</code>, <code>AvatarStack</code>, <code>Kbd</code>, <code>Alert</code>, <code>Progress</code>, <code>Spinner</code>, <code>Skeleton</code>, <code>Table</code>, <code>Timeline</code>, <code>EmptyState</code>, <code>Banner</code>"],
               ["Overlays", "<code>Modal</code>, <code>DropdownMenu</code>, <code>Tooltip</code>"],
-              ["Navigation", "<code>Tabs</code>, <code>TabList</code>, <code>Tab</code>, <code>TabPanel</code>, <code>Accordion</code>, <code>AccordionItem</code>"],
+              ["Navigation", "<code>Navbar</code> with mobile menu, <code>Breadcrumb</code>, <code>Pagination</code>, <code>SkipLink</code>, <code>Tabs</code>, <code>Accordion</code>"],
               ["Providers", "<code>ToastProvider</code> + <code>useToast</code>, <code>ThemeProvider</code> + <code>useTheme</code>"]
             ], ["Group", "Components"]),
             H("Accessibility built in"),

@@ -18,6 +18,15 @@ export type { ModalProps, DropdownMenuProps, MenuItem } from "./Overlay";
 export { Tabs, TabList, Tab, TabPanel, Accordion, AccordionItem } from "./Navigation";
 export type { TabsProps } from "./Navigation";
 
+export { Breadcrumb, Pagination, pageRange, Navbar, SkipLink } from "./Wayfinding";
+export type { BreadcrumbItem, PaginationProps, NavLink, NavbarProps } from "./Wayfinding";
+
+export { RangeSlider, NumberStepper, ChipGroup } from "./Inputs";
+export type { RangeSliderProps, NumberStepperProps, ChipGroupProps, ChipOption } from "./Inputs";
+
+export { Table, EmptyState, Timeline, Banner } from "./Data";
+export type { TableProps, EmptyStateProps, TimelineEvent, BannerProps } from "./Data";
+
 export { ToastProvider, useToast, ThemeProvider, useTheme } from "./Providers";
 export type { Theme } from "./Providers";
 

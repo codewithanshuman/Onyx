@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import {
   Accordion, AccordionItem, Alert, Avatar, AvatarStack, Badge, Button, Card, CardBody, CardFooter, CardText, CardTitle,
   Checkbox, Container, DropdownMenu, Field, Input, Kbd, Modal, Progress, Radio, Row, SegmentedControl, Select, Skeleton,
-  Spinner, Stack, Switch, Tab, TabList, TabPanel, Tabs, Textarea, ThemeProvider, ToastProvider, Tooltip, useTheme, useToast
+  Spinner, Stack, Switch, Tab, TabList, TabPanel, Tabs, Textarea, ThemeProvider, ToastProvider, Tooltip, useTheme, useToast,
+  Banner, Breadcrumb, ChipGroup, EmptyState, Navbar, NumberStepper, Pagination, RangeSlider, SkipLink, Table, Timeline
 } from "../src";
 
 function SignUp() {
@@ -96,10 +97,56 @@ function Display() {
   );
 }
 
+function NewIn11() {
+  const [volume, setVolume] = useState(64);
+  const toast = useToast();
+  return (
+    <Card style={{ marginTop: 24 }}>
+      <CardBody>
+        <CardTitle>New in 1.1</CardTitle>
+        <div className="ox-grid" style={{ marginTop: "var(--ox-space-5)", alignItems: "start" }}>
+          <Stack gap={5}>
+            <Breadcrumb items={[{ label: "Workspace", href: "#" }, { label: "Projects", href: "#" }, { label: "Landing v2" }]} />
+            <Pagination pages={12} defaultPage={4} onPageChange={(p) => toast("Page " + p)} />
+            <Row style={{ flexWrap: "nowrap" }}>
+              <span style={{ minWidth: 60, fontSize: 14 }}>Volume</span>
+              <RangeSlider aria-label="Volume" value={volume} onValueChange={setVolume} />
+              <span className="ox-mono ox-muted" style={{ minWidth: 28, textAlign: "right" }}>{volume}</span>
+            </Row>
+            <Row between><span style={{ fontSize: 14 }}>Guests</span><NumberStepper label="Guests" defaultValue={2} min={1} max={8} /></Row>
+            <ChipGroup aria-label="Team" defaultValue={["design"]} options={[{ value: "design", label: "Design" }, { value: "eng", label: "Engineering" }, { value: "mkt", label: "Marketing" }]} />
+          </Stack>
+          <Stack gap={5}>
+            <Table caption="Team members">
+              <thead><tr><th scope="col">Member</th><th scope="col" className="num">Projects</th></tr></thead>
+              <tbody>
+                <tr><td><Row style={{ flexWrap: "nowrap" }}><Avatar initials="AL" size="sm" solid status="online" />Ada Lovelace</Row></td><td className="num">14</td></tr>
+                <tr><td><Row style={{ flexWrap: "nowrap" }}><Avatar initials="GH" size="sm" status="away" />Grace Hopper</Row></td><td className="num">9</td></tr>
+              </tbody>
+            </Table>
+            <Timeline events={[{ title: "Kickoff", time: "Nov 1", dateTime: "2026-11-01", state: "done" }, { title: "Launch", time: "Nov 12", dateTime: "2026-11-12", state: "upcoming" }]} />
+          </Stack>
+        </div>
+        <div style={{ marginTop: 24 }}>
+          <EmptyState title="No projects yet" description="Projects you create will show up here." action={<Button pill onClick={() => toast("Project created")}>Create project</Button>} />
+        </div>
+      </CardBody>
+    </Card>
+  );
+}
+
 function App() {
   const { resolved, toggle } = useTheme();
   return (
-    <Container style={{ padding: "48px 16px" }}>
+    <>
+    <SkipLink />
+    <Banner storageKey="react-demo">You are viewing <b>@onyxdesign/react 1.1</b>. Every component here is React.</Banner>
+    <Navbar
+      brand={<a href="#" style={{ fontWeight: 600, color: "inherit", textDecoration: "none" }}>Onyx React</a>}
+      links={[{ label: "Overview", href: "#", current: true }, { label: "Components", href: "#main" }, { label: "Docs", href: "https://onyxdesign.vercel.app/docs/#/react" }]}
+      actions={<Button size="sm" variant="ghost" onClick={toggle}>{resolved === "dark" ? "Light" : "Dark"}</Button>}
+    />
+    <Container id="main" style={{ padding: "48px 16px" }}>
       <Row between style={{ marginBottom: 32 }}>
         <div>
           <h1 className="ox-h1" style={{ margin: 0 }}>@onyxdesign/react</h1>
@@ -126,7 +173,9 @@ function App() {
           </Accordion>
         </CardBody>
       </Card>
+      <NewIn11 />
     </Container>
+    </>
   );
 }
 

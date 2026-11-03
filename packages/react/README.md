@@ -46,12 +46,12 @@ Add `className="ox"` to `<body>` (or a wrapper) for Onyx's base typography and c
 
 | Group | Components |
 |---|---|
-| Actions | `Button`, `SegmentedControl` |
-| Forms | `Field`, `Input`, `Textarea`, `Select`, `Checkbox`, `Radio`, `Switch` |
+| Actions | `Button`, `SegmentedControl`, `ChipGroup` |
+| Forms | `Field`, `Input`, `Textarea`, `Select`, `Checkbox`, `Radio`, `Switch`, `RangeSlider`, `NumberStepper` |
 | Layout | `Container`, `Stack`, `Row`, `Divider`, `Card`, `CardHeader`, `CardBody`, `CardFooter`, `CardTitle`, `CardText` |
-| Display | `Badge`, `Avatar`, `AvatarStack`, `Kbd`, `Alert`, `Progress`, `Spinner`, `Skeleton` |
+| Display | `Badge`, `Avatar` (with `status`), `AvatarStack`, `Kbd`, `Alert`, `Progress`, `Spinner`, `Skeleton`, `Table`, `Timeline`, `EmptyState`, `Banner` |
 | Overlays | `Modal`, `DropdownMenu`, `Tooltip` |
-| Navigation | `Tabs`, `TabList`, `Tab`, `TabPanel`, `Accordion`, `AccordionItem` |
+| Navigation | `Navbar` (with mobile menu), `Breadcrumb`, `Pagination`, `SkipLink`, `Tabs`, `TabList`, `Tab`, `TabPanel`, `Accordion`, `AccordionItem` |
 | Providers | `ToastProvider` + `useToast`, `ThemeProvider` + `useTheme` |
 
 Behavior lives in the components, so you don't need `onyx.js`. Modals trap focus and return it, menus and tabs work with the keyboard, and `Field` connects labels, hints and errors for screen readers.

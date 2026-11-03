@@ -1,0 +1,47 @@
+# Runs on every push and pull request:
+#   react - type-checks, builds and tests @onyxdesign/react
+#   site  - checks every internal link, then opens each page in a real browser and fails on
+#           accessibility violations (light and dark), sideways scrolling, navbar wrapping and JS errors
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  react:
+    name: React package
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/react
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: packages/react/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
+  site:
+    name: Site quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check:links
+      - run: npm run check:site

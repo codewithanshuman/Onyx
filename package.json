@@ -11,7 +11,10 @@
   ],
   "scripts": {
     "dev": "python -m http.server 5173",
-    "build:pro-preview": "node scripts/build-pro-preview.mjs"
+    "build:pro-preview": "node scripts/build-pro-preview.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:site": "node scripts/check-site.mjs",
+    "check": "npm run check:links && npm run check:site"
   },
   "keywords": [
     "ui",
@@ -34,5 +37,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "playwright": "^1.49.1"
   }
 }

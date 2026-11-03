@@ -629,7 +629,7 @@
     function isDisabled(d) {
       return (min && d < min) || (max && d > max) || (opts.disabled && opts.disabled(d));
     }
-    function same(a, b) { return a && b && a.getTime() === b.getTime(); }
+    function same(a, b) { return !!(a && b) && a.getTime() === b.getTime(); }
 
     function render(focusAfter) {
       var first = new Date(focus.getFullYear(), focus.getMonth(), 1);
@@ -637,12 +637,15 @@
       var cursor = addDays(first, -lead);
       title.textContent = new Intl.DateTimeFormat(opts.locale, { month: "long", year: "numeric" }).format(first);
       var rangeEnd = end || (opts.range && start && hover && hover > start ? hover : null);
-      var html = "";
+      // Rows are display: contents, so the 7-column grid layout is unchanged but screen readers hear weeks
+      var html = '<div role="row">';
       for (var w = 0; w < 7; w++) {
         var dow = addDays(cursor, w);
         html += '<div class="oxp-cal-dow" role="columnheader" aria-label="' + esc(new Intl.DateTimeFormat(opts.locale, { weekday: "long" }).format(dow)) + '">' + esc(dowFmt.format(dow).slice(0, 2)) + "</div>";
       }
+      html += "</div>";
       for (var i = 0; i < 42; i++) {
+        if (i % 7 === 0) html += (i ? "</div>" : "") + '<div role="row">';
         var d = addDays(cursor, i);
         var selected = same(d, start) || same(d, end);
         var inRange = opts.range && start && rangeEnd && d > start && d < rangeEnd;
@@ -655,7 +658,7 @@
           (inRange ? " data-in-range" : "") +
           (isDisabled(d) ? " disabled" : "") + ">" + d.getDate() + "</button>";
       }
-      grid.innerHTML = html;
+      grid.innerHTML = html + "</div>";
       if (focusAfter) grid.querySelector('[tabindex="0"]').focus();
     }
 

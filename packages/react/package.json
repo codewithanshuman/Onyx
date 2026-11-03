@@ -26,7 +26,8 @@
     "build": "tsup && node scripts/copy-css.mjs",
     "test": "npm run build && node --test test/*.test.mjs",
     "typecheck": "tsc --noEmit",
-    "demo": "tsup --config tsup.demo.config.ts"
+    "demo": "tsup --config tsup.demo.config.ts",
+    "prepublishOnly": "npm test"
   },
   "peerDependencies": {
     "react": ">=18",

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page not found · Onyx</title>
+  <!-- GitHub Pages serves this file for any missing path, so links must be absolute to the site root -->
+  <base href="/Onyx/" />
+  <link rel="icon" href="brand/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="src/onyx.css" />
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; text-align: center; padding: var(--ox-space-6); }
+    .bat { width: 120px; color: var(--ox-fg); margin-bottom: var(--ox-space-8); animation: float 3s ease-in-out infinite; }
+    @keyframes float { 50% { transform: translateY(-8px); } }
+    h1 { margin: var(--ox-space-3) 0 var(--ox-space-3); }
+    .ox-lead { margin: 0 auto var(--ox-space-8); max-width: 36ch; }
+    .ox-row { justify-content: center; }
+  </style>
+</head>
+<body class="ox">
+  <main>
+    <div class="bat" id="bat" aria-hidden="true"></div>
+    <span class="ox-eyebrow">Error 404</span>
+    <h1 class="ox-h1">This page flew away.</h1>
+    <p class="ox-lead">The page you're looking for doesn't exist or has moved.</p>
+    <div class="ox-row">
+      <a href="./" class="ox-btn ox-btn-pill">Back to home</a>
+      <a href="docs/" class="ox-btn ox-btn-pill ox-btn-outline">Read the docs</a>
+    </div>
+  </main>
+  <script>
+    fetch("brand/onyx-logo.svg").then(function (r) { return r.text(); })
+      .then(function (svg) { document.getElementById("bat").innerHTML = svg; })
+      .catch(function () {});
+  </script>
+  <script src="src/onyx.js"></script>
+</body>
+</html>

@@ -4,6 +4,8 @@
 
 **The interface, in black & white.**
 
+[Website](https://codewithanshuman.github.io/Onyx/) · [Documentation](https://codewithanshuman.github.io/Onyx/docs/) · [Pricing](https://codewithanshuman.github.io/Onyx/#pricing)
+
 Onyx is a zero-dependency UI component library for designers who believe restraint is a feature. Two colors, sharp typography, and every detail considered. One CSS file, one small script, light and dark themes built in.
 
 ## Quick start

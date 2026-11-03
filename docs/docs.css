@@ -78,7 +78,7 @@ body { margin: 0; }
 .d-nav-link[aria-current="page"] { color: var(--ox-fg); font-weight: 500; background: var(--ox-bg-muted); }
 .d-nav-link .ox-badge { height: 1.15rem; font-size: 0.6rem; }
 
-.d-toc h4 { margin: 0 0 var(--ox-space-3); font-size: var(--ox-text-xs); font-weight: 500; color: var(--ox-fg-subtle); }
+.d-toc-title { margin: 0 0 var(--ox-space-3); font-size: var(--ox-text-xs); font-weight: 500; color: var(--ox-fg-subtle); }
 .d-toc a { display: block; padding: 0.25rem 0 0.25rem var(--ox-space-3); font-size: 0.8125rem; color: var(--ox-fg-muted); text-decoration: none; border-left: 1px solid var(--ox-border); transition: color var(--ox-duration), border-color var(--ox-duration); }
 .d-toc a:hover { color: var(--ox-fg); }
 .d-toc a.active { color: var(--ox-fg); border-left-color: var(--ox-fg); }

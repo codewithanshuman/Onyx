@@ -1,4 +1,4 @@
-/*! Onyx Pro v1.1.0 — PREVIEW BUILD for the Onyx documentation only.
+/*! Onyx Pro v1.1.1 — PREVIEW BUILD for the Onyx documentation only.
  *  Not licensed for use in your projects. Get a license from the Onyx pricing page. */
 (function (global) {
   "use strict";
@@ -726,6 +726,8 @@
     input.classList.add("oxp-date-input");
     input.readOnly = true;
     input.placeholder = input.placeholder || opts.placeholder;
+    // A read-only field that opens a dialog is a combobox, which is what allows aria-expanded on it
+    input.setAttribute("role", "combobox");
     input.setAttribute("aria-haspopup", "dialog");
     input.setAttribute("aria-expanded", "false");
 

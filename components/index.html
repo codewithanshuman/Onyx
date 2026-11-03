@@ -14,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/src/onyx.css?v=1.1.1" />
-  <link rel="stylesheet" href="/docs/pro-preview/onyx-pro.css?v=1.1.1" />
+  <link rel="stylesheet" href="/src/onyx.css?v=1.1.4" />
+  <link rel="stylesheet" href="/docs/pro-preview/onyx-pro.css?v=1.1.2" />
   <link rel="stylesheet" href="/assets/site.css?v=2" />
   <style>
     .toolbar { position: sticky; top: 3.75rem; z-index: 50; display: grid; gap: var(--ox-space-3); padding: var(--ox-space-4) 0; background: color-mix(in srgb, var(--ox-bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--ox-border); }
@@ -56,17 +56,18 @@
   </style>
 </head>
 <body class="ox" data-page="components">
+  <a class="ox-skip" href="#main">Skip to content</a>
   <header data-site-header></header>
 
-  <section class="page-hero">
+  <header class="page-hero">
     <div class="ox-container">
       <span class="ox-eyebrow">Components</span>
       <h1>Everything, live.</h1>
       <p class="ox-lead"><span id="total">All</span> components, working right here. Search, filter, copy the code, or open the docs for the full API.</p>
     </div>
-  </section>
+  </header>
 
-  <main class="ox-container">
+  <main id="main" tabindex="-1" class="ox-container">
     <div class="toolbar">
       <div class="toolbar-row">
         <div class="ox-input-group">
@@ -99,8 +100,8 @@
 
   <footer data-site-footer></footer>
 
-  <script src="/src/onyx.js?v=1.1.1"></script>
-  <script src="/docs/pro-preview/onyx-pro.js?v=1.1.1"></script>
+  <script src="/src/onyx.js?v=1.1.4"></script>
+  <script src="/docs/pro-preview/onyx-pro.js?v=1.1.2"></script>
   <script src="/docs/content.js"></script>
   <script src="/assets/site.js?v=2"></script>
   <script>

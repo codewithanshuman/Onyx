@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/src/onyx.css?v=1.1.1" />
+  <link rel="stylesheet" href="/src/onyx.css?v=1.1.4" />
   <link rel="stylesheet" href="/assets/site.css?v=2" />
   <style>
     .log { display: grid; gap: var(--ox-space-12); grid-template-columns: 220px minmax(0, 1fr); align-items: start; }
@@ -32,17 +32,18 @@
   </style>
 </head>
 <body class="ox" data-page="changelog">
+  <a class="ox-skip" href="#main">Skip to content</a>
   <header data-site-header></header>
 
-  <section class="page-hero">
+  <header class="page-hero">
     <div class="ox-container">
       <span class="ox-eyebrow">Changelog</span>
       <h1>What's new in Onyx.</h1>
       <p class="ox-lead">Every release of the core library, the React package and Onyx Pro.</p>
     </div>
-  </section>
+  </header>
 
-  <main class="ox-container log">
+  <main id="main" tabindex="-1" class="ox-container log">
     <div class="log-filter">
       <span class="ox-label">Package</span>
       <div class="ox-chips" data-single id="pkg" aria-label="Filter by package">
@@ -57,11 +58,23 @@
 
   <footer data-site-footer></footer>
 
-  <script src="/src/onyx.js?v=1.1.1"></script>
+  <script src="/src/onyx.js?v=1.1.4"></script>
   <script src="/assets/site.js?v=2"></script>
   <script>
     // Newest first. Add a release by adding an object here.
     var RELEASES = [
+      { pkg: "core", version: "1.1.1", date: "2026-11-03", title: "Accessibility pass",
+        summary: "Every page and template now passes an automated WCAG audit with zero violations.",
+        items: ["<b>Fixed:</b> secondary and subtle text now meet 4.5:1 contrast in light and dark mode.",
+                "<b>New:</b> <code>--ox-control-border</code> gives inputs, selects, checkboxes, radios, switches and steppers a 3:1 outline.",
+                "<b>New:</b> <code>.ox-skip</code> skip-to-content link for keyboard users.",
+                "<b>Fixed:</b> code comments in <code>.ox-code</code> are readable (5.6:1)."],
+        install: "npm i @onyxdesign/core@1.1.1" },
+      { pkg: "pro", version: "1.1.1", date: "2026-11-03", title: "Accessibility fixes",
+        summary: "Pro components and templates pass the same audit.",
+        items: ["<b>Fixed:</b> the date picker field is announced correctly as a combobox.",
+                "<b>Fixed:</b> combobox and code input fields use the stronger field outline.",
+                "<b>Fixed:</b> landing and pricing templates have a main landmark; settings table headers are all named."] },
       { pkg: "core", version: "1.1.0", date: "2026-11-03", title: "Ten new components and a mobile menu",
         summary: "Navigation, data and input components, plus touch-friendly sizing everywhere.",
         items: ["<b>New:</b> breadcrumb, pagination, range slider, number stepper, chips, table, empty state, timeline, banner.",

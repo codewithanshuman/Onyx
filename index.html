@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="src/onyx.css?v=1.1.1" />
+  <link rel="stylesheet" href="src/onyx.css?v=1.1.4" />
   <link rel="stylesheet" href="docs/pro-preview/onyx-pro.css?v=1.1.0" />
   <style>
     body { margin: 0; }
@@ -98,7 +98,7 @@
     .principles { display: grid; grid-template-columns: repeat(4, 1fr); border-block: 1px solid var(--ox-border); }
     .principles > div { padding: var(--ox-space-8) var(--ox-space-6); }
     .principles > div + div { border-left: 1px solid var(--ox-border); }
-    .principles h3 { margin: var(--ox-space-4) 0 var(--ox-space-2); font-size: var(--ox-text-base); font-weight: 600; letter-spacing: -0.01em; }
+    .principles h2 { margin: var(--ox-space-4) 0 var(--ox-space-2); font-size: var(--ox-text-base); font-weight: 600; letter-spacing: -0.01em; }
     .principles p { margin: 0; font-size: var(--ox-text-sm); color: var(--ox-fg-muted); }
     @media (max-width: 900px) {
       .principles { grid-template-columns: 1fr 1fr; }
@@ -188,7 +188,7 @@
     /* Footer */
     footer { padding: var(--ox-space-16) 0 var(--ox-space-10); }
     .foot { display: grid; gap: var(--ox-space-8); grid-template-columns: 2fr repeat(3, 1fr); }
-    .foot h4 { margin: 0 0 var(--ox-space-4); font-size: var(--ox-text-xs); font-weight: 500; color: var(--ox-fg-subtle); }
+    .foot-title { margin: 0 0 var(--ox-space-4); font-size: var(--ox-text-xs); font-weight: 500; color: var(--ox-fg-subtle); }
     .foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--ox-space-2); }
     .foot a { color: var(--ox-fg-muted); font-size: var(--ox-text-sm); text-decoration: none; }
     .foot a:hover { color: var(--ox-fg); }
@@ -300,6 +300,7 @@
   </style>
 </head>
 <body class="ox">
+  <a class="ox-skip" href="#main">Skip to content</a>
   <div class="progress-line" id="progress" aria-hidden="true"></div>
   <div class="ox-banner" data-ox-banner="v1-1" role="region" aria-label="Announcement">
     <span><b>Onyx 1.1</b> — 10 new components and a built-in mobile menu.</span>
@@ -346,6 +347,7 @@
     </div>
   </nav>
 
+  <main id="main">
   <!-- Hero -->
   <header class="hero">
     <div class="hero-glow" aria-hidden="true"><i></i><i></i></div>
@@ -383,7 +385,7 @@
             </div>
 
             <div class="ox-card">
-              <h3 class="ox-card-title">Welcome back</h3>
+              <p class="ox-card-title">Welcome back</p>
               <p class="ox-card-text">Sign in to your workspace.</p>
               <div class="ox-stack" style="margin-top:var(--ox-space-6)">
                 <div class="ox-field"><label class="ox-label" for="s-email">Email</label><input class="ox-input" id="s-email" placeholder="ada@studio.com" /></div>
@@ -397,7 +399,7 @@
 
             <div class="shot-col">
               <div class="ox-card" style="padding:var(--ox-space-5)">
-                <div class="ox-row ox-between"><h3 class="ox-card-title" style="margin:0">Team</h3><span class="ox-badge ox-badge-dot ox-badge-live">3 online</span></div>
+                <div class="ox-row ox-between"><p class="ox-card-title" style="margin:0">Team</p><span class="ox-badge ox-badge-dot ox-badge-live">3 online</span></div>
                 <div style="margin-top:var(--ox-space-3)">
                   <div class="list-row"><span class="ox-avatar ox-avatar-solid">AL</span><div class="who">Ada Lovelace<small>ada@studio.com</small></div><span class="ox-badge">Owner</span></div>
                   <div class="list-row"><span class="ox-avatar">GH</span><div class="who">Grace Hopper<small>grace@studio.com</small></div><span class="ox-badge ox-badge-outline">Editor</span></div>
@@ -405,7 +407,7 @@
                 </div>
               </div>
               <div class="ox-card" style="padding:var(--ox-space-5)">
-                <h3 class="ox-card-title">Notifications</h3>
+                <p class="ox-card-title">Notifications</p>
                 <div class="ox-stack" style="margin-top:var(--ox-space-4);gap:var(--ox-space-3)">
                   <label class="ox-switch switch-row">Comments<input type="checkbox" checked /><span class="ox-switch-track"></span></label>
                   <label class="ox-switch switch-row">Mentions<input type="checkbox" checked /><span class="ox-switch-track"></span></label>
@@ -422,10 +424,10 @@
   <!-- Principles -->
   <div class="ox-container">
     <div class="principles reveal">
-      <div><span class="ox-eyebrow">01</span><h3>Zero dependencies</h3><p>One stylesheet, one tiny script. No build step, no framework lock-in.</p></div>
-      <div><span class="ox-eyebrow">02</span><h3>Accessible by default</h3><p>Focus management, keyboard navigation and maximum contrast.</p></div>
-      <div><span class="ox-eyebrow">03</span><h3>Light &amp; dark, natively</h3><p>Follows the system, flips on demand, inverts any section with one class.</p></div>
-      <div><span class="ox-eyebrow">04</span><h3>Yours to theme</h3><p>Every radius, shadow and spacing step is a CSS variable.</p></div>
+      <div><span class="ox-eyebrow">01</span><h2>Zero dependencies</h2><p>One stylesheet, one tiny script. No build step, no framework lock-in.</p></div>
+      <div><span class="ox-eyebrow">02</span><h2>Accessible by default</h2><p>Focus management, keyboard navigation and maximum contrast.</p></div>
+      <div><span class="ox-eyebrow">03</span><h2>Light &amp; dark, natively</h2><p>Follows the system, flips on demand, inverts any section with one class.</p></div>
+      <div><span class="ox-eyebrow">04</span><h2>Yours to theme</h2><p>Every radius, shadow and spacing step is a CSS variable.</p></div>
     </div>
   </div>
 
@@ -555,7 +557,7 @@
             <div class="ox-tab-panel" role="tabpanel" id="tp-1" aria-labelledby="t-1">
               <div class="ox-stack">
                 <div class="ox-row ox-between" style="font-size:var(--ox-text-sm)"><span>Storage used</span><span class="ox-muted ox-mono">6.8 / 10 GB</span></div>
-                <div class="ox-progress" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"><div class="ox-progress-bar" style="--value:68%"></div></div>
+                <div class="ox-progress" role="progressbar" aria-label="Storage used" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"><div class="ox-progress-bar" style="--value:68%"></div></div>
                 <div class="ox-alert"><span class="ox-alert-icon">i</span><div><strong>Heads up</strong>You'll reach your limit in about 12 days.</div></div>
               </div>
             </div>
@@ -894,6 +896,8 @@
     </div>
   </div>
 
+  </main>
+
   <footer>
     <div class="ox-container">
       <div class="foot">
@@ -901,9 +905,9 @@
           <a href="#" class="logo"><svg><use href="#i-logo"/></svg>Onyx</a>
           <p class="ox-muted" style="font-size:var(--ox-text-sm);max-width:30ch;margin:var(--ox-space-3) 0 0">A black &amp; white component library for people who care about the details.</p>
         </div>
-        <div><h4>Product</h4><ul><li><a href="components/">Components</a></li><li><a href="studio/">Theme Studio</a></li><li><a href="#pricing">Pricing</a></li><li><a href="changelog/">Changelog</a></li></ul></div>
-        <div><h4>Resources</h4><ul><li><a href="docs/">Documentation</a></li><li><a href="docs/#/react">React</a></li><li><a href="https://github.com/codewithanshuman/Onyx" target="_blank" rel="noopener">GitHub</a></li></ul></div>
-        <div><h4>Company</h4><ul><li><a href="#faq">FAQ</a></li><li><a href="https://github.com/codewithanshuman/Onyx/blob/main/LICENSE" target="_blank" rel="noopener">License</a></li><li><a href="https://github.com/codewithanshuman/Onyx/issues" target="_blank" rel="noopener">Contact</a></li></ul></div>
+        <div><h2 class="foot-title">Product</h2><ul><li><a href="components/">Components</a></li><li><a href="studio/">Theme Studio</a></li><li><a href="#pricing">Pricing</a></li><li><a href="changelog/">Changelog</a></li></ul></div>
+        <div><h2 class="foot-title">Resources</h2><ul><li><a href="docs/">Documentation</a></li><li><a href="docs/#/react">React</a></li><li><a href="https://github.com/codewithanshuman/Onyx" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+        <div><h2 class="foot-title">Company</h2><ul><li><a href="#faq">FAQ</a></li><li><a href="https://github.com/codewithanshuman/Onyx/blob/main/LICENSE" target="_blank" rel="noopener">License</a></li><li><a href="https://github.com/codewithanshuman/Onyx/issues" target="_blank" rel="noopener">Contact</a></li></ul></div>
       </div>
       <div class="foot-bottom">
         <span>© 2026 Onyx UI</span>
@@ -950,7 +954,7 @@
     </div>
   </div>
 
-  <script src="src/onyx.js?v=1.1.1"></script>
+  <script src="src/onyx.js?v=1.1.4"></script>
   <script src="docs/pro-preview/onyx-pro.js?v=1.1.0"></script>
   <script>
     // Page-specific demo wiring

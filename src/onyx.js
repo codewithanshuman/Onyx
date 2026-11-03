@@ -1,5 +1,5 @@
 /*!
- * Onyx v1.1.0 — interactive behaviors
+ * Onyx v1.1.1 — interactive behaviors
  * Zero dependencies. Works via data attributes, or the window.Onyx API.
  */
 (function (global) {
@@ -306,7 +306,7 @@
   restoreTheme();
 
   global.Onyx = {
-    version: "1.1.0",
+    version: "1.1.1",
     modal: { open: openModal, close: closeModal },
     toast: toast,
     copy: copy,

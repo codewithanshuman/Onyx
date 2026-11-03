@@ -709,12 +709,12 @@ Onyx.modal.close("example-modal");`),
           lead: "Shows how far along a task is.",
           blocks: [
             H("Example"),
-            EX(`<div class="ox-progress" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100">
+            EX(`<div class="ox-progress" role="progressbar" aria-label="Upload progress" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100">
   <div class="ox-progress-bar" style="--value:68%"></div>
 </div>`, "block"),
             H("API"),
             API([
-              ["<code>.ox-progress</code>", "Track. Add <code>role=\"progressbar\"</code> and <code>aria-valuenow</code>."],
+              ["<code>.ox-progress</code>", "Track. Add <code>role=\"progressbar\"</code>, <code>aria-valuenow</code> and an <code>aria-label</code> that says what is progressing."],
               ["<code>.ox-progress-bar</code>", "Fill. Set its width with <code>--value</code>."]
             ])
           ]

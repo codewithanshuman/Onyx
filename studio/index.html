@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/src/onyx.css?v=1.1.1" />
+  <link rel="stylesheet" href="/src/onyx.css?v=1.1.4" />
   <link rel="stylesheet" href="/assets/site.css?v=2" />
   <style>
     .studio { display: grid; gap: var(--ox-space-6); grid-template-columns: 340px minmax(0, 1fr); align-items: start; }
@@ -52,17 +52,18 @@
   <style id="live-theme"></style>
 </head>
 <body class="ox" data-page="studio">
+  <a class="ox-skip" href="#main">Skip to content</a>
   <header data-site-header></header>
 
-  <section class="page-hero">
+  <header class="page-hero">
     <div class="ox-container">
       <span class="ox-eyebrow">Theme Studio</span>
       <h1>Make Onyx yours.</h1>
       <p class="ox-lead">Start from a preset, tune every token, check contrast as you go, and export to CSS, JSON or Tailwind. Share a link to come back to it later.</p>
     </div>
-  </section>
+  </header>
 
-  <main class="ox-container studio">
+  <main id="main" tabindex="-1" class="ox-container studio">
     <aside class="ox-card panel" aria-label="Theme controls">
       <div class="ctl">
         <span class="ox-label">Presets</span>
@@ -195,7 +196,7 @@
 
   <footer data-site-footer></footer>
 
-  <script src="/src/onyx.js?v=1.1.1"></script>
+  <script src="/src/onyx.js?v=1.1.4"></script>
   <script src="/assets/site.js?v=2"></script>
   <script>
     // ================= Color math =================
@@ -249,9 +250,11 @@
         "--ox-surface": mode === "light" ? (s.tone === "neutral" ? "#ffffff" : mix(bg, "#ffffff", 0.6)) : mix(bg, fg, 0.03),
         "--ox-border": mix(bg, fg, mode === "light" ? 0.09 : 0.13),
         "--ox-border-strong": mix(bg, fg, mode === "light" ? 0.17 : 0.22),
+        // Form fields need a 3:1 outline; secondary text needs 4.5:1 (WCAG 1.4.11 and 1.4.3)
+        "--ox-control-border": mix(bg, fg, mode === "light" ? 0.45 : 0.38),
         "--ox-fg": fg,
-        "--ox-fg-muted": mix(fg, bg, 0.42),
-        "--ox-fg-subtle": mix(fg, bg, 0.62),
+        "--ox-fg-muted": mix(fg, bg, 0.34),
+        "--ox-fg-subtle": mix(fg, bg, 0.44),
         "--ox-inverse": bg
       };
     }
@@ -309,14 +312,17 @@
       // Contrast for the colors in the current preview mode
       var c = colors(state, state.mode);
       var rows = [
-        ["Text on background", contrast(c["--ox-fg"], c["--ox-bg"]), 4.5],
+        ["Text", contrast(c["--ox-fg"], c["--ox-bg"]), 4.5],
         ["Muted text", contrast(c["--ox-fg-muted"], c["--ox-bg"]), 4.5],
+        ["Subtle text", contrast(c["--ox-fg-subtle"], c["--ox-bg"]), 4.5],
         ["Button label", contrast(c["--ox-inverse"], c["--ox-fg"]), 4.5],
-        ["Borders", contrast(c["--ox-border-strong"], c["--ox-bg"]), 1.5]
+        ["Field outline", contrast(c["--ox-control-border"], c["--ox-bg"]), 3]
       ];
       document.getElementById("contrast-mode").textContent = state.mode;
       document.getElementById("contrast").innerHTML = rows.map(function (r) {
-        return "<div><span>" + r[0] + '</span><span class="ox-row" style="gap:6px"><b>' + r[1].toFixed(2) + ":1</b>" + (r[2] < 3 ? '<span class="ox-badge ox-badge-outline">' + (r[1] >= r[2] ? "Visible" : "Faint") + "</span>" : badge(r[1], r[2])) + "</span></div>";
+        // Text is rated AA/AAA; field outlines only have one bar to clear (3:1)
+        var rating = r[2] === 3 ? (r[1] >= 3 ? '<span class="ox-badge">Pass</span>' : '<span class="ox-badge ox-badge-outline">Fail</span>') : badge(r[1], r[2]);
+        return "<div><span>" + r[0] + '</span><span class="ox-row" style="gap:6px"><b>' + r[1].toFixed(2) + ":1</b>" + rating + "</span></div>";
       }).join("");
 
       renderExport();

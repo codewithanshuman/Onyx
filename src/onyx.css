@@ -1,5 +1,5 @@
 /*!
- * Onyx v1.1.0 — a black & white component library for the web
+ * Onyx v1.1.1 — a black & white component library for the web
  * Core: MIT License. Onyx Pro components require a commercial license.
  */
 
@@ -19,9 +19,10 @@
   --ox-surface: #ffffff;
   --ox-border: #e8e8e8;
   --ox-border-strong: #d4d4d4;
+  --ox-control-border: #8f8f8f;
   --ox-fg: #0a0a0a;
-  --ox-fg-muted: #6b6b6b;
-  --ox-fg-subtle: #a3a3a3;
+  --ox-fg-muted: #5c5c5c;
+  --ox-fg-subtle: #737373;
   --ox-inverse: #ffffff;
   --ox-ring: rgba(10, 10, 10, 0.12);
   --ox-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -38,9 +39,10 @@
   --ox-surface: #0a0a0a;
   --ox-border: #222222;
   --ox-border-strong: #383838;
+  --ox-control-border: #5e5e5e;
   --ox-fg: #fafafa;
-  --ox-fg-muted: #a1a1a1;
-  --ox-fg-subtle: #6b6b6b;
+  --ox-fg-muted: #a8a8a8;
+  --ox-fg-subtle: #8a8a8a;
   --ox-inverse: #000000;
   --ox-ring: rgba(255, 255, 255, 0.18);
   --ox-shadow-sm: 0 0 0 1px rgba(255, 255, 255, 0.02);
@@ -61,9 +63,10 @@
     --ox-surface: #0a0a0a;
     --ox-border: #222222;
     --ox-border-strong: #383838;
+    --ox-control-border: #5e5e5e;
     --ox-fg: #fafafa;
-    --ox-fg-muted: #a1a1a1;
-    --ox-fg-subtle: #6b6b6b;
+    --ox-fg-muted: #a8a8a8;
+    --ox-fg-subtle: #8a8a8a;
     --ox-inverse: #000000;
     --ox-ring: rgba(255, 255, 255, 0.18);
     --ox-shadow-sm: 0 0 0 1px rgba(255, 255, 255, 0.02);
@@ -78,9 +81,10 @@
     --ox-surface: #ffffff;
     --ox-border: #e8e8e8;
     --ox-border-strong: #d4d4d4;
+    --ox-control-border: #8f8f8f;
     --ox-fg: #0a0a0a;
-    --ox-fg-muted: #6b6b6b;
-    --ox-fg-subtle: #a3a3a3;
+    --ox-fg-muted: #5c5c5c;
+    --ox-fg-subtle: #737373;
     --ox-inverse: #ffffff;
     --ox-ring: rgba(10, 10, 10, 0.12);
     --ox-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -341,7 +345,7 @@
   font-size: var(--ox-text-sm);
   color: var(--ox-fg);
   background: var(--ox-surface);
-  border: 1px solid var(--ox-border);
+  border: 1px solid var(--ox-control-border);
   border-radius: var(--ox-radius);
   transition: border-color var(--ox-duration) var(--ox-ease), box-shadow var(--ox-duration) var(--ox-ease);
 }
@@ -349,7 +353,7 @@
 .ox-textarea::placeholder { color: var(--ox-fg-subtle); }
 .ox-input:hover,
 .ox-select:hover,
-.ox-textarea:hover { border-color: var(--ox-border-strong); }
+.ox-textarea:hover { border-color: var(--ox-fg-muted); }
 .ox-input:focus,
 .ox-select:focus,
 .ox-textarea:focus {
@@ -403,7 +407,7 @@
   height: 1rem;
   margin: 0;
   background: var(--ox-surface);
-  border: 1px solid var(--ox-border-strong);
+  border: 1px solid var(--ox-control-border);
   cursor: pointer;
   transition: background var(--ox-duration) var(--ox-ease), border-color var(--ox-duration) var(--ox-ease);
 }
@@ -441,7 +445,7 @@
   width: 2.25rem;
   height: 1.25rem;
   flex-shrink: 0;
-  background: var(--ox-border-strong);
+  background: var(--ox-control-border);
   border-radius: var(--ox-radius-full);
   transition: background var(--ox-duration) var(--ox-ease);
 }
@@ -818,7 +822,7 @@
   overflow-x: auto;
   tab-size: 2;
 }
-.ox-code .c { color: #5f5f5f; }
+.ox-code .c { color: #8a8a8a; } /* 5.6:1 on the code background */
 .ox-code .t { color: #ffffff; }
 .ox-code .a { color: #9a9a9a; }
 .ox-code .s { color: #e5e5e5; font-style: italic; }
@@ -996,7 +1000,7 @@ body.ox-nav-locked { overflow: hidden; }
 .ox-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--ox-ring); }
 .ox-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px var(--ox-ring); }
 
-.ox-stepper { display: inline-flex; align-items: stretch; height: 2.5rem; background: var(--ox-surface); border: 1px solid var(--ox-border); border-radius: var(--ox-radius); overflow: hidden; }
+.ox-stepper { display: inline-flex; align-items: stretch; height: 2.5rem; background: var(--ox-surface); border: 1px solid var(--ox-control-border); border-radius: var(--ox-radius); overflow: hidden; }
 .ox-stepper:focus-within { border-color: var(--ox-fg); box-shadow: 0 0 0 3px var(--ox-ring); }
 .ox-stepper button { width: 2.5rem; padding: 0; font-size: var(--ox-text-lg); line-height: 1; color: var(--ox-fg); background: transparent; border: 0; cursor: pointer; transition: background var(--ox-duration); }
 .ox-stepper button:hover { background: var(--ox-bg-muted); }
@@ -1091,6 +1095,23 @@ body.ox-nav-locked { overflow: hidden; }
 .ox-avatar[data-status="online"]::after { background: var(--ox-fg); }
 .ox-avatar[data-status="away"]::after { background: var(--ox-bg); box-shadow: inset 0 0 0 2px var(--ox-fg); }
 .ox-avatar[data-status="offline"]::after { background: var(--ox-border-strong); }
+
+/* Skip link: hidden until a keyboard user tabs to it, then jumps past the navigation */
+.ox-skip {
+  position: fixed;
+  left: var(--ox-space-4);
+  top: var(--ox-space-3);
+  z-index: 1200;
+  padding: var(--ox-space-2) var(--ox-space-4);
+  font: 500 var(--ox-text-sm) var(--ox-font-sans);
+  color: var(--ox-inverse);
+  background: var(--ox-fg);
+  border-radius: var(--ox-radius-full);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--ox-duration) var(--ox-ease);
+}
+.ox-skip:focus { transform: none; }
 
 /* =========================================================
    26. Touch screens: comfortable tap targets

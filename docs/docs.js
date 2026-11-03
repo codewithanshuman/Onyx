@@ -72,7 +72,7 @@
     return (
       '<div class="d-code-bar"><span>' + esc(label || lang) + "</span>" +
       '<button class="d-copy" data-src="' + esc(src) + '"><svg><use href="#i-copy"/></svg><span>Copy</span></button></div>' +
-      '<pre class="ox-code">' + hl + "</pre>"
+      '<pre class="ox-code" tabindex="0" aria-label="' + esc(label || lang) + ' code">' + hl + "</pre>"
     );
   }
 
@@ -147,7 +147,7 @@
   function renderToc(page) {
     var heads = page.blocks.filter(function (b) { return b.type === "h2"; });
     if (!heads.length) { toc.innerHTML = ""; return; }
-    toc.innerHTML = "<h4>On this page</h4>" + heads.map(function (h) {
+    toc.innerHTML = '<p class="d-toc-title">On this page</p>' + heads.map(function (h) {
       var id = slugify(h.text);
       return '<a href="#/' + page.slug + "/" + id + '" data-id="' + id + '">' + esc(h.text) + "</a>";
     }).join("");

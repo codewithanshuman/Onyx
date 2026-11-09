@@ -77,9 +77,19 @@
   }
 
   /* ---------- Rendering ---------- */
+  // Tables are named after the heading above them, so each scrollable region has its own name
+  var tableNames = {};
+  var lastHeading = "";
+  function tableName() {
+    var base = (lastHeading || "Reference") + " table";
+    tableNames[base] = (tableNames[base] || 0) + 1;
+    return tableNames[base] > 1 ? base + " " + tableNames[base] : base;
+  }
+
   function renderBlock(b) {
     switch (b.type) {
       case "h2":
+        lastHeading = b.text;
         return '<h2 id="' + slugify(b.text) + '">' + esc(b.text) + "</h2>";
       case "p":
         return "<p>" + b.html + "</p>";
@@ -100,7 +110,7 @@
       case "table":
         return (
           // Focusable so keyboard users can scroll it sideways on narrow screens
-          '<div class="d-table-wrap" tabindex="0" role="region" aria-label="Reference table"><table class="d-table"><thead><tr>' +
+          '<div class="d-table-wrap" tabindex="0" role="region" aria-label="' + esc(tableName()) + '"><table class="d-table"><thead><tr>' +
           b.head.map(function (h) { return "<th>" + h + "</th>"; }).join("") +
           "</tr></thead><tbody>" +
           b.rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>"; }).join("") +
@@ -137,7 +147,7 @@
   function renderPager(page) {
     var prev = pages[page.index - 1];
     var next = pages[page.index + 1];
-    var html = '<nav class="d-pager" aria-label="Pagination">';
+    var html = '<nav class="d-pager" aria-label="Previous and next page">';
     if (prev) html += '<a href="#/' + prev.slug + '"><small><svg><use href="#i-back"/></svg>Previous</small><b>' + prev.title + "</b></a>";
     if (next) html += '<a class="next" href="#/' + next.slug + '"><small>Next<svg><use href="#i-arrow"/></svg></small><b>' + next.title + "</b></a>";
     return html + "</nav>";
@@ -176,7 +186,7 @@
       '<div class="d-breadcrumb"><span>' + page.group + "</span><span>/</span><span>" + page.title + "</span></div>" +
       "<h1>" + page.title + "</h1>" +
       '<p class="ox-lead">' + esc(page.lead) + "</p>" +
-      page.blocks.map(renderBlock).join("") +
+      (tableNames = {}, lastHeading = "", page.blocks.map(renderBlock).join("")) +
       renderPager(page) +
       "</article>";
 

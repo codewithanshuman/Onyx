@@ -17,8 +17,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="src/onyx.css?v=1.1.4" />
-  <link rel="stylesheet" href="docs/pro-preview/onyx-pro.css?v=1.1.3" />
+  <link rel="stylesheet" href="src/onyx.css?v=1.1.5" />
+  <link rel="stylesheet" href="docs/pro-preview/onyx-pro.css?v=1.2.0" />
   <style>
     body { margin: 0; }
     section { padding: clamp(4rem, 9vw, 7rem) 0; }
@@ -326,6 +326,7 @@
       <a href="#" class="logo" aria-label="Onyx home"><svg><use href="#i-logo"/></svg>Onyx</a>
       <div class="ox-navbar-links">
         <a href="components/">Components</a>
+        <a href="blocks/">Blocks</a>
         <a href="studio/">Theme Studio</a>
         <a href="docs/">Docs</a>
         <a href="#pricing">Pricing</a>
@@ -342,7 +343,7 @@
       </div>
     </div>
     <div class="ox-navbar-menu" id="site-menu">
-      <a href="components/">Components</a><a href="studio/">Theme Studio</a><a href="docs/">Docs</a><a href="#pricing">Pricing</a><a href="changelog/">Changelog</a><a href="#faq">FAQ</a>
+      <a href="components/">Components</a><a href="blocks/">Blocks</a><a href="studio/">Theme Studio</a><a href="docs/">Docs</a><a href="#pricing">Pricing</a><a href="changelog/">Changelog</a><a href="#faq">FAQ</a>
       <a href="#pricing" class="ox-btn ox-btn-lg ox-btn-pill ox-btn-block">Get Onyx Pro</a>
     </div>
   </nav>
@@ -454,7 +455,10 @@
         <span class="ox-eyebrow">Components</span>
         <h2 class="ox-h1">Fewer colors.<br />More craft.</h2>
         <p class="ox-lead">Without color to lean on, everything else has to be right — spacing, weight, rhythm, motion. Every piece below is live. Go ahead, click around.</p>
-        <a href="components/" class="ox-btn ox-btn-outline ox-btn-pill" style="margin-top:var(--ox-space-6)">Browse all components <svg class="ox-arrow"><use href="#i-arrow"/></svg></a>
+        <div class="ox-row" style="margin-top:var(--ox-space-6)">
+          <a href="components/" class="ox-btn ox-btn-outline ox-btn-pill">Browse all components <svg class="ox-arrow"><use href="#i-arrow"/></svg></a>
+          <a href="blocks/" class="ox-btn ox-btn-ghost ox-btn-pill">Or start from a ready-made block <svg class="ox-arrow"><use href="#i-arrow"/></svg></a>
+        </div>
       </div>
 
       <div class="bento stagger">
@@ -905,7 +909,7 @@
           <a href="#" class="logo"><svg><use href="#i-logo"/></svg>Onyx</a>
           <p class="ox-muted" style="font-size:var(--ox-text-sm);max-width:30ch;margin:var(--ox-space-3) 0 0">A black &amp; white component library for people who care about the details.</p>
         </div>
-        <div><h2 class="foot-title">Product</h2><ul><li><a href="components/">Components</a></li><li><a href="studio/">Theme Studio</a></li><li><a href="#pricing">Pricing</a></li><li><a href="changelog/">Changelog</a></li></ul></div>
+        <div><h2 class="foot-title">Product</h2><ul><li><a href="components/">Components</a></li><li><a href="blocks/">Blocks</a></li><li><a href="studio/">Theme Studio</a></li><li><a href="#pricing">Pricing</a></li><li><a href="changelog/">Changelog</a></li></ul></div>
         <div><h2 class="foot-title">Resources</h2><ul><li><a href="docs/">Documentation</a></li><li><a href="docs/#/react">React</a></li><li><a href="https://github.com/codewithanshuman/Onyx" target="_blank" rel="noopener">GitHub</a></li></ul></div>
         <div><h2 class="foot-title">Company</h2><ul><li><a href="#faq">FAQ</a></li><li><a href="https://github.com/codewithanshuman/Onyx/blob/main/LICENSE" target="_blank" rel="noopener">License</a></li><li><a href="https://github.com/codewithanshuman/Onyx/issues" target="_blank" rel="noopener">Contact</a></li></ul></div>
       </div>
@@ -955,7 +959,7 @@
   </div>
 
   <script src="src/onyx.js?v=1.1.4"></script>
-  <script src="docs/pro-preview/onyx-pro.js?v=1.1.3"></script>
+  <script src="docs/pro-preview/onyx-pro.js?v=1.2.0"></script>
   <script>
     // Page-specific demo wiring
     document.getElementById("loading-demo").addEventListener("click", function () {
@@ -1110,7 +1114,8 @@
           { group: "Sections", label: "Components", action: go("#components") },
           { group: "Sections", label: "New in 1.1", keywords: "breadcrumb pagination table slider timeline", action: go("#more") },
           { group: "Pages", label: "Components gallery", keywords: "browse search all", href: "components/" },
-          { group: "Pages", label: "Theme Studio", keywords: "theme builder customize export tailwind", href: "studio/" },
+          { group: "Pages", label: "Blocks", keywords: "sections templates hero pricing sign in dashboard copy", href: "blocks/" },
+        { group: "Pages", label: "Theme Studio", keywords: "theme builder customize export tailwind", href: "studio/" },
           { group: "Pages", label: "Changelog", keywords: "releases what's new", href: "changelog/" },
           { group: "Sections", label: "Playground", keywords: "theme customize tokens", action: go("#playground") },
           { group: "Sections", label: "Developers", keywords: "code install", action: go("#developers") },

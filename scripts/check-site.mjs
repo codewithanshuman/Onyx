@@ -1,6 +1,6 @@
 // Opens every page in a real browser and fails on:
 //   - any accessibility violation (axe-core, WCAG 2.1 AA), in light and dark mode,
-//     including with popups open (date picker, combobox, command menu)
+//     including with popups open (date picker, combobox, command menu) and inside every block preview
 //   - sideways scrolling at phone, tablet and desktop widths
 //   - a navbar that wraps, or that shows both (or neither) the links and the menu button
 //   - JavaScript errors on the page
@@ -13,9 +13,11 @@ import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const PAGES = ["/", "/components/", "/studio/", "/changelog/", "/docs/#/button", "/docs/#/color", "/docs/#/date-picker", "/docs/#/combobox", "/docs/#/command-menu"];
+const PAGES = ["/", "/components/", "/blocks/", "/studio/", "/changelog/", "/docs/#/pro-react", "/docs/#/button", "/docs/#/color", "/docs/#/date-picker", "/docs/#/combobox", "/docs/#/command-menu"];
 // Popups only exist once opened, so these pages are scanned a second time with one open (and empty, the trickiest state)
 const OPEN = {
+  // Every block preview is a page of its own in a frame; axe scans inside frames too
+  "/blocks/": async (page) => { await page.evaluate(() => window.OnyxBlocks.loadAll()); await page.waitForTimeout(3500); },
   "/docs/#/date-picker": async (page) => { await page.locator("input.oxp-date-input").first().click(); },
   "/docs/#/combobox": async (page) => { await page.locator("#cb-one input").click(); await page.keyboard.type("zzzzz"); },
   "/docs/#/command-menu": async (page) => { await page.click("#demo-cmd"); await page.waitForTimeout(400); await page.keyboard.type("zzzz"); }

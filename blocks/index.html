@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blocks · Onyx</title>
+  <meta name="description" content="Ready-made page sections built with Onyx: heroes, pricing, sign-in, dashboards and more. Preview at any screen size, then copy the HTML." />
+  <link rel="canonical" href="https://onyxdesign.vercel.app/blocks/" />
+  <meta property="og:title" content="Onyx Blocks" />
+  <meta property="og:description" content="Ready-made page sections built with Onyx. Preview at any screen size, then copy the HTML." />
+  <meta property="og:image" content="https://onyxdesign.vercel.app/brand/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/onyx.css?v=1.1.5" />
+  <link rel="stylesheet" href="/assets/site.css?v=2" />
+  <style>
+    .toolbar { position: sticky; top: 3.75rem; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; gap: var(--ox-space-3); padding: var(--ox-space-4) 0; background: color-mix(in srgb, var(--ox-bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--ox-border); }
+    .toolbar .ox-input-group { flex: 1 1 240px; max-width: 360px; }
+    .toolbar .ox-input-group .ox-input { height: 2.5rem; border-radius: var(--ox-radius-full); padding-left: 2.5rem; }
+    .toolbar .ox-input-group .ox-input-icon { left: 1rem; }
+    .toolbar .ox-chips { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .toolbar .ox-chip { flex-shrink: 0; white-space: nowrap; }
+    .count { font-size: var(--ox-text-sm); color: var(--ox-fg-muted); white-space: nowrap; }
+
+    .list { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ox-space-12); padding: var(--ox-space-10) 0 var(--ox-space-16); }
+    .block { min-width: 0; } /* lets wide preview frames scroll inside the card instead of widening the page */
+    .block[hidden] { display: none; }
+    .block { scroll-margin-top: 9rem; }
+    .block-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--ox-space-4); margin-bottom: var(--ox-space-4); }
+    .block-head h2 { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ox-space-2); margin: 0 0 var(--ox-space-1); font-size: var(--ox-text-lg); font-weight: 600; letter-spacing: -0.02em; }
+    .block-head h2 a { color: inherit; text-decoration: none; }
+    .block-head h2 a:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .block-head p { max-width: 60ch; margin: 0; font-size: var(--ox-text-sm); color: var(--ox-fg-muted); }
+    .block-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ox-space-2); }
+    .block-tools .ox-segmented svg { width: 16px; height: 16px; }
+    .block-tools .ox-segmented button { display: inline-grid; place-items: center; }
+
+    .frame { position: relative; border: 1px solid var(--ox-border); border-radius: var(--ox-radius-lg); overflow: hidden; background-color: var(--ox-bg-subtle); background-image: radial-gradient(var(--ox-border) 1px, transparent 1px); background-size: 16px 16px; }
+    .stage { overflow-x: auto; }
+    .stage iframe { display: block; width: 100%; height: 480px; margin: 0 auto; border: 0; background: var(--ox-bg); transition: width 320ms var(--ox-ease); }
+    .frame[data-view="tablet"] iframe, .frame[data-view="phone"] iframe { border-inline: 1px solid var(--ox-border); }
+    .frame[data-view="tablet"] iframe { width: 768px; }
+    .frame[data-view="phone"] iframe { width: min(390px, 100%); } /* on a real phone, use the space there is */
+    .frame .loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: var(--ox-text-sm); color: var(--ox-fg-muted); pointer-events: none; }
+    .frame[data-loaded] .loading { display: none; }
+    @media (prefers-reduced-motion: reduce) { .stage iframe { transition: none; } }
+
+    .code { margin-top: var(--ox-space-3); }
+    .code[hidden] { display: none; }
+    .code-note { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ox-space-2); margin-bottom: var(--ox-space-2); font-size: var(--ox-text-xs); color: var(--ox-fg-muted); }
+    .code-note code { font-family: var(--ox-font-mono); color: var(--ox-fg); }
+    .code pre { max-height: 32rem; overflow: auto; font-size: var(--ox-text-xs); }
+    .code pre:focus-visible { outline: 2px solid var(--ox-fg); outline-offset: 2px; }
+
+    @media (max-width: 640px) {
+      .toolbar { position: static; } /* three rows is too much to pin on a phone */
+      .block { scroll-margin-top: 5rem; }
+      .toolbar .ox-input-group { max-width: none; }
+      .block-tools { width: 100%; }
+      .block-tools .grow { margin-left: auto; }
+    }
+  </style>
+</head>
+<body class="ox" data-page="blocks">
+  <a class="ox-skip" href="#main">Skip to content</a>
+  <header data-site-header></header>
+
+  <header class="page-hero">
+    <div class="ox-container">
+      <span class="ox-eyebrow">Blocks</span>
+      <h1>Whole sections, ready to paste.</h1>
+      <p class="ox-lead"><span id="total"></span> page sections built only from Onyx: heroes, pricing, sign-in, dashboards and more. Check each one at desktop, tablet and phone size, in light and dark, then copy the HTML.</p>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1" class="ox-container">
+    <div class="toolbar">
+      <div class="ox-input-group">
+        <svg class="ox-input-icon" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></g></svg>
+        <input class="ox-input" id="q" type="search" placeholder="Search blocks…" aria-label="Search blocks" aria-controls="list" autocomplete="off" />
+      </div>
+      <div class="ox-chips" data-single id="cats" aria-label="Category"></div>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+
+    <div class="list" id="list"></div>
+    <div id="empty" hidden style="padding: var(--ox-space-10) 0">
+      <div class="ox-empty">
+        <span class="ox-empty-icon" aria-hidden="true">⌕</span>
+        <h2 class="ox-empty-title">No blocks match</h2>
+        <p class="ox-empty-text">Try another word, or show every category.</p>
+        <button class="ox-btn ox-btn-outline ox-btn-pill" id="clear">Show all blocks</button>
+      </div>
+    </div>
+  </main>
+
+  <footer data-site-footer></footer>
+
+  <script src="/src/onyx.js?v=1.1.4"></script>
+  <script src="/blocks/blocks.js?v=1"></script>
+  <script src="/assets/site.js?v=3"></script>
+  <script>
+    (function () {
+      "use strict";
+      var BLOCKS = window.ONYX_BLOCKS;
+      var ORIGIN = location.origin;
+      var CSS_V = "1.1.5", JS_V = "1.1.4", PV = "1.2.0";
+      var list = document.getElementById("list"), q = document.getElementById("q"), cats = document.getElementById("cats");
+      var state = { q: "", cat: "All" };
+      var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); };
+
+      // Tablet and phone frames are wider than a phone screen, so small screens start at the size they can show
+      var defaultView = innerWidth < 600 ? "phone" : "desktop";
+      var VIEWS = [
+        { v: "desktop", label: "Desktop", icon: '<svg viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1.5" y="2.5" width="13" height="9" rx="1.5"/><path d="M6 14h4M8 11.5V14"/></g></svg>' },
+        { v: "tablet", label: "Tablet", icon: '<svg viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/><path d="M7 12.5h2"/></g></svg>' },
+        { v: "phone", label: "Phone", icon: '<svg viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="4.5" y="1.5" width="7" height="13" rx="1.5"/><path d="M7.25 12.5h1.5"/></g></svg>' }
+      ];
+
+      function siteTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        if (t === "light" || t === "dark") return t;
+        return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+
+      // A full page for one block. Standalone ("Open in new tab") it gets its own <main>; inline previews
+      // sit inside this page's <main> already, so they use a plain wrapper.
+      function pageFor(b, theme, standalone) {
+        var wrap = standalone && !/<main[\s>]/.test(b.html) ? "main" : "div";
+        var heading = /<h1[\s>]/.test(b.html) ? "" : '<h1 class="ox-sr-only">' + esc(b.name) + " preview</h1>";
+        return '<!doctype html><html lang="en" data-theme="' + theme + '"><head><meta charset="utf-8">' +
+          '<meta name="viewport" content="width=device-width, initial-scale=1"><title>' + esc(b.name) + " · Onyx block</title>" +
+          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap">' +
+          '<link rel="stylesheet" href="' + ORIGIN + "/src/onyx.css?v=" + CSS_V + '">' +
+          (b.pro ? '<link rel="stylesheet" href="' + ORIGIN + "/docs/pro-preview/onyx-pro.css?v=" + PV + '">' : "") +
+          '<script src="' + ORIGIN + "/src/onyx.js?v=" + JS_V + '"><\/script>' +
+          (b.pro ? '<script src="' + ORIGIN + "/docs/pro-preview/onyx-pro.js?v=" + PV + '"><\/script>' : "") +
+          "<style>body { margin: 0; background: var(--ox-bg); }</style></head>" +
+          '<body class="ox"><' + wrap + ">" + heading + b.html + "</" + wrap + ">" +
+          // Demo links and forms go nowhere in the preview
+          '<script>document.addEventListener("click", function (e) { var a = e.target.closest("a[href]"); if (a && a.getAttribute("href").charAt(0) === "#") e.preventDefault(); });' +
+          'document.addEventListener("submit", function (e) { e.preventDefault(); });<\/script>' +
+          "</body></html>";
+      }
+
+      // Small highlighter for the code view, using the .ox-code token colours
+      function highlight(html) {
+        return html.replace(/(<!--[\s\S]*?-->)|(<\/?[a-zA-Z][\w-]*)|("[^"\n]*")|(\s[a-zA-Z-:]+)(?==)|[<>&]/g, function (m, comment, tag, str, attr) {
+          if (comment) return '<span class="c">' + esc(comment) + "</span>";
+          if (tag) return '<span class="t">' + esc(tag) + "</span>";
+          if (str) return '<span class="s">' + esc(str) + "</span>";
+          if (attr) return '<span class="a">' + esc(attr) + "</span>";
+          return esc(m);
+        });
+      }
+
+      function card(b) {
+        var tools =
+          '<div class="ox-segmented" role="group" aria-label="Preview size for ' + esc(b.name) + '" data-views>' +
+            VIEWS.map(function (x) { return '<button type="button" value="' + x.v + '" aria-pressed="' + (x.v === defaultView) + '" aria-label="' + x.label + '" data-ox-tooltip="' + x.label + '">' + x.icon + "</button>"; }).join("") +
+          "</div>" +
+          '<button type="button" class="ox-btn ox-btn-ghost ox-btn-sm" data-act="theme" aria-pressed="false">Dark preview</button>' +
+          '<button type="button" class="ox-btn ox-btn-ghost ox-btn-sm" data-act="code" aria-expanded="false" aria-controls="code-' + b.id + '">View code</button>' +
+          '<button type="button" class="ox-btn ox-btn-ghost ox-btn-sm" data-act="open">Open<span class="ox-sr-only"> ' + esc(b.name) + " in a new tab</span></button>" +
+          '<button type="button" class="ox-btn ox-btn-sm grow" data-act="copy">Copy HTML</button>';
+        var needs = "Needs <code>onyx.css</code> and <code>onyx.js</code>" + (b.pro ? ", plus <code>onyx-pro.css</code> and <code>onyx-pro.js</code> from Onyx Pro" : "") + ".";
+        return '<article class="block" id="' + b.id + '" data-cat="' + esc(b.category) + '" aria-labelledby="t-' + b.id + '">' +
+          '<div class="block-head"><div>' +
+            '<h2 id="t-' + b.id + '"><a href="#' + b.id + '">' + esc(b.name) + "</a>" +
+              '<span class="ox-badge ox-badge-outline">' + esc(b.category) + "</span>" +
+              (b.pro ? '<span class="ox-badge ox-badge-solid">Pro</span>' : "") + "</h2>" +
+            "<p>" + esc(b.description) + "</p>" +
+          '</div><div class="block-tools">' + tools + "</div></div>" +
+          '<div class="frame" data-view="' + defaultView + '"><div class="stage"><iframe title="' + esc(b.name) + ' preview" loading="lazy"></iframe></div><div class="loading">Loading preview…</div></div>' +
+          '<div class="code" id="code-' + b.id + '" hidden><div class="code-note"><span>' + needs + "</span>" +
+            (b.pro ? '<a href="/#pricing">Get Onyx Pro</a>' : '<a href="/docs/#/installation">Installation</a>') + "</div>" +
+            '<pre class="ox-code" tabindex="0" aria-label="' + esc(b.name) + ' HTML"><code></code></pre></div>' +
+        "</article>";
+      }
+
+      list.innerHTML = BLOCKS.map(card).join("");
+      document.getElementById("total").textContent = BLOCKS.length;
+
+      // ---- Previews render when they come near the screen ----
+      function load(article) {
+        if (article.dataset.ready) return;
+        article.dataset.ready = "1";
+        var b = byId(article.id), frame = article.querySelector(".frame"), iframe = frame.querySelector("iframe");
+        var theme = article.dataset.theme || siteTheme();
+        iframe.addEventListener("load", function () {
+          frame.setAttribute("data-loaded", "");
+          var doc = iframe.contentDocument;
+          if (!doc || !doc.body) return;
+          // Grow the frame to its content. Full-height blocks (100vh) would grow with the frame itself,
+          // so they get a fixed height and scroll inside it.
+          var fit = function () {
+            if (b.height) { iframe.style.height = b.height + "px"; return; }
+            var min = b.minHeight && frame.dataset.view !== "desktop" ? b.minHeight : 0;
+            iframe.style.height = Math.max(min, Math.ceil(doc.body.getBoundingClientRect().height)) + "px";
+          };
+          fit();
+          if ("ResizeObserver" in window) new ResizeObserver(fit).observe(doc.body);
+          iframe._fit = fit;
+        });
+        iframe.srcdoc = pageFor(b, theme);
+      }
+      var io = "IntersectionObserver" in window && new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+      }, { rootMargin: "600px 0px" });
+      list.querySelectorAll(".block").forEach(function (a) { if (io) io.observe(a); else load(a); });
+
+      function byId(id) { return BLOCKS.filter(function (b) { return b.id === id; })[0]; }
+
+      function setTheme(article, theme) {
+        article.dataset.theme = theme;
+        var btn = article.querySelector('[data-act="theme"]');
+        btn.setAttribute("aria-pressed", String(theme === "dark"));
+        var doc = article.querySelector("iframe").contentDocument;
+        if (doc && doc.documentElement) doc.documentElement.setAttribute("data-theme", theme);
+      }
+
+      // ---- Per-block tools ----
+      list.addEventListener("ox:change", function (e) {
+        if (!e.target.matches("[data-views]")) return;
+        var article = e.target.closest(".block"), frame = article.querySelector(".frame");
+        frame.dataset.view = e.detail.value;
+        var iframe = frame.querySelector("iframe");
+        if (iframe._fit) setTimeout(iframe._fit, 340); // after the width transition
+      });
+      list.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-act]");
+        if (!btn) return;
+        var article = btn.closest(".block"), b = byId(article.id), act = btn.dataset.act;
+        if (act === "copy") Onyx.copy(b.html + "\n");
+        if (act === "theme") setTheme(article, btn.getAttribute("aria-pressed") === "true" ? "light" : "dark");
+        if (act === "open") {
+          var url = URL.createObjectURL(new Blob([pageFor(b, article.dataset.theme || siteTheme(), true)], { type: "text/html" }));
+          window.open(url, "_blank", "noopener");
+          setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+        }
+        if (act === "code") {
+          var panel = article.querySelector(".code"), open = panel.hidden;
+          if (open && !panel.dataset.ready) { panel.querySelector("pre code").innerHTML = highlight(b.html); panel.dataset.ready = "1"; }
+          panel.hidden = !open;
+          btn.setAttribute("aria-expanded", String(open));
+          btn.textContent = open ? "Hide code" : "View code";
+        }
+      });
+
+      // Previews follow the site theme until someone picks one for a block
+      new MutationObserver(function () {
+        var t = siteTheme();
+        list.querySelectorAll(".block").forEach(function (a) {
+          if (a.dataset.picked) return;
+          setTheme(a, t);
+          delete a.dataset.theme;
+        });
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+      list.addEventListener("click", function (e) { var b = e.target.closest('[data-act="theme"]'); if (b) b.closest(".block").dataset.picked = "1"; });
+      list.querySelectorAll(".block").forEach(function (a) { a.querySelector('[data-act="theme"]').setAttribute("aria-pressed", String(siteTheme() === "dark")); });
+
+      // ---- Search and categories ----
+      var categories = ["All"].concat(BLOCKS.map(function (b) { return b.category; }).filter(function (c, i, a) { return a.indexOf(c) === i; }));
+      cats.innerHTML = categories.map(function (c) {
+        var n = c === "All" ? BLOCKS.length : BLOCKS.filter(function (b) { return b.category === c; }).length;
+        return '<button type="button" class="ox-chip" value="' + c + '" aria-pressed="' + (c === "All") + '">' + c + " · " + n + "</button>";
+      }).join("");
+
+      function render() {
+        var words = state.q.toLowerCase().trim().split(/\s+/).filter(Boolean), shown = 0;
+        list.querySelectorAll(".block").forEach(function (a) {
+          var b = byId(a.id), text = (b.name + " " + b.description + " " + b.category + (b.pro ? " pro" : "")).toLowerCase();
+          var ok = (state.cat === "All" || b.category === state.cat) && words.every(function (w) { return text.indexOf(w) !== -1; });
+          a.hidden = !ok;
+          if (ok) shown++;
+        });
+        document.getElementById("count").textContent = shown === BLOCKS.length ? BLOCKS.length + " blocks" : shown + " of " + BLOCKS.length;
+        document.getElementById("empty").hidden = shown > 0;
+      }
+      q.addEventListener("input", function () { state.q = q.value; render(); });
+      cats.addEventListener("ox:change", function (e) { state.cat = e.detail.value[0] || "All"; render(); });
+      document.getElementById("clear").addEventListener("click", function () {
+        state = { q: "", cat: "All" }; q.value = "";
+        cats.querySelectorAll(".ox-chip").forEach(function (c) { c.setAttribute("aria-pressed", String(c.value === "All")); });
+        render(); q.focus();
+      });
+      render();
+
+      // Deep links (#pricing) jump to the block and load it right away
+      if (location.hash && document.getElementById(location.hash.slice(1))) load(document.getElementById(location.hash.slice(1)));
+
+      // For automated checks: render every preview now
+      window.OnyxBlocks = { loadAll: function () { list.querySelectorAll(".block").forEach(load); } };
+    })();
+  </script>
+</body>
+</html>

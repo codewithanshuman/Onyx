@@ -671,7 +671,7 @@ Onyx.modal.close("example-modal");`),
           lead: "A sticky, translucent top bar. A border appears once the page scrolls.",
           blocks: [
             H("Example"),
-            EX(`<nav class="ox-navbar" style="position:relative;border:1px solid var(--ox-border);border-radius:12px">
+            EX(`<nav class="ox-navbar" aria-label="Example" style="position:relative;border:1px solid var(--ox-border);border-radius:12px">
   <div class="ox-container ox-navbar-inner">
     <strong>Studio</strong>
     <div class="ox-navbar-links">
@@ -1089,6 +1089,103 @@ Onyx.toast("Link copied", { duration: 5000 });`),
               ["template-settings", "Settings", "Profile, billing and team settings with an unsaved-changes bar."]
             ] },
             NOTE("<b>License.</b> Onyx Pro is covered by a commercial license. You can use it in unlimited projects for yourself or your clients, but you can't resell or redistribute the Pro source files.")
+          ]
+        },
+        {
+          slug: "pro-react",
+          title: "Pro for React",
+          lead: "The Pro components as real React components: typed props, controlled or uncontrolled, and the same keyboard and screen-reader support.",
+          blocks: [
+            H("Setup"),
+            P("Pro for React comes with Onyx Pro, next to the CSS and JavaScript files. Load both stylesheets once at the root of your app; there is no script to add."),
+            CODE("js", `import "@onyxdesign/react/styles.css";     // core Onyx styles
+import "@onyxdesign/pro-react/styles.css";  // Pro styles`, "main.tsx"),
+            H("Components"),
+            API([
+              ["<code>Chart</code>", "Line, area, bar and donut charts with hover tooltips. Redraws when its container resizes."],
+              ["<code>Sparkline</code>", "A tiny trend line for tables and stat cards. Decorative, so put the real number beside it."],
+              ["<code>DataTable</code>", "Search, sort, paging and row selection for an array of objects."],
+              ["<code>Calendar</code>", "A month grid with full keyboard support, single dates or ranges, and blocked days."],
+              ["<code>DatePicker</code>", "A field that opens a <code>Calendar</code>, with Clear and Today. <code>name</code> submits the value with forms."],
+              ["<code>Combobox</code>", "Searchable select. Add <code>multiple</code> for tags and <code>creatable</code> to let people add values."],
+              ["<code>CommandMenu</code>", "A ⌘K / Ctrl+K palette with fuzzy search, groups and keyboard navigation."]
+            ], ["Component", "What it does"]),
+            NOTE("Every component that holds a value works <b>controlled</b> (<code>value</code> + <code>onChange</code>) or <b>uncontrolled</b> (<code>defaultValue</code>). Dates are plain <code>\"YYYY-MM-DD\"</code> strings, so they survive JSON and time zones."),
+            H("Charts"),
+            CODE("js", `import { Chart, Sparkline } from "@onyxdesign/pro-react";
+
+<Chart
+  type="area"
+  title="Revenue by month"
+  labels={["Jan", "Feb", "Mar", "Apr"]}
+  series={[{ name: "2026", data: [12000, 18000, 15000, 22000] }]}
+  format={(v) => "$" + v.toLocaleString()}
+  legend
+/>
+
+<p>MRR $12.4k <Sparkline values={[4, 6, 5, 8, 7, 9, 12]} /></p>`, "Revenue.tsx"),
+            H("Data table"),
+            CODE("js", `import { DataTable, type RowId } from "@onyxdesign/pro-react";
+import { useState } from "react";
+
+const [selected, setSelected] = useState<RowId[]>([]);
+
+<DataTable
+  aria-label="Customers"
+  rows={customers}                  // [{ id, name, plan, mrr }, ...]
+  pageSize={10}
+  selectable
+  selected={selected}
+  onSelectedChange={setSelected}
+  actions={<Button size="sm" disabled={!selected.length}>Export</Button>}
+  columns={[
+    { key: "name", label: "Name" },
+    { key: "plan", label: "Plan" },
+    { key: "mrr", label: "MRR", align: "right", render: (r) => "$" + r.mrr },
+  ]}
+/>`, "Customers.tsx"),
+            H("Dates"),
+            CODE("js", `import { DatePicker, Calendar, type DateRange } from "@onyxdesign/pro-react";
+
+const [due, setDue] = useState<string | null>(null);
+const [stay, setStay] = useState<DateRange>([null, null]);
+
+<Field label="Due date"><DatePicker name="due" value={due} onChange={setDue} min="2026-01-01" /></Field>
+
+{/* onChange fires once both ends are picked */}
+<DatePicker range value={stay} onChange={setStay} isDateDisabled={(d) => d.getDay() === 0} />
+
+<Calendar weekStart={1} defaultValue="2026-11-04" />`, "Booking.tsx"),
+            API([
+              ["<code>range</code>", "Pick a start and end. The value is <code>[start, end]</code>."],
+              ["<code>min</code>, <code>max</code>", "Earliest and latest selectable days."],
+              ["<code>isDateDisabled</code>", "Return <code>true</code> to block a day: weekends, holidays, booked dates."],
+              ["<code>weekStart</code>", "0 for Sunday (default), 1 for Monday."],
+              ["<code>locale</code>", "Month and weekday names. Defaults to the browser's language."]
+            ], ["Prop", "Description"]),
+            P("Keyboard: arrows move by day and week, <span class=\"ox-kbd\">Page Up</span> / <span class=\"ox-kbd\">Page Down</span> by month (add <span class=\"ox-kbd\">Shift</span> for years), <span class=\"ox-kbd\">Home</span> / <span class=\"ox-kbd\">End</span> to the week's edges, <span class=\"ox-kbd\">Enter</span> picks, <span class=\"ox-kbd\">Esc</span> closes."),
+            H("Combobox"),
+            CODE("js", `import { Combobox } from "@onyxdesign/pro-react";
+
+// Single choice, with hints
+<Combobox aria-label="Owner" value={owner} onChange={setOwner}
+  options={[{ value: "ada", label: "Ada Lovelace", hint: "Engineer" }, { value: "grace", label: "Grace Hopper", hint: "Admiral" }]} />
+
+// Tag input: pick or type new tags, Enter or comma adds, Backspace removes the last
+<Combobox aria-label="Tags" multiple creatable max={5} value={tags} onChange={setTags}
+  options={["design", "engineering", "research"]} />`, "Filters.tsx"),
+            H("Command menu"),
+            CODE("js", `import { CommandMenu } from "@onyxdesign/pro-react";
+
+<CommandMenu
+  open={open}
+  onOpenChange={setOpen}           // Ctrl+K / ⌘K toggles it too
+  items={[
+    { label: "New project", group: "Create", shortcut: "N", onSelect: createProject },
+    { label: "Open settings", group: "Navigate", keywords: "preferences", href: "/settings" },
+  ]}
+/>`, "App.tsx"),
+            P("Search matches letters in order (\"ost\" finds <i>Open settings</i>), ranks word starts first, and also searches <code>keywords</code>.")
           ]
         },
         {

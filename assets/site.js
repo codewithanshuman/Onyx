@@ -6,6 +6,7 @@
 
   var LINKS = [
     { href: "/components/", label: "Components", page: "components" },
+    { href: "/blocks/", label: "Blocks", page: "blocks" },
     { href: "/studio/", label: "Theme Studio", page: "studio" },
     { href: "/docs/", label: "Docs", page: "docs" },
     { href: "/#pricing", label: "Pricing", page: "pricing" },
@@ -45,7 +46,7 @@
         '<div class="site-foot">' +
           '<div><a href="/" class="site-logo"><i aria-hidden="true"></i>Onyx</a>' +
             '<p class="ox-muted" style="font-size:var(--ox-text-sm);max-width:30ch;margin:var(--ox-space-3) 0 0">A black &amp; white component library for people who care about the details.</p></div>' +
-          '<div><h2 class="site-foot-title">Product</h2><ul><li><a href="/components/">Components</a></li><li><a href="/studio/">Theme Studio</a></li><li><a href="/#pricing">Pricing</a></li><li><a href="/changelog/">Changelog</a></li></ul></div>' +
+          '<div><h2 class="site-foot-title">Product</h2><ul><li><a href="/components/">Components</a></li><li><a href="/blocks/">Blocks</a></li><li><a href="/studio/">Theme Studio</a></li><li><a href="/#pricing">Pricing</a></li><li><a href="/changelog/">Changelog</a></li></ul></div>' +
           '<div><h2 class="site-foot-title">Developers</h2><ul><li><a href="/docs/">Documentation</a></li><li><a href="/docs/#/react">React</a></li><li><a href="https://www.npmjs.com/package/@onyxdesign/core" target="_blank" rel="noopener">npm</a></li><li><a href="https://github.com/codewithanshuman/Onyx" target="_blank" rel="noopener">GitHub</a></li></ul></div>' +
           '<div><h2 class="site-foot-title">Company</h2><ul><li><a href="/#faq">FAQ</a></li><li><a href="https://github.com/codewithanshuman/Onyx/blob/main/LICENSE" target="_blank" rel="noopener">License</a></li></ul></div>' +
         "</div>" +

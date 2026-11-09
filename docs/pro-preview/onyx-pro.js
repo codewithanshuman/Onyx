@@ -1,4 +1,4 @@
-/*! Onyx Pro v1.1.1 — PREVIEW BUILD for the Onyx documentation only.
+/*! Onyx Pro v1.2.0 — PREVIEW BUILD for the Onyx documentation only.
  *  Not licensed for use in your projects. Get a license from the Onyx pricing page. */
 (function (global) {
   "use strict";

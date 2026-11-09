@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PAGES = {
   "index.html": "/", "404.html": "/", "components/index.html": "/components/", "studio/index.html": "/studio/",
-  "changelog/index.html": "/changelog/", "docs/index.html": "/docs/", "assets/site.js": "/"
+  "changelog/index.html": "/changelog/", "blocks/index.html": "/blocks/", "docs/index.html": "/docs/", "assets/site.js": "/"
 };
 const ATTR = /(?:href|src)=\\?"([^"\\]+)\\?"/g;
 

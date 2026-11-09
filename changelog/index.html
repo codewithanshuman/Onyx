@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/src/onyx.css?v=1.1.4" />
+  <link rel="stylesheet" href="/src/onyx.css?v=1.1.5" />
   <link rel="stylesheet" href="/assets/site.css?v=2" />
   <style>
     .log { display: grid; gap: var(--ox-space-12); grid-template-columns: 220px minmax(0, 1fr); align-items: start; }
@@ -45,12 +45,13 @@
 
   <main id="main" tabindex="-1" class="ox-container log">
     <div class="log-filter">
-      <span class="ox-label">Package</span>
-      <div class="ox-chips" data-single id="pkg" aria-label="Filter by package">
+      <span class="ox-label">Show</span>
+      <div class="ox-chips" data-single id="pkg" aria-label="Filter by package or site">
         <button class="ox-chip" value="all" aria-pressed="true">All</button>
         <button class="ox-chip" value="core" aria-pressed="false">Core</button>
         <button class="ox-chip" value="react" aria-pressed="false">React</button>
         <button class="ox-chip" value="pro" aria-pressed="false">Pro</button>
+        <button class="ox-chip" value="site" aria-pressed="false">Site</button>
       </div>
     </div>
     <div id="releases" aria-live="polite"></div>
@@ -59,10 +60,24 @@
   <footer data-site-footer></footer>
 
   <script src="/src/onyx.js?v=1.1.4"></script>
-  <script src="/assets/site.js?v=2"></script>
+  <script src="/assets/site.js?v=3"></script>
   <script>
     // Newest first. Add a release by adding an object here.
     var RELEASES = [
+      { pkg: "site", date: "2026-11-09", title: "Blocks: 22 ready-made page sections",
+        summary: "Whole sections built only from Onyx, previewed live and ready to paste.",
+        items: ["<b>New:</b> <a href=\"/blocks/\">Blocks</a>: heroes, features, stats, testimonials, pricing, FAQ, call to action, newsletter, team, contact, navbar and footer.",
+                "<b>New:</b> sign-in and sign-up screens with validation, a password reveal and a strength meter; settings, empty state and 404 pages.",
+                "<b>New:</b> preview every block at desktop, tablet and phone width, in light or dark, then copy the HTML or open it full screen.",
+                "<b>Improved:</b> plain links in Onyx pages are black and white with a soft underline, instead of the browser's blue.",
+                "<b>Quality:</b> every block is scanned for accessibility on every change, inside its preview, in both themes."] },
+      { pkg: "pro", version: "1.2.0", date: "2026-11-09", title: "Pro for React",
+        summary: "The Pro components as typed React components, plus accessibility fixes found by opening every popup in an audit.",
+        items: ["<b>New:</b> <code>Chart</code>, <code>Sparkline</code>, <code>DataTable</code>, <code>Calendar</code>, <code>DatePicker</code>, <code>Combobox</code> and <code>CommandMenu</code> for React. See <a href=\"/docs/#/pro-react\">Pro for React</a>.",
+                "<b>New:</b> analytics dashboard and customers table blocks.",
+                "<b>Fixed:</b> the calendar groups days into weeks for screen readers, and never reports an invalid selected state.",
+                "<b>Fixed:</b> the open date picker names the popup it controls; empty search results no longer break the list.",
+                "<b>Fixed:</b> option hints meet 4.5:1 contrast on the highlighted row."] },
       { pkg: "react", version: "1.1.0", date: "2026-11-04", title: "React catches up with 1.1",
         summary: "Every new core component, as typed React components with behavior built in.",
         items: ["<b>New:</b> <code>Navbar</code> with a mobile menu (Escape and link taps close it, page scroll locks while open).",
@@ -118,16 +133,16 @@
                 "<b>New:</b> design tokens for every color, radius, shadow and spacing step."],
         install: "npm i @onyxdesign/core@1.0.0" }
     ];
-    var LABEL = { core: "Core", react: "React", pro: "Pro" };
+    var LABEL = { core: "Core", react: "React", pro: "Pro", site: "Site" };
     var fmt = new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" });
 
     function render(filter) {
       var list = RELEASES.filter(function (r) { return filter === "all" || r.pkg === filter; });
       document.getElementById("releases").innerHTML = list.map(function (r) {
         var d = r.date.split("-");
-        return '<article class="release" id="' + r.pkg + "-" + r.version + '">' +
+        return '<article class="release" id="' + r.pkg + "-" + (r.version || r.date) + '">' +
           '<time datetime="' + r.date + '">' + fmt.format(new Date(+d[0], d[1] - 1, +d[2])) + "</time>" +
-          "<div><h2>" + r.title + '<span class="ox-badge ' + (r.pkg === "pro" ? "ox-badge-solid" : "ox-badge-outline") + '">' + LABEL[r.pkg] + " " + r.version + "</span></h2>" +
+          "<div><h2>" + r.title + '<span class="ox-badge ' + (r.pkg === "pro" ? "ox-badge-solid" : "ox-badge-outline") + '">' + LABEL[r.pkg] + (r.version ? " " + r.version : "") + "</span></h2>" +
           "<p>" + r.summary + "</p><ul>" + r.items.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</ul>" +
           (r.install ? '<div class="install"><code>' + r.install + "</code></div>" : "") +
           "</div></article>";

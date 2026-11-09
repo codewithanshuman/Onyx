@@ -153,6 +153,18 @@
   font-feature-settings: "ss01", "cv11";
 }
 
+/* Plain links stay black and white: the text colour with a soft underline.
+   :where() keeps this at zero specificity, so any component or class wins. */
+:where(.ox) :where(a:not([class])) {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  transition: text-decoration-color var(--ox-duration) var(--ox-ease);
+}
+:where(.ox) :where(a:not([class])):hover { text-decoration-color: currentColor; }
+
 .ox ::selection {
   background: var(--ox-fg);
   color: var(--ox-inverse);
